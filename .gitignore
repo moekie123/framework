@@ -1,0 +1,27 @@
+
+# Ignore generated directories
+build/
+library/
+binairy/
+Testing/
+
+# Ignore CMake generated files
+CMakeFiles/
+
+CMakeCache.txt
+cmake_install.cmake
+
+CTestTestfile.cmake
+
+DartConfiguration.tcl
+
+Makefile
+
+# Ignore VIM temporary files
+*.~
+.swp
+
+# Ignora Generated Libraries
+*.a
+*.o
+*.so
