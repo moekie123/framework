@@ -5,7 +5,7 @@
 #include "designpatterns/Singleton.h"
 #include "designpatterns/AbstractFactory.h"
 
-#include "factory/ParameterFactory.h"
+#include "../../ParameterFactory.h"
 
 TEST( Construct, ParameterDefault )
 {
