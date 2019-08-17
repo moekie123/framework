@@ -1,0 +1,2 @@
+#include "designpatterns/Singleton.h"
+
