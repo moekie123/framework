@@ -15,21 +15,20 @@ class Generic
          */
         const std::string& getName() const;
  
-    	/** 
+	/** 
     	  *  @brief getProperty 
       	*  @details return the value of the requested property
       	*  @param _property the name of the requested property
       	*/
-    	virtual const int& getProperty( std::string _property ) const;
+	virtual bool getProperty( std::string, int& ) const;
 
-    	/** 
+	/** 
       	*  @brief setProperty 
       	*  @details set the requested property
       	*  @param _property the name of the requested property
       	*  @param _value the new value of the property
-      	*/
-    	virtual void setProperty( std::string _property, int _value );
-
+      	*/ 
+	virtual bool setProperty( std::string, const int& );
 
     protected:
 

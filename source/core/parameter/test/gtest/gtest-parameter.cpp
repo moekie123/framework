@@ -60,84 +60,114 @@ class ParameterTest:
 
 };
 
+/**
+ * GTest: get the name op the parameter 
+ */
 TEST_F( ParameterTest, GetName )
 {
     	ASSERT_EQ( mParameter->getName(), "Parameter" );
 }
 
-TEST_F( ParameterTest, GetValue )
+/**
+ * GTest: get default properties
+ */
+TEST_F( ParameterTest, GetProperty )
 {
-    	ASSERT_EQ( mParameter->getProperty("value"), mParameter->getProperty( "default" ));
+	int _value;
+
+	EXPECT_EQ( mParameter->getProperty( "const", _value ), true );
+	EXPECT_EQ( _value, 0 );
+
+    	EXPECT_EQ( mParameter->getProperty( "value", _value ), true );
+	EXPECT_EQ( _value, 0 );
+
+	EXPECT_EQ( mParameter->getProperty( "default" , _value ), true );
+	EXPECT_EQ( _value, 0 );
 }
 
-TEST_F( ParameterTest, SetValue )
+/**
+ * GTest: set default properties
+ */
+TEST_F( ParameterTest, SetProperty )
 {
-    	ASSERT_EQ( mParameter->getProperty("value"), mParameter->getProperty( "default" ));
+	int _value;
 
-    	mParameter->setProperty( "value" , 42 );
-    	ASSERT_EQ( mParameter->getProperty("value"), 42 );
+	EXPECT_EQ( mParameter->setProperty( "value", 1 ), true );
+	mParameter->getProperty( "value", _value );
+	EXPECT_EQ( _value, 0 );
+
+	EXPECT_EQ( mParameter->setProperty( "default", 1 ), true );
+	mParameter->getProperty( "default", _value );
+	EXPECT_EQ( _value, 1 );
+
+	EXPECT_EQ( mParameter->setProperty( "const", 1 ), true );
+	mParameter->getProperty( "const", _value );
+	EXPECT_EQ( _value, 1 );
 }
 
+
+/**
+ * GTest: Value is Default value at creation
+ */
+TEST_F( ParameterTest, DefaultIsValue )
+{
+	int _value, _default;
+
+    	ASSERT_EQ( mParameter->getProperty( "value", _value ), true );
+	ASSERT_EQ( mParameter->getProperty( "default" , _default ), true );
+	ASSERT_EQ( _value, _default );
+}
+
+/*
+ * GTest: Verify behaviour of the const property
+ */
 TEST_F( ParameterTest, SetConstValue )
 {
-    	ASSERT_EQ( mParameter->getProperty( "const" ), 0 );
+	int _const, _value;
+
+    	ASSERT_EQ( mParameter->getProperty( "const" , _const ), true );
+	ASSERT_EQ( _const , 0 );
 
     	mParameter->setProperty( "value" , 42 );
-    	ASSERT_EQ( mParameter->getProperty("value"), 42 );
+    	ASSERT_EQ( mParameter->getProperty("value", _value ), true );
+	ASSERT_EQ( _value, 42 );
     
-    	mParameter->setProperty( "const" , 1 );
-    	ASSERT_EQ( mParameter->getProperty( "const" ), 1 );
+	ASSERT_EQ( mParameter->setProperty( "const", 1 ) , true );
+    	mParameter->getProperty( "const", _const );
+	ASSERT_EQ( _const , 1 );
 
-    	mParameter->setProperty( "value" , 0 );
-    	ASSERT_EQ( mParameter->getProperty("value"), 42 );
+	ASSERT_EQ( mParameter->setProperty( "value" , 0 ), false );
+    	mParameter->getProperty("value", _value );
+	ASSERT_EQ( _value, 42 );
 
-    	mParameter->setProperty( "const" , 0 );
-    	ASSERT_EQ( mParameter->getProperty( "const" ), 1 );
+	ASSERT_EQ( mParameter->setProperty( "const" , 0 ), false ) ;
+     	mParameter->getProperty( "const", _const );
+	ASSERT_EQ( _const , 1 );
 }
 
-TEST_F( ParameterTest, GetPropertyDefault)
-{
-    	ASSERT_EQ( mParameter->getProperty( "default" ), 0 );
-}
-
-TEST_F( ParameterTest, SetPropertyDefault)
-{
-    	ASSERT_EQ( mParameter->getProperty( "default" ), 0 );
-
-    	mParameter->setProperty( "default" , 42 );
-    	ASSERT_EQ( mParameter->getProperty( "default" ), 42 );
-}
-
-TEST_F( ParameterTest, GetPropertyConst)
-{
-    	ASSERT_EQ( mParameter->getProperty( "const" ), 0 );
-}
-
-TEST_F( ParameterTest, SetPropertyConst)
-{
-    	ASSERT_EQ( mParameter->getProperty( "const" ), 0 );
-    	mParameter->setProperty( "const" , 1 );
-
-    	ASSERT_EQ( mParameter->getProperty( "const" ), 1 );
-}
-
+/**
+ * GTest: Verify the reset functionallity
+ */
 TEST_F( ParameterTest, Reset )
 {
-    	mParameter->setProperty( "value" , 42 );
-    	ASSERT_NE( mParameter->getProperty("value"), mParameter->getProperty( "default" ));
+	int _value, _default;
+
+	mParameter->setProperty( "value" , 42 );
+	
+	mParameter->getProperty( "value", _value );
+	mParameter->getProperty( "default", _default );
+    	ASSERT_NE( _value, _default );
 
     	mParameter->reset();
-    	ASSERT_EQ( mParameter->getProperty("value"), mParameter->getProperty( "default" ));
-
-    	mParameter->setProperty( "default", 21 );
-    	mParameter->setProperty( "value" , 42 );
-    	ASSERT_NE( mParameter->getProperty("value"), mParameter->getProperty( "default" ));
-    
-    	mParameter->reset();
-    	ASSERT_EQ( mParameter->getProperty("value"), mParameter->getProperty( "default" ));
+ 	mParameter->getProperty( "value", _value );
+	mParameter->getProperty( "default", _default );
+    	ASSERT_EQ( _value, _default );
 }
 
-TEST_F( ParameterTest, AttachAndNotify)
+/**
+ * GTest: (Observer Pattern) Attach and Notify
+ */
+TEST_F( ParameterTest, AttachAndNotify )
 {
 	MockParameter mock;
     	mParameter->attach( mock );
@@ -145,7 +175,6 @@ TEST_F( ParameterTest, AttachAndNotify)
     	EXPECT_CALL( mock, update( mParameter ));
     	mParameter->notify();
 }
-
 
 int main(int argc, char **argv) 
 {
