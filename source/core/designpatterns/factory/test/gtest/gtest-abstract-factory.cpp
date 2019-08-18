@@ -1,10 +1,15 @@
 #include <gtest/gtest.h>
 
 #include "designpatterns/AbstractFactory.h"
+#include "designpatterns/Builder.h"
+
 #include "Generic.h"
+#include "Configurator.h"
+
+#include <string>
 
 class InterfaceBeta:
-    public Generic
+	public Generic
 {
     public:
         virtual void execute() = 0;
@@ -13,17 +18,32 @@ class InterfaceBeta:
 class ConcreteBeta:
     public InterfaceBeta
 {
-    Generic* build( std::string ){ return new ConcreteBeta; }
-    void execute(){}
+	public:
+	/**
+	 * Builder
+	 */
+	class ConcreteBetaBuilder:
+		public Builder
+	{
+		public:
+		Generic* build( std::string _name ) override
+		{
+			return new ConcreteBeta();
+		}
+	};
+	static ConcreteBetaBuilder builder;
+
+    	void execute(){}
 };
+ConcreteBeta::ConcreteBetaBuilder ConcreteBeta::builder;
 
 TEST( Construct, Default )
 {
     Factory *f = new Factory;
 
-    f->push( "CB", new ConcreteBeta );
+    f->Register( "CB", &ConcreteBeta::builder );
 
-    auto ab = f->create< InterfaceBeta >( "CB", "Name" );
+    auto ab = f->Create< InterfaceBeta >( "CB", "Name" );
 
     ab->execute();
 

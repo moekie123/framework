@@ -1,7 +1,13 @@
+#include "Configurator.h"
 #include "IParameter.h"
 #include "Parameter.h"
 
+#include "designpatterns/Singleton.h"
+#include "designpatterns/AbstractFactory.h"
+
 #include <map>
+
+Parameter::ParameterBuilder Parameter::builder;
 
 using property = std::pair< std::string, int >;
 
@@ -12,14 +18,21 @@ const std::map< std::string, int> defaults =
     { "value",   0 }
 };
 
-Parameter::Parameter():
-    Parameter( "Unknown" )
+Parameter::Parameter()
 {}
  
-Parameter::Parameter( std::string _name )
+Parameter::Parameter( Configurator& _config, std::string _name )
 {
-    mName = _name;
-    mProperties.insert ( defaults.begin(), defaults.end() );
+    	mName = _name;
+    	mProperties.insert ( defaults.begin(), defaults.end() );
+
+	for( auto it = defaults.begin(); it != defaults.end(); ++it )
+	{
+		int value;
+		 _config.getProperty( _name , it->first , value );
+
+		mProperties[ it->first ] =  value;
+	}
 }
  
 const int& Parameter::getProperty( std::string _property ) const
@@ -31,11 +44,6 @@ void Parameter::setProperty( std::string _property, int _value )
 {
     if ( mProperties.find( "const" )->second == 0 )
         mProperties.find( _property )->second = _value;
-}
-
-Generic* Parameter::build( std::string _name )
-{
-    return new Parameter( _name );
 }
 
 void Parameter::reset()

@@ -1,6 +1,7 @@
 # Creational Patterns
 add_subdirectory( singleton )
 add_subdirectory( factory )
+add_subdirectory( builder )
 
 # Structural Patterns
 add_subdirectory( composite )
@@ -9,9 +10,11 @@ add_subdirectory( composite )
 add_subdirectory( observer )
 
 add_library( designpatterns OBJECT
-                singleton/Singleton.cpp
+
+		singleton/Singleton.cpp
                 factory/AbstractFactory.cpp
-                                              
+		builder/Builder.cpp
+
                 composite/Composite.cpp 
 
                 observer/Observer.cpp

@@ -1,0 +1,17 @@
+<Root>
+	<Device>
+		<name>"PulseWidthModulation"</name>
+		<Parameter>
+			<name>"GTest-Parameter1"</name>
+			<value>42</value>
+		</Parameter>
+		<Parameter>
+			<name>"GTest-Parameter2"</name>
+			<value>42</value>
+		</Parameter>
+		<Signal> 
+			<name>"Test"</name>
+			<filename>"/sys/class/pwm/pwmchip0"</filename>
+		</Signal>
+	</Device>
+</Root>

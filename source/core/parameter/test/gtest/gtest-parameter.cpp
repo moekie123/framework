@@ -2,129 +2,150 @@
 #include <gmock/gmock.h>
 
 #include "mocks/MockParameter.h"
+#include "mocks/MockConfigurator.h"
 
 #include "IParameter.h"
 #include "../../Parameter.h"
 
+#include <iostream>
+
+// Constructor Tests
 TEST( Default, Construct)
 {
-    IParameter *p = new Parameter( "Parameter" );
-    ASSERT_NE( p , nullptr );
+	int value = 0;
+	MockConfigurator config;
+		
+	EXPECT_CALL( config, getProperty( "Parameter.const" )).WillRepeatedly( testing::ReturnRef(value));
+	EXPECT_CALL( config, getProperty( "Parameter.default" )).WillRepeatedly( testing::ReturnRef(value));
+	EXPECT_CALL( config, getProperty( "Parameter.value" )).WillRepeatedly( testing::ReturnRef(value));
+
+	IParameter *p = new Parameter( config, "Parameter" );
+    	ASSERT_NE( p , nullptr );
 }
 
-TEST( Default, GetName )
-{
-    IParameter *p = new Parameter( "Parameter" );
-    ASSERT_NE( p , nullptr );
 
-    ASSERT_EQ( p->getName(), "Parameter" );
+// Other Test that we already trust a working Constructor
+class ParameterTest: 
+	public ::testing::Test 
+{
+	private:
+		int * mReturn;
+
+	protected:
+		MockConfigurator mConfig;
+		IParameter* mParameter;
+
+    	ParameterTest() 
+	{
+    	
+	}
+
+    	virtual ~ParameterTest() {}
+
+    	virtual void SetUp() 
+	{
+		mReturn = new int( 0 );
+
+		EXPECT_CALL( mConfig, getProperty( "Parameter.const" )).WillRepeatedly( testing::ReturnRef( *mReturn ));
+		EXPECT_CALL( mConfig, getProperty( "Parameter.default" )).WillRepeatedly( testing::ReturnRef( *mReturn ));
+		EXPECT_CALL( mConfig, getProperty( "Parameter.value" )).WillRepeatedly( testing::ReturnRef( *mReturn ));
+	
+		mParameter = new Parameter( mConfig, "Parameter" );
+		ASSERT_NE( mParameter , nullptr );
+	}
+
+    	virtual void TearDown() 
+	{
+		delete mParameter;
+		delete mReturn;
+    	}
+
+};
+
+TEST_F( ParameterTest, GetName )
+{
+    	ASSERT_EQ( mParameter->getName(), "Parameter" );
 }
 
-TEST( Default, GetValue )
+TEST_F( ParameterTest, GetValue )
 {
-    IParameter *p = new Parameter( "Parameter" );
-    ASSERT_NE( p , nullptr );
-
-    ASSERT_EQ( p->getProperty("value"), p->getProperty( "default" ));
+    	ASSERT_EQ( mParameter->getProperty("value"), mParameter->getProperty( "default" ));
 }
 
-TEST( Default, SetValue )
+TEST_F( ParameterTest, SetValue )
 {
-    IParameter *p = new Parameter( "Parameter" );
-    ASSERT_NE( p , nullptr );
+    	ASSERT_EQ( mParameter->getProperty("value"), mParameter->getProperty( "default" ));
 
-    ASSERT_EQ( p->getProperty("value"), p->getProperty( "default" ));
-
-    p->setProperty( "value" , 42 );
-    ASSERT_EQ( p->getProperty("value"), 42 );
+    	mParameter->setProperty( "value" , 42 );
+    	ASSERT_EQ( mParameter->getProperty("value"), 42 );
 }
 
-TEST( Default, SetConstValue )
+TEST_F( ParameterTest, SetConstValue )
 {
-    IParameter *p = new Parameter( "Parameter" );
-    ASSERT_NE( p , nullptr );
+    	ASSERT_EQ( mParameter->getProperty( "const" ), 0 );
 
-    ASSERT_EQ( p->getProperty( "const" ), 0 );
-
-    p->setProperty( "value" , 42 );
-    ASSERT_EQ( p->getProperty("value"), 42 );
+    	mParameter->setProperty( "value" , 42 );
+    	ASSERT_EQ( mParameter->getProperty("value"), 42 );
     
-    p->setProperty( "const" , 1 );
-    ASSERT_EQ( p->getProperty( "const" ), 1 );
+    	mParameter->setProperty( "const" , 1 );
+    	ASSERT_EQ( mParameter->getProperty( "const" ), 1 );
 
-    p->setProperty( "value" , 0 );
-    ASSERT_EQ( p->getProperty("value"), 42 );
+    	mParameter->setProperty( "value" , 0 );
+    	ASSERT_EQ( mParameter->getProperty("value"), 42 );
 
-    p->setProperty( "const" , 0 );
-    ASSERT_EQ( p->getProperty( "const" ), 1 );
+    	mParameter->setProperty( "const" , 0 );
+    	ASSERT_EQ( mParameter->getProperty( "const" ), 1 );
 }
 
-TEST( Default, GetPropertyDefault)
+TEST_F( ParameterTest, GetPropertyDefault)
 {
-    IParameter *p = new Parameter( "Parameter" );
-    ASSERT_NE( p , nullptr );
-
-    ASSERT_EQ( p->getProperty( "default" ), 0 );
+    	ASSERT_EQ( mParameter->getProperty( "default" ), 0 );
 }
 
-TEST( Default, SetPropertyDefault)
+TEST_F( ParameterTest, SetPropertyDefault)
 {
-    IParameter *p = new Parameter( "Parameter" );
-    ASSERT_NE( p , nullptr );
+    	ASSERT_EQ( mParameter->getProperty( "default" ), 0 );
 
-    ASSERT_EQ( p->getProperty( "default" ), 0 );
-
-    p->setProperty( "default" , 42 );
-    ASSERT_EQ( p->getProperty( "default" ), 42 );
+    	mParameter->setProperty( "default" , 42 );
+    	ASSERT_EQ( mParameter->getProperty( "default" ), 42 );
 }
 
-TEST( Default, GetPropertyConst)
+TEST_F( ParameterTest, GetPropertyConst)
 {
-    IParameter *p = new Parameter( "Parameter" );
-    ASSERT_NE( p , nullptr );
-
-    ASSERT_EQ( p->getProperty( "const" ), 0 );
+    	ASSERT_EQ( mParameter->getProperty( "const" ), 0 );
 }
 
-TEST( Default, SetPropertyConst)
+TEST_F( ParameterTest, SetPropertyConst)
 {
-    IParameter *p = new Parameter( "Parameter" );
-    ASSERT_NE( p , nullptr );
+    	ASSERT_EQ( mParameter->getProperty( "const" ), 0 );
+    	mParameter->setProperty( "const" , 1 );
 
-    ASSERT_EQ( p->getProperty( "const" ), 0 );
-    p->setProperty( "const" , 1 );
-
-    ASSERT_EQ( p->getProperty( "const" ), 1 );
+    	ASSERT_EQ( mParameter->getProperty( "const" ), 1 );
 }
 
-TEST( Default, Reset )
+TEST_F( ParameterTest, Reset )
 {
-    IParameter *p = new Parameter( "Parameter" );
-    ASSERT_NE( p , nullptr );
+    	mParameter->setProperty( "value" , 42 );
+    	ASSERT_NE( mParameter->getProperty("value"), mParameter->getProperty( "default" ));
 
-    p->setProperty( "value" , 42 );
-    ASSERT_NE( p->getProperty("value"), p->getProperty( "default" ));
+    	mParameter->reset();
+    	ASSERT_EQ( mParameter->getProperty("value"), mParameter->getProperty( "default" ));
 
-    p->reset();
-    ASSERT_EQ( p->getProperty("value"), p->getProperty( "default" ));
-
-    p->setProperty( "default", 21 );
-    p->setProperty( "value" , 42 );
-    ASSERT_NE( p->getProperty("value"), p->getProperty( "default" ));
+    	mParameter->setProperty( "default", 21 );
+    	mParameter->setProperty( "value" , 42 );
+    	ASSERT_NE( mParameter->getProperty("value"), mParameter->getProperty( "default" ));
     
-    p->reset();
-    ASSERT_EQ( p->getProperty("value"), p->getProperty( "default" ));
+    	mParameter->reset();
+    	ASSERT_EQ( mParameter->getProperty("value"), mParameter->getProperty( "default" ));
 }
 
-TEST( Observer, AttachAndNotify)
+TEST_F( ParameterTest, AttachAndNotify)
 {
-    MockParameter mock;
-    IParameter *p = new Parameter( "Parameter" );
+	MockParameter mock;
+    	mParameter->attach( mock );
 
-    p->attach( mock );
-
-    EXPECT_CALL( mock, update( p ));
-    p->notify();
+    	EXPECT_CALL( mock, update( mParameter ));
+    	mParameter->notify();
 }
 
 

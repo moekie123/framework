@@ -2,6 +2,8 @@
 #include "Parameter.h"
 #include "ParameterRange.h"
 
+#include "Configurator.h"
+
 #include <map>
 
 #include <iostream>
@@ -12,12 +14,11 @@ const std::map< std::string, int> defaults =
     { "minimum", 0 },
 };
  
-ParameterRange::ParameterRange():
-    ParameterRange( "Unknown" )
+ParameterRange::ParameterRange()
 {}
  
-ParameterRange::ParameterRange( std::string _name ):
-    Parameter( _name )
+ParameterRange::ParameterRange( Configurator& _config, std::string _name ):
+    Parameter( _config, _name )
 {
     mProperties.insert ( defaults.begin(), defaults.end() );
 }

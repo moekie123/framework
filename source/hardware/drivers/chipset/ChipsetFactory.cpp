@@ -1,4 +1,4 @@
-#include "factory/ChipsetFactory.h"
+#include "ChipsetFactory.h"
 
 #include "designpatterns/Singleton.h"
 #include "designpatterns/AbstractFactory.h"
@@ -9,7 +9,7 @@ ChipsetFactory::ChipsetFactory()
 {
     Factory& factory = Singleton< Factory >::Instance();
     
-    factory.push( "ChipsetDefault", new Chipset );
+    factory.Register( "ChipsetDefault", &Chipset::builder );
 };
 
 

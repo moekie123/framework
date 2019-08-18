@@ -1,104 +1,141 @@
 #include <gtest/gtest.h>
 #include "../../ParameterRange.h"
 
+#include "mocks/MockConfigurator.h"
+
 TEST( Default, Construct)
 {
-    IParameter *p = new ParameterRange( "Parameter" );
-    ASSERT_NE( p , nullptr );
+	int value = 0;
+	MockConfigurator config;
+		
+	EXPECT_CALL( config, getProperty( "Parameter.const" )).WillRepeatedly( testing::ReturnRef(value));
+	EXPECT_CALL( config, getProperty( "Parameter.default" )).WillRepeatedly( testing::ReturnRef(value));
+	EXPECT_CALL( config, getProperty( "Parameter.value" )).WillRepeatedly( testing::ReturnRef(value));
+
+	IParameter *p = new ParameterRange( config, "Parameter" );
+    	ASSERT_NE( p , nullptr );
 }
 
-TEST( Default, GetDefaultMinimum )
+// Other Test that we already trust a working Constructor
+class ParameterTest: 
+	public ::testing::Test 
 {
-    IParameter *p = new ParameterRange( "Parameter" );
-    ASSERT_NE( p , nullptr );
+	private:
+		int * mReturn;
 
-    ASSERT_EQ( p->getProperty( "minimum" ) , 0);
+	protected:
+		MockConfigurator mConfig;
+		IParameter* mParameter;
+
+    	ParameterTest() 
+	{
+    	
+	}
+
+    	virtual ~ParameterTest() {}
+
+    	virtual void SetUp() 
+	{
+		mReturn = new int( 0 );
+
+		EXPECT_CALL( mConfig, getProperty( "Parameter.const" )).WillRepeatedly( testing::ReturnRef( *mReturn ));
+		EXPECT_CALL( mConfig, getProperty( "Parameter.default" )).WillRepeatedly( testing::ReturnRef( *mReturn ));
+		EXPECT_CALL( mConfig, getProperty( "Parameter.value" )).WillRepeatedly( testing::ReturnRef( *mReturn ));
+	
+		mParameter = new Parameter( mConfig, "Parameter" );
+		ASSERT_NE( mParameter , nullptr );
+	}
+
+    	virtual void TearDown() 
+	{
+		delete mParameter;
+		delete mReturn;
+    	}
+
+};
+
+TEST_F( ParameterTest, GetDefaultMinimum )
+{
+	ASSERT_EQ( mParameter->getProperty( "minimum" ) , 0);
 }
 
-TEST( Default, GetDefaultMaximum )
-{
-    IParameter *p = new ParameterRange( "Parameter" );
-    ASSERT_NE( p , nullptr );
-
-    ASSERT_EQ( p->getProperty( "maximum" ) , 0);
+TEST_F( ParameterTest, GetDefaultMaximum )
+{	
+	ASSERT_EQ( mParameter->getProperty( "maximum" ) , 0);
 }
 
-TEST( Default, SetValue )
-{
-    int min; 
-    IParameter *p = new ParameterRange( "Parameter" );
-    ASSERT_NE( p , nullptr );
+TEST_F( ParameterTest, SetValue )
+{	
+	int min; 
 
-    p->setProperty( "minimum" , -42 );
-    ASSERT_EQ( p->getProperty("minimum"), -42 );
+	mParameter->setProperty( "minimum" , -42 );
+	ASSERT_EQ( mParameter->getProperty("minimum"), -42 );
     
-    p->setProperty( "maximum" , 42 );
-    ASSERT_EQ( p->getProperty("maximum"), 42 );
+	mParameter->setProperty( "maximum" , 42 );
+	ASSERT_EQ( mParameter->getProperty("maximum"), 42 );
     
-    p->setProperty( "value" , 21 );
-    ASSERT_EQ( p->getProperty("value"), 21 );
+	mParameter->setProperty( "value" , 21 );
+	ASSERT_EQ( mParameter->getProperty("value"), 21 );
 }
 
 
-TEST( Default, ExceedMinimum )
-{
-    int value, min; 
-    IParameter *p = new ParameterRange( "Parameter" );
-    ASSERT_NE( p , nullptr );
+TEST_F( ParameterTest, ExceedMinimum )
+{	
+	int value, min; 
+	mParameter->setProperty( "minimum" , -42 );
+	min = mParameter->getProperty("minimum");
+	
+	mParameter->setProperty("value", 0 );
+	value =  mParameter->getProperty("value");
+	
+	mParameter->setProperty( "value" , min-1 );
+	ASSERT_EQ( mParameter->getProperty("value"), value );
 
-    min = p->getProperty("minimum");
-    value =  p->getProperty("value");
-    p->setProperty( "value" , min-1 );
-    ASSERT_EQ( p->getProperty("value"), value );
+	mParameter->setProperty( "minimum" , -42 );
 
-    p->setProperty( "minimum" , -42 );
-
-    min = p->getProperty("minimum");
-    value =  p->getProperty("value");
-    p->setProperty( "value" , min-1 );
-    ASSERT_EQ( p->getProperty("value"), value );
+	min = mParameter->getProperty("minimum");
+	value =  mParameter->getProperty("value");
+	mParameter->setProperty( "value" , min-1 );
+	ASSERT_EQ( mParameter->getProperty("value"), value );
 }
 
-TEST( Default, ExceedMaximum )
-{
-    int value, max; 
-    IParameter *p = new ParameterRange( "Parameter" );
-    ASSERT_NE( p , nullptr );
+TEST_F( ParameterTest, ExceedMaximum )
+{	
+	int value, max; 
+	max = mParameter->getProperty("maximum");
 
-    max = p->getProperty("maximum");
-    value =  p->getProperty("value");
-    p->setProperty( "value" , max+1 );
-    ASSERT_EQ( p->getProperty("value"), value );
+	mParameter->setProperty("value", 0 );
+	value =  mParameter->getProperty("value");
+	
+	mParameter->setProperty( "value" , max+1 );
+	ASSERT_EQ( mParameter->getProperty("value"), value );
 
-    p->setProperty( "maximum" , 42 );
+	mParameter->setProperty( "maximum" , 42 );
 
-    max = p->getProperty("maximum");
-    value =  p->getProperty("value");
-    p->setProperty( "value" , max+1 );
-    ASSERT_EQ( p->getProperty("value"), value );
+	max = mParameter->getProperty("maximum");
+	value =  mParameter->getProperty("value");
+	mParameter->setProperty( "value" , max+1 );
+	ASSERT_EQ( mParameter->getProperty("value"), value );
 }
 
 
-TEST( Default, Reset )
+TEST_F( ParameterTest, Reset )
 {
-    IParameter *p = new ParameterRange( "Parameter" );
-    ASSERT_NE( p , nullptr );
+    	mParameter->setProperty( "minimum" , -42 );
+    	mParameter->setProperty( "maximum" , 42 );
 
-    p->setProperty( "minimum" , -42 );
-    p->setProperty( "maximum" , 42 );
+    	mParameter->setProperty( "value" , 21 );
+    	ASSERT_NE( mParameter->getProperty("value"), mParameter->getProperty( "default" ));
 
-    p->setProperty( "value" , 21 );
-    ASSERT_NE( p->getProperty("value"), p->getProperty( "default" ));
+    	mParameter->reset();
+    	ASSERT_EQ( mParameter->getProperty("value"), mParameter->getProperty( "default" ));
 
-    p->reset();
-    ASSERT_EQ( p->getProperty("value"), p->getProperty( "default" ));
-
-    p->setProperty( "default", 10 );
-    p->setProperty( "value" , 21 );
-    ASSERT_NE( p->getProperty("value"), p->getProperty( "default" ));
+    	mParameter->setProperty( "default", 10 );
+    	mParameter->setProperty( "value" , 21 );
+    	ASSERT_NE( mParameter->getProperty("value"), mParameter->getProperty( "default" ));
     
-    p->reset();
-    ASSERT_EQ( p->getProperty("value"), p->getProperty( "default" ));
+    	mParameter->reset();
+    	ASSERT_EQ( mParameter->getProperty("value"), mParameter->getProperty( "default" ));
 }
 
 

@@ -1,7 +1,5 @@
-add_library( devices OBJECT
+add_library( driver-device OBJECT
                 Device.cpp 
-                Device-PWM.cpp
-                Device-ADC.cpp
                 )
 
-#add_subdirectory( test )
+add_subdirectory( test )

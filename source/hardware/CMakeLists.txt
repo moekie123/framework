@@ -7,6 +7,8 @@ add_library( hardware
 
                 # Include Driver Modules
                 $<TARGET_OBJECTS:driver-chipset>
+                $<TARGET_OBJECTS:driver-device>
+                $<TARGET_OBJECTS:driver-signal>
 
                 # Include the controllers
                 $<TARGET_OBJECTS:actuators>

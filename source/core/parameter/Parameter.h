@@ -1,6 +1,10 @@
 #pragma once
 
 #include "IParameter.h"
+#include "Configurator.h"
+
+#include "designpatterns/Builder.h"
+#include "designpatterns/Singleton.h"
 
 #include <string>
 #include <vector>
@@ -12,16 +16,23 @@
 class Parameter: 
     public IParameter
 {
-    public:
-           
-        /**
-         * @brief Builder
-         * @details Builder to create a new Parameter fully constructed and initiliazed
-         * @param _name the name of the Parameter
-         * @return Generic Class
-         */
-        Generic* build( std::string _name ) override;
 
+public:
+	/**
+	 * Builder
+	 */
+	class ParameterBuilder:
+		public Builder
+	{
+		public:
+			Generic* build( std::string _name ) override
+			{
+				Configurator& config = Singleton< Configurator >::Instance();
+				return new Parameter( config, _name );
+			}
+	};
+	static ParameterBuilder builder;
+	
         /** 
          *  @brief Constructor
          *  @param _name the name of the Parameter
@@ -30,9 +41,10 @@ class Parameter:
 
         /** 
          *  @brief Constructor
-         *  @param _name the name of the Parameter
+         *  @param _config the configurator
+	 *  @param _name the name of the Parameter
          */
-        Parameter( std::string _name );
+        Parameter( Configurator& _config, std::string _name );
         
         /// Getter
         const int& getProperty( std::string _property ) const override;
@@ -51,3 +63,5 @@ class Parameter:
         std::map< std::string, int > mProperties;
 
 };
+
+

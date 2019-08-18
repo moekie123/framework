@@ -1,10 +1,15 @@
 #pragma once
 
 #include "Parameter.h"
+#include "Configurator.h"
+
+#include "designpatterns/Singleton.h"
+#include "designpatterns/Builder.h"
 
 #include <string>
 #include <map>
 #include <vector>
+
 
 /** 
  *  @brief Derived: Parameter Range
@@ -15,6 +20,21 @@ class ParameterRange:
 {
     public:
  
+   	/**
+	 * Builder
+	 */
+	class ParameterRangeBuilder:
+		public Builder
+	{
+		public:
+		Generic* build( std::string _name ) override
+		{
+			Configurator& config = Singleton< Configurator >::Instance();
+			return new ParameterRange( config, _name );
+		}
+	};
+	static ParameterRangeBuilder builder;
+
         /** 
          *  @brief Constructor
          *  @param _name the name of the Parameter
@@ -25,9 +45,11 @@ class ParameterRange:
          *  @brief Constructor
          *  @param _name the name of the Parameter
          */
-        ParameterRange( std::string _name );
+        ParameterRange( Configurator& _config, std::string _name );
         
         /// Setter
         void setProperty( std::string _property, int _value ) override;
        
 };
+
+ParameterRange::ParameterRangeBuilder ParameterRange::builder;

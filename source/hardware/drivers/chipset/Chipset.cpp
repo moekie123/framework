@@ -1,13 +1,15 @@
 #include "Chipset.h"
 
+#include "Configurator.h"
+#include "designpatterns/Singleton.h"
+
 Chipset::Chipset()
 {
-
 }
 
-Generic* Chipset::build( std::string _name )
+Chipset::Chipset( Configurator& _config, std::string _name )
 {
-    return new Chipset();
+
 }
 
 void Chipset::update( IChipset *subject )

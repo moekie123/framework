@@ -1,0 +1,10 @@
+<Root>
+
+	<Parameter name="gtest-parameter" > 
+		<value>42</value>
+	</Parameter>
+
+	<Signal name="gtest-signal" > 
+		<period>path</period>
+	</Signal>
+</Root>

@@ -5,29 +5,17 @@
 #include "designpatterns/Singleton.h"
 #include "designpatterns/AbstractFactory.h"
 
-#include "../../ParameterFactory.h"
+#include "../../Parameter.h"
 
 TEST( Construct, ParameterDefault )
 {
-    ParameterFactory pf;
+	Factory& factory = Singleton< Factory >::Instance();
+	factory.Register( "Parameter",  &Parameter::builder );
+	
+    	auto ab = factory.Create< IParameter >( "Parameter", "<name>" );
 
-    Factory& factory = Singleton< Factory >::Instance(); 
-    auto ab = factory.create< IParameter >( "ParameterDefault", "<name>" );
-
-    ASSERT_NE( ab, nullptr );
+    	ASSERT_NE( ab, nullptr );
 }
-
-TEST( Construct, ParameterRange )
-{
-    ParameterFactory pf;
-
-    Factory& factory = Singleton< Factory >::Instance(); 
-    auto ab = factory.create< IParameter >( "ParameterRange", "<name>" );
-
-    ASSERT_NE( ab, nullptr );
-
-}
-
 
 int main(int argc, char **argv) 
 {

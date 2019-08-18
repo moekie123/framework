@@ -1,4 +1,5 @@
 #include "Actuator.h"
+#include "Configurator.h"
 #include "IParameter.h"
 
 #include "designpatterns/Singleton.h"
@@ -12,7 +13,7 @@ Actuator::Actuator( std::string _name )
 
     Factory& factory = Singleton< Factory >::Instance(); 
 
-    IParameter* ip = factory.create< IParameter >( "Parameter", "TargetPosition" );
+    IParameter* ip = factory.Create< IParameter >( "Parameter", "TargetPosition" );
 
     Composite< IParameter >::add( ip );
 }
