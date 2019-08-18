@@ -1,11 +1,10 @@
-#include <gtest/gtest.h>
-
+#include "../../Parameter.h"
 #include "IParameter.h"
 
 #include "Singleton.h"
 #include "Factory.h"
 
-#include "../../Parameter.h"
+#include <gtest/gtest.h>
 
 TEST( Construct, ParameterDefault )
 {

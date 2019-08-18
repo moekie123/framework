@@ -1,8 +1,9 @@
-#include "Generic.h"
-
-#include "Configurator.h"
-#include "IParameter.h"
 #include "Parameter.h"
+
+#include "IParameter.h"
+
+#include "Generic.h"
+#include "Configurator.h"
 
 #include <map>
 

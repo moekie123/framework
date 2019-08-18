@@ -1,7 +1,7 @@
-#include <gtest/gtest.h>
-
-#include "IChipset.h"
 #include "../../Chipset.h"
+#include "IChipset.h"
+
+#include <gtest/gtest.h>
 
 TEST( Construct, Default )
 {

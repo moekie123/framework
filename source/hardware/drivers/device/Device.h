@@ -1,13 +1,13 @@
 #pragma once
 
 #include "IDevice.h"
-#include "Configurator.h"
-
-#include "Signal.h"
 
 #include "Generic.h"
 #include "Builder.h"
 #include "Singleton.h"
+
+#include "Signal.h"
+#include "Configurator.h"
 
 #include <string>
 

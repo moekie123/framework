@@ -1,9 +1,10 @@
 #include "Actuator.h"
-#include "Configurator.h"
-#include "IParameter.h"
 
 #include "Singleton.h"
 #include "Factory.h"
+
+#include "Configurator.h"
+#include "IParameter.h"
 
 #include <string>
 

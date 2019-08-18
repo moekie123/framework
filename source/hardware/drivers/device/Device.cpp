@@ -1,7 +1,8 @@
 #include "Device.h"
-#include "Configurator.h"
 
 #include "Signal.h"
+
+#include "Configurator.h"
 
 Device::DeviceBuilder Device::builder;
 

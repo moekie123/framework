@@ -1,7 +1,8 @@
-#include <gtest/gtest.h>
-
 #include "Singleton.h"
+
 #include "Generic.h"
+
+#include <gtest/gtest.h>
 
 class   Beta
 {

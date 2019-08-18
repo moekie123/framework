@@ -1,8 +1,9 @@
-#include <gtest/gtest.h>
-#include <map>
+#include "../../Actuator.h"
 
 #include "IActuator.h"
-#include "../../Actuator.h"
+
+#include <gtest/gtest.h>
+#include <map>
 
 TEST( Interface, Construct )
 {

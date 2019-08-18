@@ -1,10 +1,11 @@
 #pragma once
 
 #include "IChipset.h"
-#include "Configurator.h"
 
 #include "Builder.h"
 #include "Singleton.h"
+
+#include "Configurator.h"
 
 class Chipset:
     public IChipset

@@ -1,11 +1,11 @@
-#include <gtest/gtest.h>
-#include <gmock/gmock.h>
-
-#include "IDevice.h"
 #include "../../Device.h"
+#include "IDevice.h"
 
 #include "mocks/MockConfigurator.h"
 #include "mocks/MockSignal.h"
+
+#include <gtest/gtest.h>
+#include <gmock/gmock.h>
 
 TEST( Construct, Default )
 {

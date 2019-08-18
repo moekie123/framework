@@ -1,10 +1,11 @@
 #pragma once
 
 #include "Parameter.h"
-#include "Configurator.h"
 
-#include "designpatterns/Singleton.h"
-#include "designpatterns/Builder.h"
+#include "Singleton.h"
+#include "Builder.h"
+
+#include "Configurator.h"
 
 #include <string>
 #include <map>

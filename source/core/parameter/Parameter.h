@@ -1,10 +1,11 @@
 #pragma once
 
 #include "IParameter.h"
-#include "Configurator.h"
 
 #include "Builder.h"
 #include "Singleton.h"
+
+#include "Configurator.h"
 
 #include <string>
 #include <vector>

@@ -1,5 +1,7 @@
 #include "Generic.h"
 
+#include <string>
+
 Generic::Generic()
 {
 	mProperties[ "const" ] = 0;

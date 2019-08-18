@@ -1,11 +1,11 @@
 #include "Configurator.h"
 
+#include "tinyxml2.h"
+
 #include <string>
 #include <fstream>
-
 #include <iostream>
 
-#include "tinyxml2.h"
 using namespace tinyxml2;
 
 XMLDocument xmlDoc;

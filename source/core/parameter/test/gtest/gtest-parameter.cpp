@@ -1,11 +1,11 @@
-#include <gtest/gtest.h>
-#include <gmock/gmock.h>
+#include "../../Parameter.h"
+#include "IParameter.h"
 
 #include "mocks/MockParameter.h"
 #include "mocks/MockConfigurator.h"
 
-#include "IParameter.h"
-#include "../../Parameter.h"
+#include <gtest/gtest.h>
+#include <gmock/gmock.h>
 
 // Constructor Tests
 TEST( Default, Construct)
