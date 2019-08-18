@@ -2,8 +2,8 @@
 
 #include "IParameter.h"
 
-#include "designpatterns/Singleton.h"
-#include "designpatterns/AbstractFactory.h"
+#include "Singleton.h"
+#include "Factory.h"
 
 #include "../../Parameter.h"
 

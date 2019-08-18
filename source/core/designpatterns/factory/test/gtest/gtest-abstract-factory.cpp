@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "designpatterns/AbstractFactory.h"
-#include "designpatterns/Builder.h"
+#include "Factory.h"
+#include "Builder.h"
 
 #include "Generic.h"
 #include "Configurator.h"

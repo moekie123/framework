@@ -1,4 +1,4 @@
-#include "designpatterns/Observer.h"
+#include "Observer.h"
 
 /** 
  * The Observer is a "Template Based Class"

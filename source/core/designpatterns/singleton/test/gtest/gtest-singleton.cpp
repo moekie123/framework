@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "designpatterns/Singleton.h"
+#include "Singleton.h"
 #include "Generic.h"
 
 class   Beta

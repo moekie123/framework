@@ -3,7 +3,7 @@
 #include "Generic.h"
 #include "IParameter.h"
 
-#include "designpatterns/Composite.h"
+#include "Composite.h"
 
 /**
  *  Interface: IActuator

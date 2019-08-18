@@ -3,8 +3,8 @@
 #include "IParameter.h"
 #include "Configurator.h"
 
-#include "designpatterns/Builder.h"
-#include "designpatterns/Singleton.h"
+#include "Builder.h"
+#include "Singleton.h"
 
 #include <string>
 #include <vector>

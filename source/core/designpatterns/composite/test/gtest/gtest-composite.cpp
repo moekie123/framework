@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "designpatterns/Composite.h"
+#include "Composite.h"
 
 class   Beta:
     public Composite< Beta >

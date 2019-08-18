@@ -3,9 +3,8 @@
 #include "IChipset.h"
 #include "Configurator.h"
 
-#include "designpatterns/Builder.h"
-#include "designpatterns/Singleton.h"
-
+#include "Builder.h"
+#include "Singleton.h"
 
 class Chipset:
     public IChipset
@@ -32,5 +31,6 @@ class Chipset:
 
         /** Observer */
         void update( IChipset *subject) override;
-
 };
+
+

@@ -2,7 +2,7 @@
 
 #include "Generic.h"
 #include "IParameter.h"
-#include "designpatterns/Composite.h"
+#include "Composite.h"
 
 class IDevice:
 	public Generic,

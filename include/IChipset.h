@@ -1,9 +1,9 @@
 #pragma once
 
 #include "Generic.h"
-#include "designpatterns/Composite.h"
-#include "designpatterns/Subject.h"
-#include "designpatterns/Observer.h"
+#include "Composite.h"
+#include "Subject.h"
+#include "Observer.h"
 
 /**
  * Interface: IChipset

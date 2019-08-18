@@ -2,8 +2,8 @@
 
 #include "IActuator.h"
 
-#include "designpatterns/Builder.h"
-#include "designpatterns/Singleton.h"
+#include "Builder.h"
+#include "Singleton.h"
 
 #include <string>
 

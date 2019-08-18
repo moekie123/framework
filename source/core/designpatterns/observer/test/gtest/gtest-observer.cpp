@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-#include "designpatterns/Observer.h"
-#include "designpatterns/Subject.h"
+#include "Observer.h"
+#include "Subject.h"
 
 
 class Beta:

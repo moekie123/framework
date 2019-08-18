@@ -1,6 +1,6 @@
 #pragma once
 
-#include "designpatterns/Composite.h"
+#include "Composite.h"
 
 /**
  *  Interface: ISensor

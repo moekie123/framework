@@ -1,2 +1,2 @@
-#include "designpatterns/Singleton.h"
+#include "Singleton.h"
 
