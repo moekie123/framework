@@ -7,8 +7,6 @@
 #include "IParameter.h"
 #include "../../Parameter.h"
 
-#include <iostream>
-
 // Constructor Tests
 TEST( Default, Construct)
 {

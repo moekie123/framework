@@ -1,9 +1,8 @@
+#include "Generic.h"
+
 #include "Configurator.h"
 #include "IParameter.h"
 #include "Parameter.h"
-
-#include "Singleton.h"
-#include "Factory.h"
 
 #include <map>
 
@@ -18,9 +17,6 @@ const std::map< std::string, int> defaults =
     { "value",   0 }
 };
 
-Parameter::Parameter()
-{}
- 
 Parameter::Parameter( Configurator& _config, std::string _name )
 {
     	mName = _name;
@@ -35,21 +31,11 @@ Parameter::Parameter( Configurator& _config, std::string _name )
 	}
 }
  
-const int& Parameter::getProperty( std::string _property ) const
-{
-    return mProperties.find( _property )->second;
-}
-
-void Parameter::setProperty( std::string _property, int _value )
-{
-    if ( mProperties.find( "const" )->second == 0 )
-        mProperties.find( _property )->second = _value;
-}
-
 void Parameter::reset()
 {
     setProperty( "value",  mProperties.find( "default" )->second );
 }
+
 
 void Parameter::update( IParameter *subject )
 {

@@ -3,7 +3,7 @@ add_subdirectory( hardware )
 
 Project( Framework )
 add_executable( Framework main.cpp Framework.cpp )
-target_link_libraries( Framework PRIVATE 
-					core
-					hardware
-			)
+
+target_link_libraries( Framework PUBLIC
+				core
+				hardware )
