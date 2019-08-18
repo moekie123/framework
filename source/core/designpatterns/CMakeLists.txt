@@ -12,7 +12,7 @@ add_subdirectory( observer )
 add_library( designpatterns OBJECT
 
 		singleton/Singleton.cpp
-                factory/AbstractFactory.cpp
+                factory/Factory.cpp
 		builder/Builder.cpp
 
                 composite/Composite.cpp 
