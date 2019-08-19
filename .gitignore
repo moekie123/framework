@@ -4,18 +4,7 @@ build/
 library/
 binairy/
 Testing/
-
-# Ignore CMake generated files
-CMakeFiles/
-
-CMakeCache.txt
-cmake_install.cmake
-
-CTestTestfile.cmake
-
-DartConfiguration.tcl
-
-Makefile
+documentation/
 
 # Ignore VIM temporary files
 *.~
@@ -25,3 +14,16 @@ Makefile
 *.a
 *.o
 *.so
+
+# Ignore CMake generated files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+CTestTestfile.cmake
+DartConfiguration.tcl
+Makefile
+install_manifest.txt
+
+# Ignore Doxygen generated files	
+CMakeDoxyfile.in 
+CMakeDoxygenDefaults.cmake

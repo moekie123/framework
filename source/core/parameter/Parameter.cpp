@@ -38,6 +38,15 @@ void Parameter::reset()
 }
 
 
+bool Parameter::setProperty( std::string _property, const int& _value )
+{
+	if ( mProperties.find( "const" )->second == 0 )
+	{
+		return Generic::setProperty( _property, _value );
+	}
+	return false;
+}
+
 void Parameter::update( IParameter *subject )
 {
 

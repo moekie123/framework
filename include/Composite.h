@@ -3,14 +3,18 @@
 #include <string>
 #include <vector>
 
+/**
+ * @brief ( Structional Design Pattern ) Composite
+ * @details A generic implementation
+ */
 template< class T >
 class Composite
 {
     public:
 
     /**
-     * @brief (Composite) - add
-     * @details add a new IParameter to the tree
+     * @brief add
+     * @details add a new T to the tree
      */
     void add ( T* _node )
     {

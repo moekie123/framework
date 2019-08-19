@@ -27,11 +27,8 @@ bool Generic::setProperty( std::string _property, const int& _value )
 {
    	if ( mProperties.find( _property ) == mProperties.end() )
 	{
-		if ( mProperties.find( "const" )->second == 0 )
-		{
-			mProperties.find( _property )->second = _value;
-			return true;
-		}
+		mProperties.find( _property )->second = _value;
+		return true;
 	}
 	return false;
 }

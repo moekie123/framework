@@ -43,6 +43,9 @@ public:
         
         void reset() override;
 
+	/** Generic **/
+	bool setProperty( std::string _property, const int& _value ) override;
+
         /** Observer **/
         void update( IParameter *subject ) override; 
 
