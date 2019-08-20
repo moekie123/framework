@@ -3,31 +3,39 @@
 #include <string>
 #include <map>
 
+/**
+ * @brief An generic class that should be inherent by all used classes in the Framework.
+ * @details All generic design patters should be compatible with this base class
+ */
 class Generic
 {
     public:
 
+	/* *
+	 * @brief The basic constructor to initiaaze the generic properties
+	 */
        	Generic();
 
 	/** 
-         *  @brief getName 
-         *  @details return the name of the Parameter
+         *  @brief Get the name of the derived class
+	 *  @return The name of the created class
          */
         const std::string& getName() const;
  
 	/** 
-    	  *  @brief getProperty 
-      	*  @details return the value of the requested property
-      	*  @param _property the name of the requested property
+    	*  @brief Get an property of the class
+      	*  @param _property The name of the requested property
+	*  @param _value The storage location of the value
+	*  @return True, when the value has been succesfully 'Get'
       	*/
-	virtual bool getProperty( std::string, int& ) const;
+	virtual bool getProperty( std::string _property, int& _value ) const;
 
 	/** 
-      	*  @brief setProperty 
-      	*  @details set the requested property
-      	*  @param _property the name of the requested property
-      	*  @param _value the new value of the property
-      	*/ 
+      	*  @brief Set an property of the class
+      	*  @param _property The name of the requested property
+      	*  @param _value The storage location of the value
+	*  @return True, when the value has been succelfully 'Set'
+ 	*/ 
 	virtual bool setProperty( std::string, const int& );
 
     protected:

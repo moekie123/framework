@@ -4,8 +4,8 @@
 #include <vector>
 
 /**
- * @brief ( Structional Design Pattern ) Composite
- * @details A generic implementation
+ * @brief This generic class can be used to create a Uniform nested structure of Generic elements
+ * @details This generic structional design pattern will be used command all (nested) attached classes.
  */
 template< class T >
 class Composite
@@ -13,8 +13,7 @@ class Composite
     public:
 
     /**
-     * @brief add
-     * @details add a new T to the tree
+     * @brief The 'add'-method will store the compontens that should be triggered when a command is send.
      */
     void add ( T* _node )
     {
@@ -22,10 +21,5 @@ class Composite
     }
 
     private:
-        /** @brief (Composite) tree of Components */
         std::vector< T* > mComponents;
-
 };
-
-
-

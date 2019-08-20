@@ -11,8 +11,7 @@
 #include <vector>
 
 /** 
- *  @brief Base: Parameter 
- *  @details base framework for a Parameter,
+ *  @brief The (base) Parameter class
  */
 class Parameter: 
     public IParameter
@@ -20,7 +19,7 @@ class Parameter:
 
 public:
 	/**
-	 * Builder
+	 * @brief The Parameter Builder class to create new (base) Parameters
 	 */
 	class ParameterBuilder:
 		public Builder
@@ -32,21 +31,26 @@ public:
 				return new Parameter( config, _name );
 			}
 	};
+	/**
+	 * @brief The global ParameterBuilder
+	 */
 	static ParameterBuilder builder;
 	
         /** 
-         *  @brief Constructor
+         *  @brief The default constructor
          *  @param _config the configurator
 	 *  @param _name the name of the Parameter
          */
         Parameter( Configurator& _config, std::string _name );
         
-        void reset() override;
+        
+	/* IParameter methods */
+	void reset() override;
 
-	/** Generic **/
+	/* Generic methods **/
 	bool setProperty( std::string _property, const int& _value ) override;
 
-        /** Observer **/
+        /* Observer methods **/
         void update( IParameter *subject ) override; 
 
 };

@@ -9,8 +9,8 @@
 #include <map>
 
 /**
- * @brief ( Creational Design Pattern ) Factory
- * @details a generic factory that accepts Builders
+ * @brief An (abstract) Factory that creates new instances with the registed Builders
+ * @details This generic constructional design pattern of a generic (abstract) Factory that accepts Builders
  */
 class Factory
 {

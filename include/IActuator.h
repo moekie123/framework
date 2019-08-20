@@ -6,7 +6,7 @@
 #include "Composite.h"
 
 /**
- *  Interface: IActuator
+ * @brief The generic interface for Actuators
  */
 class IActuator:
         public Generic,

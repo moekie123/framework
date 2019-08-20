@@ -4,21 +4,19 @@
 #include <map>
 
 /**
- * @brief Configurator
- * details An interface to get configuration from an external source
+ * @brief This generic configuration class can be used to an configuration from an external source
  */
 class Configurator
 {
 	public:
-		/* 
-		 * @brief Constructor
-		 * @details The External Source will get opened in the constructor
+		/** 
+		 * @brief The configuration file will loaded in the in the constructor
+		 * @param _name The configuration file 
 		 */
-		Configurator( std::string = "default.config" );
+		Configurator( std::string _name = "default.config" );
 
-		/*
-		 * @brief Getter
-		 * @details Get a property from the external source
+		/**
+		 * @brief Get a property from the external source
 		 * @param _name the name of the parameter or device
 		 * @param _property the property of the parameter or device
 		 * @param _value the memory location where to store the value
@@ -26,9 +24,8 @@ class Configurator
 		 */
 		virtual bool getProperty( std::string _name, std::string _property, int& _value ) const;
 
-		/*
-		 * @brief setter
-		 * @details Set a property in the external source
+		/**
+		 * @brief Set a property in the external source
 		 * @param _name the name of the parameter or device
 		 * @param _property the property of the parameter or device
 		 * @param _value the memory location of the new value
@@ -36,7 +33,7 @@ class Configurator
 		 */
 		virtual bool setProperty( std::string _name, std::string _property, const int& _value );
 
-		/*
+		/**
 		 * @brief Signal Getter
 		 * @details Get a signal property in the external source
 		 * @param _name the name of the signal

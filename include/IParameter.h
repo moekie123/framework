@@ -10,7 +10,7 @@
 #include <map>
 
 /**
- *  Interface: IParameter
+ * @brief The generic interface class for a Poramater
  */
 class IParameter:
     public Generic,
@@ -21,8 +21,8 @@ class IParameter:
     public:
 
     /** 
-     *  @brief reset
-     *  @details resets the parameter to the default value
+     *  @brief reset the parameter to the default valuei
+     *  @details TODO should return a bool whether it was succesfull
      */
     virtual void reset() = 0;
 

@@ -5,6 +5,10 @@
 #include <vector>
 #include <iterator>
 
+/**
+ * @brief The generic behavorial design patterns Observer-Subject
+ * @details This class should be used in combinaation with the Observer
+ */
 template <class T>
 class Subject
 {
@@ -12,11 +16,18 @@ class Subject
         Subject() {}
         virtual ~Subject() {}
 
-        void attach ( Observer<T> &observer )
+	/**
+	 * @brief Observers can subscribe to the subject through this method
+	 * @param _observer The observer that needs the get notified
+	 */
+        void attach ( Observer<T> &_observer )
         {
-            m_observers.push_back( &observer );
+            m_observers.push_back( &_observer );
         }
     
+	/**
+	 * @brief The trigger to update all subcribed Observers
+	 */
         template< class U = T >
         void notify ()
         {

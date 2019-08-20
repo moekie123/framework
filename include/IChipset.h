@@ -6,7 +6,7 @@
 #include "Observer.h"
 
 /**
- * Interface: IChipset
+ * @brief The generic interface for a Chipset
  */
 class IChipset:
     public Generic,

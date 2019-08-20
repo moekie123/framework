@@ -9,21 +9,16 @@
 #include "hardware/drivers/chipset/Chipset.h"
 #include "hardware/drivers/device/Device.h"
 
+// TODO This should be moved to a documenation page
 /**
  * @mainpage  Documentation for the Autonomous Bar Tender (Robotic Arm)
- * 	This webpage contains webpage documentation. 
- * 	The background developement and choices made during this project
- * 	are explained on "https://moekiehome.wpcomstaging.com".
+ * 	This is the documentation for a framework to create and control an robotic arm. 
+ *
+ *	This doxygen generated webpages are describing the code base. 
+ * 	Detailed design choices van be found on the <a href="https://moekiehome.wpcomstaging.com"> WordPress Pages </a> 
  *
  * @section Introduction
- *	Welcome on the documentation for this Robotic Arm project.
- *
- * @section Core Idea
- *	The main idea for this project
- *
- * @section Controller
- * 	
- *
+ *	This is de doxygen generated documentation for this Robotic Arm project.
  */
 
 Framework::Framework( int argc, char *argv[] )
@@ -31,8 +26,14 @@ Framework::Framework( int argc, char *argv[] )
 	Configurator config = Singleton< Configurator >::Instance();
 	Factory& factory = Singleton< Factory >::Instance();
 
+	/** Registered Builders: */
+
+	///	- Parameter 
 	factory.Register( "Parameter",  &Parameter::builder );
 
+	///	- Chipset
     	factory.Register( "Chipset", &Chipset::builder );
+
+	///	- Device
 	factory.Register( "Device", &Device::builder );
 };

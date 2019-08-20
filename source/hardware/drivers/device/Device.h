@@ -11,12 +11,15 @@
 
 #include <string>
 
+/**
+ * @brief The (base) Device class
+ */
 class Device:
     public IDevice
 {
 	public:
 		/**
-		 * Builder
+		 * @brief The Device Builder to create new (base) Devices
 		 */
 		class DeviceBuilder:
 			public Builder
@@ -32,12 +35,27 @@ class Device:
 					return new Device( config, _name, *period, *dutycycle );
 				}
 		};
+		/**
+		 * @brief The global Device builder
+		 */
 		static DeviceBuilder builder;
 		
 		/**
-		 * Constructor
+		 * @brief The default constructor
+		 * @details TODO The signal should be move to a derived class only for PWM signals
+		 * @param _config The Configurator to update the default properties
+		 * @param _name The name of the new Device
+		 * @param _period The Signal to control the Period
+		 * @param _dutycycle The Signal to control the DutyCycle
 		 */
 		Device( Configurator& _config, std::string _name, Signal& _period, Signal& _dutycycle );
 		
-		void set( std::string, int ){}
+		/**
+		 * @brief Setter
+		 * @details TODO This can be replaced by the default Generic SetProperty
+		 */
+		void set( std::string, int )
+		{
+
+		}
 };

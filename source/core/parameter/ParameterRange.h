@@ -13,7 +13,7 @@
 
 
 /** 
- *  @brief Derived: Parameter Range
+ *  @brief The (derived) Parameter Range
  *  @details The ParameterRange has threshold Parameters that will limit the setpoint of the parameter
  */
 class ParameterRange: 
@@ -22,7 +22,7 @@ class ParameterRange:
     public:
  
    	/**
-	 * Builder
+	 * @brief The ParameterRange Builder to create new ParameterRanges
 	 */
 	class ParameterRangeBuilder:
 		public Builder
@@ -34,22 +34,23 @@ class ParameterRange:
 			return new ParameterRange( config, _name );
 		}
 	};
+	/**
+	 * @brief The global ParameterRange Builder
+	 */
 	static ParameterRangeBuilder builder;
 
         /** 
-         *  @brief Constructor
-         *  @param _name the name of the Parameter
+         *  @brief Default Constructor
+	 *  @details TODO Most likely wont be nessacary
          */
         ParameterRange( );
            
         /** 
-         *  @brief Constructor
-         *  @param _name the name of the Parameter
+         *  @brief The default constructor
+	 *  @param _config The Configurator to overwrite the default values
+	 *  @param _name the name of the Parameter
          */
         ParameterRange( Configurator& _config, std::string _name );
-        
-        /// Setter
-        void setProperty( std::string _property, int _value ) override;
        
 };
 
