@@ -18,7 +18,7 @@ class MockParameter:
 	    	MOCK_METHOD2( GetProperty, bool( std::string, const int& ));
 
 		/* IObserver */
-    		MOCK_METHOD1( Update, void( IParameter* ));
+    		MOCK_METHOD1( Update, bool( IParameter* ));
           
           	/* ??
 		 * TODO - Is This Still necssary 

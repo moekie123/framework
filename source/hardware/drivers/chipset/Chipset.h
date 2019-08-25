@@ -46,7 +46,7 @@ class Chipset:
 	 */
    	Chipset( IConfigurator* _config, std::string _name );
 
-        void Update( IChipset *subject) override;
+        bool Update( IChipset *subject) override;
 };
 
 

@@ -54,7 +54,7 @@ public:
 	bool SetProperty( std::string _property, const int& _value ) override;
 
         /* Observer methods **/
-        void Update( IParameter *subject ) override; 
+        bool Update( IParameter *subject ) override; 
 
 };
 

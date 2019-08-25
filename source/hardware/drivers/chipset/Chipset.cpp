@@ -7,7 +7,7 @@ Chipset::Chipset( IConfigurator* _config, std::string _name )
 
 }
 
-void Chipset::Update( IChipset *subject )
+bool Chipset::Update( IChipset *subject )
 {
-    
+	return false;    
 }

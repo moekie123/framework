@@ -1,24 +1,24 @@
-#include <gtest/gtest.h>
-#include <gmock/gmock.h>
-
 #include "Observer.h"
 #include "Subject.h"
 
+#include <gtest/gtest.h>
+#include <gmock/gmock.h>
 
 class Beta:
     public Subject< Beta >,
     public Observer< Beta >
 {
     public:
-        void Update( Beta* subject ) override
-        { 
+        bool Update( Beta* subject ) override
+        {
+	       return false;	
         }
 };
 
 class MockBeta: public Beta
 {
     public:
-        MOCK_METHOD1( Update, void( Beta* ) );
+        MOCK_METHOD1( Update, bool( Beta* ) );
 };
 
 TEST( Construct, Default )
@@ -36,17 +36,28 @@ TEST( Subject, AttachObserver )
     // Static cast to check whether all classes are intherent
 }
 
-TEST( Subject, NotifyObserver )
+TEST( Subject, NotifyObserverSuccesfull )
 {
     MockBeta observer;
     Beta *subject = new Beta();
 
     subject->Attach( observer );
 
-    EXPECT_CALL( observer, Update( subject ) );
-    
-    subject->Notify< MockBeta >();
+    EXPECT_CALL( observer, Update( subject ) ).WillOnce( testing::Return(true));
+    ASSERT_EQ( subject->Notify< MockBeta >(), true );
 }
+
+TEST( Subject, NotifyObserverFailure )
+{
+    MockBeta observer;
+    Beta *subject = new Beta();
+
+    subject->Attach( observer );
+
+    EXPECT_CALL( observer, Update( subject ) ).WillOnce( testing::Return( false ));
+    ASSERT_EQ( subject->Notify< MockBeta >(), false );
+}
+
 
 int main(int argc, char **argv) 
 {

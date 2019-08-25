@@ -47,7 +47,7 @@ bool Parameter::SetProperty( std::string _property, const int& _value )
 	return false;
 }
 
-void Parameter::Update( IParameter *subject )
+bool Parameter::Update( IParameter *subject )
 {
-
+	return false;
 }

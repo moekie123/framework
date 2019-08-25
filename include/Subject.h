@@ -27,14 +27,20 @@ class Subject
     
 	/**
 	 * @brief The trigger to update all subcribed Observers
+	 * @details 	All observers should return True on their update... 
+	 * 		Abort 'Notify' when the first observer return False.
 	 */
         template< class U = T >
-        void Notify ()
+        bool Notify ()
         {
             for ( auto it = mObservers.begin(); it != mObservers.end(); it++ ) 
             {
-                ( *it )->Update( static_cast<U *>(this) );
+		/* All should pass, return false immedially when one fails */
+		if( (*it)->Update( static_cast<U *>( this )) == false )
+			return false;
             }
+
+	    return true;
         }
 
    private:

@@ -15,5 +15,5 @@ class Observer
 	/**
 	 * @brief The callback when the Subject notifies all subscribtions
 	 */
-        virtual void Update(T *subject) = 0;
+        virtual bool Update(T *subject) = 0;
 };
