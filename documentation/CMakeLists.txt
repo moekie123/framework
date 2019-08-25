@@ -5,7 +5,7 @@ option( BUILD_DOC "Build documentation" OFF )
 find_package( Doxygen )
 
 if ( DOXYGEN_FOUND )
-    	# set input and output files
+	# set input and output files
 	set( DOXYGEN_IN  ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile.in )
     	set( DOXYGEN_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile ) 
 
