@@ -10,7 +10,7 @@ documentation/
 *.~
 .swp
 
-# Ignora Generated Libraries
+# Ignore Generated Libraries
 *.a
 *.o
 *.so
@@ -23,6 +23,9 @@ CTestTestfile.cmake
 DartConfiguration.tcl
 Makefile
 install_manifest.txt
+
+# Ignore CTags generated files
+tags
 
 # Ignore Doxygen generated files	
 CMakeDoxyfile.in 
