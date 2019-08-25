@@ -1,6 +1,6 @@
 cmake_minimum_required( VERSION 3.0.0 )
 
-Project( Framework )
+Project( SpyderFramework )
 
 set(VERSION_MAJOR   0   CACHE STRING "Project major version number.")
 set(VERSION_MINOR   1   CACHE STRING "Project minor version number.")

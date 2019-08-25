@@ -1,6 +1,7 @@
-Robotic Arm Framework Documentation {#mainpage}
+Spyder Documentation {#mainpage}
 ============
 
+# Introduction 
 This is a framework for building a Robotic Arm.
  
 These doxygen generated webpages are describing the code base. 
