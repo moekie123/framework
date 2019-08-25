@@ -27,6 +27,7 @@ class Chipset:
 		{
 			Factory& factory = Singleton< Factory >::Instance();
 
+		
 			auto config = factory.Create< IConfigurator >( "Configurator", "configuration.xml" );
 			return new Chipset( config, _name );
 		}

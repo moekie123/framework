@@ -10,10 +10,11 @@ TEST( Construct, ParameterDefault )
 {
 	Factory& factory = Singleton< Factory >::Instance();
 	factory.Register< Parameter >( "Parameter" );
-	
-    	auto ab = factory.Create< IParameter >( "Parameter", "<name>" );
 
-    	ASSERT_NE( ab, nullptr );
+	
+	auto param = factory.Create< IParameter >( "Parameter", "<name>" );
+
+    	ASSERT_NE( param, nullptr );
 }
 
 int main(int argc, char **argv) 

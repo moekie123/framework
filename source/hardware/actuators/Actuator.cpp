@@ -10,12 +10,12 @@
 
 Actuator::Actuator( std::string _name ) 
 {
-    mName = _name;
+    	mName = _name;
 
-    Factory& factory = Singleton< Factory >::Instance(); 
+    	Factory& factory = Singleton< Factory >::Instance(); 
 
-    IParameter* ip = factory.Create< IParameter >( "Parameter", "TargetPosition" );
+   	auto ip = factory.Create< IParameter >( "Parameter", "TargetPosition" );
 
-    Composite< IParameter >::Add( ip );
+    	Composite< IParameter >::Add( ip );
 }
 

@@ -29,7 +29,7 @@ public:
 			Generic* Build( std::string _name ) override
 			{
 				Factory& factory = Singleton< Factory >::Instance();
-
+				
 				auto config = factory.Create< IConfigurator >( "Configurator", "configuration.xml" ); 
 				return new Parameter( config, _name );
 			}
