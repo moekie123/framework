@@ -26,7 +26,7 @@ public:
 		public Builder
 	{
 		public:
-			Generic* build( std::string _name ) override
+			Generic* Build( std::string _name ) override
 			{
 				Factory& factory = Singleton< Factory >::Instance();
 
@@ -48,13 +48,13 @@ public:
         
         
 	/* IParameter methods */
-	void reset() override;
+	void Reset() override;
 
 	/* Generic methods **/
-	bool setProperty( std::string _property, const int& _value ) override;
+	bool SetProperty( std::string _property, const int& _value ) override;
 
         /* Observer methods **/
-        void update( IParameter *subject ) override; 
+        void Update( IParameter *subject ) override; 
 
 };
 

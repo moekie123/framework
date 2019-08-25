@@ -17,7 +17,7 @@ Configurator::Configurator( std::string _filename )
 	XMLError eResult = xmlDoc.LoadFile( _filename.c_str() );
 }
 
-bool Configurator::getProperty( std::string _property, int& _value ) const
+bool Configurator::GetProperty( std::string _property, int& _value ) const
 {
 /*
 	XMLNode * pRoot = xmlDoc.FirstChild();
@@ -47,7 +47,7 @@ bool Configurator::getProperty( std::string _property, int& _value ) const
 }
 
 
-bool Configurator::setProperty( std::string _property, const int &_value )
+bool Configurator::SetProperty( std::string _property, const int &_value )
 {
 	return false;
 }

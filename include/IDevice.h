@@ -18,5 +18,5 @@ class IDevice:
 		 * @brief Set the value of the device
 		 * @details TODO: This can be replaced for the Generic version
 		 */
-		virtual void set( std::string, int ) = 0;
+		virtual void Set( std::string, int ) = 0;
 };

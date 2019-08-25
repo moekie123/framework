@@ -21,7 +21,7 @@ class Configurator:
 			public Builder
 		{
 			public:
-				Generic* build( std::string _filename ) override
+				Generic* Build( std::string _filename ) override
 				{
 					return new Configurator( _filename );
 				}
@@ -38,6 +38,6 @@ class Configurator:
 		Configurator( std::string _name );
 
 		/* Generic */	
-		bool getProperty( std::string _property, int& _value ) const override;
-		bool setProperty( std::string _property, const int& ) override;
+		bool GetProperty( std::string _property, int& _value ) const override;
+		bool SetProperty( std::string _property, const int& ) override;
 };

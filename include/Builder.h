@@ -18,5 +18,5 @@ class Builder
 		 * @param _name The name of the new created derived class.
 		 * @return The Generic class of the new created derived class.
 		 */
-		virtual Generic* build( std::string _name ) = 0;
+		virtual Generic* Build( std::string _name ) = 0;
 };

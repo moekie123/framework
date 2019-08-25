@@ -20,7 +20,7 @@ TEST( BuildTree, Add )
     Beta *b1 = new Beta();
     Beta *b2 = new Beta();
 
-    b1->add( b2 );
+    b1->Add( b2 );
 }
 
 

@@ -15,7 +15,7 @@ TEST( Default, GetValue )
 	Configurator *cf = new Configurator( "gtest-configurator.xml" );
 	
 	int value;
-	ASSERT_EQ( cf->getProperty( "gtest-parameter.value", value ), true );
+	ASSERT_EQ( cf->GetProperty( "gtest-parameter.value", value ), true );
 }
 
 int main(int argc, char **argv) 

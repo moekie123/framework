@@ -34,7 +34,7 @@ class Factory
         template< class T >
         T* Create( std::string _id, std::string _name )
         {
-        	T* obj = static_cast< T* >( BuilderMap[ _id ]->build( _name ));
+        	T* obj = static_cast< T* >( BuilderMap[ _id ]->Build( _name ));
             	return obj;
         }
 

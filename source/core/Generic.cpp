@@ -7,12 +7,12 @@ Generic::Generic()
 	mProperties[ "const" ] = 0;
 };
 
-const std::string& Generic::getName() const
+const std::string& Generic::GetName() const
 {
     return mName;
 }
  
-bool Generic::getProperty( std::string _property, int& _value ) const
+bool Generic::GetProperty( std::string _property, int& _value ) const
 {
    	if ( mProperties.find( _property ) == mProperties.end() )
 	{
@@ -23,7 +23,7 @@ bool Generic::getProperty( std::string _property, int& _value ) const
 	return false;
 }
 
-bool Generic::setProperty( std::string _property, const int& _value )
+bool Generic::SetProperty( std::string _property, const int& _value )
 {
    	if ( mProperties.find( _property ) == mProperties.end() )
 	{

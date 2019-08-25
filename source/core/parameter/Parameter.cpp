@@ -26,28 +26,28 @@ Parameter::Parameter( IConfigurator* _config, std::string _name )
 	for( auto it = defaults.begin(); it != defaults.end(); ++it )
 	{
 		int value;
-		 _config->getProperty( _name + "." + it->first , value );
+		 _config->GetProperty( _name + "." + it->first , value );
 
 		mProperties[ it->first ] =  value;
 	}
 }
  
-void Parameter::reset()
+void Parameter::Reset()
 {
-    setProperty( "value",  mProperties.find( "default" )->second );
+    SetProperty( "value",  mProperties.find( "default" )->second );
 }
 
 
-bool Parameter::setProperty( std::string _property, const int& _value )
+bool Parameter::SetProperty( std::string _property, const int& _value )
 {
 	if ( mProperties.find( "const" )->second == 0 )
 	{
-		return Generic::setProperty( _property, _value );
+		return Generic::SetProperty( _property, _value );
 	}
 	return false;
 }
 
-void Parameter::update( IParameter *subject )
+void Parameter::Update( IParameter *subject )
 {
 
 }

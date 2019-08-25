@@ -16,6 +16,6 @@ Actuator::Actuator( std::string _name )
 
     IParameter* ip = factory.Create< IParameter >( "Parameter", "TargetPosition" );
 
-    Composite< IParameter >::add( ip );
+    Composite< IParameter >::Add( ip );
 }
 

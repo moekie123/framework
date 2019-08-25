@@ -24,14 +24,14 @@ class Signal
 		 * @details TODO Should return a bool, whether the write was succesfull
 		 * @param _value The new value to which it will be set
 		 */
-    		virtual void write( const int& _value );
+    		virtual void Write( const int& _value );
 
 		/**
 		 * @brief The getter of the signal
 		 * @details TODO Should return a bool, whether the read was succesfull
 		 * @param _value The new value of the signal
 		 */
-    		virtual void read ( int& _value );
+    		virtual void Read ( int& _value );
 
 	private:
 		const std::string mName;

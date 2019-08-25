@@ -20,23 +20,23 @@ class Subject
 	 * @brief Observers can subscribe to the subject through this method
 	 * @param _observer The observer that needs the get notified
 	 */
-        void attach ( Observer<T> &_observer )
+        void Attach ( Observer<T> &_observer )
         {
-            m_observers.push_back( &_observer );
+            mObservers.push_back( &_observer );
         }
     
 	/**
 	 * @brief The trigger to update all subcribed Observers
 	 */
         template< class U = T >
-        void notify ()
+        void Notify ()
         {
-            for ( auto it = m_observers.begin(); it != m_observers.end(); it++ ) 
+            for ( auto it = mObservers.begin(); it != mObservers.end(); it++ ) 
             {
-                ( *it )->update( static_cast<U *>(this) );
+                ( *it )->Update( static_cast<U *>(this) );
             }
         }
 
    private:
-      std::vector<Observer<T> *> m_observers;
+      std::vector<Observer<T> *> mObservers;
 };

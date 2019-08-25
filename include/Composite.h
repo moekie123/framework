@@ -15,7 +15,7 @@ class Composite
     /**
      * @brief The 'add'-method will store the compontens that should be triggered when a command is send.
      */
-    void add ( T* _node )
+    void Add ( T* _node )
     {
         mComponents.push_back( _node ); 
     }

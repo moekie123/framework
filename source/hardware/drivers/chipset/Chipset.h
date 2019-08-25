@@ -23,7 +23,7 @@ class Chipset:
 		public Builder
 	{
 		public:
-		Generic* build( std::string _name ) override
+		Generic* Build( std::string _name ) override
 		{
 			Factory& factory = Singleton< Factory >::Instance();
 
@@ -45,7 +45,7 @@ class Chipset:
 	 */
    	Chipset( IConfigurator* _config, std::string _name );
 
-        void update( IChipset *subject) override;
+        void Update( IChipset *subject) override;
 };
 
 

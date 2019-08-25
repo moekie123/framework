@@ -10,7 +10,7 @@ class Beta:
     public Observer< Beta >
 {
     public:
-        void update( Beta* subject ) override
+        void Update( Beta* subject ) override
         { 
         }
 };
@@ -18,7 +18,7 @@ class Beta:
 class MockBeta: public Beta
 {
     public:
-        MOCK_METHOD1( update, void( Beta* ) );
+        MOCK_METHOD1( Update, void( Beta* ) );
 };
 
 TEST( Construct, Default )
@@ -32,7 +32,7 @@ TEST( Subject, AttachObserver )
     Beta observer;
     Beta subject;
 
-    subject.attach( observer );
+    subject.Attach( observer );
     // Static cast to check whether all classes are intherent
 }
 
@@ -41,11 +41,11 @@ TEST( Subject, NotifyObserver )
     MockBeta observer;
     Beta *subject = new Beta();
 
-    subject->attach( observer );
+    subject->Attach( observer );
 
-    EXPECT_CALL( observer, update( subject ) );
+    EXPECT_CALL( observer, Update( subject ) );
     
-    subject->notify< MockBeta >();
+    subject->Notify< MockBeta >();
 }
 
 int main(int argc, char **argv) 

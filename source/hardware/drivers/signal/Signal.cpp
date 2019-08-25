@@ -13,7 +13,7 @@ Signal::Signal( IConfigurator* _config, std::string _name ):
 }
 
 
-void Signal::write( const int& _value )
+void Signal::Write( const int& _value )
 {
 	std::ofstream file;
 
@@ -25,7 +25,7 @@ void Signal::write( const int& _value )
 	file.close();	
 }
 
-void Signal::read( int& _value )
+void Signal::Read( int& _value )
 {
 	std::ifstream file;
 

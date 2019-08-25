@@ -10,13 +10,20 @@ class MockParameter:
     public IParameter
 {
         public:
-            MOCK_METHOD1( update, void( IParameter* ));
+		/* IParameter */
+    		MOCK_METHOD0( Reset, void() );
+
+		/* IGeneric */
+	   	MOCK_CONST_METHOD2( GetProperty, bool( std::string, int& ));
+	    	MOCK_METHOD2( GetProperty, bool( std::string, const int& ));
+
+		/* IObserver */
+    		MOCK_METHOD1( Update, void( IParameter* ));
           
-	    MOCK_CONST_METHOD2( getProperty, bool( std::string, int& ));
-	    MOCK_METHOD2( setProperty, bool( std::string, const int& ));
-          
-	    MOCK_METHOD0( reset, void() );
-            MOCK_METHOD1( build, Generic*( std::string ));
+          	/* ??
+		 * TODO - Is This Still necssary 
+		 **/
+	    	MOCK_METHOD1( Build, Generic*( std::string ));
 };
 
 

@@ -27,7 +27,7 @@ class Device:
 			public Builder
 		{
 			public:
-				Generic* build( std::string _name ) override
+				Generic* Build( std::string _name ) override
 				{
 					Factory& factory = Singleton< Factory >::Instance();
 					auto config = factory.Create< IConfigurator >( "Configurator", "configuration.xml" );
@@ -57,7 +57,7 @@ class Device:
 		 * @brief Setter
 		 * @details TODO This can be replaced by the default Generic SetProperty
 		 */
-		void set( std::string, int )
+		void Set( std::string, int )
 		{
 
 		}

@@ -24,6 +24,6 @@ class IParameter:
      *  @brief reset the parameter to the default valuei
      *  @details TODO should return a bool whether it was succesfull
      */
-    virtual void reset() = 0;
+    virtual void Reset() = 0;
 
 };

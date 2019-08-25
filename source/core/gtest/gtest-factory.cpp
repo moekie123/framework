@@ -25,7 +25,7 @@ class ConcreteBeta:
 		public Builder
 	{
 		public:
-		Generic* build( std::string _name ) override
+		Generic* Build( std::string _name ) override
 		{
 			return new ConcreteBeta();
 		}
