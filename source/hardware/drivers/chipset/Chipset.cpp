@@ -2,12 +2,7 @@
 
 Chipset::ChipsetBuilder Chipset::builder;
 
-Chipset::Chipset()
-{
-
-}
-
-Chipset::Chipset( Configurator& _config, std::string _name )
+Chipset::Chipset( IConfigurator* _config, std::string _name )
 {
 
 }

@@ -2,10 +2,11 @@
 
 #include "IChipset.h"
 
+#include "Factory.h"
 #include "Builder.h"
 #include "Singleton.h"
 
-#include "Configurator.h"
+#include "IConfigurator.h"
 
 /**
  * @brief The (base) Chipset class
@@ -24,7 +25,9 @@ class Chipset:
 		public:
 		Generic* build( std::string _name ) override
 		{
-			Configurator& config = Singleton< Configurator >::Instance();
+			Factory& factory = Singleton< Factory >::Instance();
+
+			auto config = factory.Create< IConfigurator >( "Configurator", "configuration.xml" );
 			return new Chipset( config, _name );
 		}
 	};
@@ -35,13 +38,12 @@ class Chipset:
 	 */
 	static ChipsetBuilder builder;
    
-	Chipset();
 	/**
 	 * @brief The basic constructor
 	 * @param _config The Configurator to fill in the default values
 	 * @param _name The name of the new Chipset
 	 */
-   	Chipset( Configurator& _config, std::string _name );
+   	Chipset( IConfigurator* _config, std::string _name );
 
         void update( IChipset *subject) override;
 };

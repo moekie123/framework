@@ -2,10 +2,11 @@
 
 #include "IParameter.h"
 
+#include "Factory.h"
 #include "Builder.h"
 #include "Singleton.h"
 
-#include "Configurator.h"
+#include "IConfigurator.h"
 
 #include <string>
 #include <vector>
@@ -27,7 +28,9 @@ public:
 		public:
 			Generic* build( std::string _name ) override
 			{
-				Configurator& config = Singleton< Configurator >::Instance();
+				Factory& factory = Singleton< Factory >::Instance();
+
+				auto config = factory.Create< IConfigurator >( "Configurator", "configuration.xml" ); 
 				return new Parameter( config, _name );
 			}
 	};
@@ -41,7 +44,7 @@ public:
          *  @param _config the configurator
 	 *  @param _name the name of the Parameter
          */
-        Parameter( Configurator& _config, std::string _name );
+        Parameter( IConfigurator* _config, std::string _name );
         
         
 	/* IParameter methods */

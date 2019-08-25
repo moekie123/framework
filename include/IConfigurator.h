@@ -1,13 +1,11 @@
 #pragma once
 
-#include <string>
-#include <map>
+#include "Generic.h"
 
 /**
- * TODO This should be implmented
+ * @brief The generic interface for 
  */
-class IConfigurator
+class IConfigurator:
+	public Generic
 {
-	public:
-		virtual const int& getProperty( std::string ) const;
 };

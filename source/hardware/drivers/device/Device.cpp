@@ -2,11 +2,11 @@
 
 #include "Signal.h"
 
-#include "Configurator.h"
+#include "IConfigurator.h"
 
 Device::DeviceBuilder Device::builder;
 
-Device::Device( Configurator& _config, std::string _name, Signal& _period, Signal& _dutycycle )
+Device::Device( IConfigurator* _config, std::string _name, Signal& _period, Signal& _dutycycle )
 {
 
 }

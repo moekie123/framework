@@ -1,12 +1,12 @@
 #include "Signal.h"
 
-#include "Configurator.h"
+#include "IConfigurator.h"
 
 #include <string>
 #include <iostream>
 #include <fstream>
 
-Signal::Signal( Configurator& _config, std::string _name ):
+Signal::Signal( IConfigurator* _config, std::string _name ):
 	mName( _name )
 {
 

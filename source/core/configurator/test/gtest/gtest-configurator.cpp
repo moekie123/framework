@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-#include "Configurator.h"
+#include "../../Configurator.h"
 
 #include <string>
 
@@ -15,18 +15,8 @@ TEST( Default, GetValue )
 	Configurator *cf = new Configurator( "gtest-configurator.xml" );
 	
 	int value;
-	ASSERT_EQ( cf->getProperty( "gtest-parameter", "value", value ), true );
+	ASSERT_EQ( cf->getProperty( "gtest-parameter.value", value ), true );
 }
-
-TEST( Default, GetSignal )
-{	
-	Configurator *cf = new Configurator( "gtest-configurator.xml" );
-	
-	std::string filename;
-	ASSERT_EQ( cf->getSignal( "gtest-signal", "period", filename ), true );
-}
-
-
 
 int main(int argc, char **argv) 
 {

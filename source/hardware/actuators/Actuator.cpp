@@ -3,7 +3,7 @@
 #include "Singleton.h"
 #include "Factory.h"
 
-#include "Configurator.h"
+#include "IConfigurator.h"
 #include "IParameter.h"
 
 #include <string>

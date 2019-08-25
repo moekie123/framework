@@ -3,7 +3,7 @@
 #include "Singleton.h"
 #include "Factory.h"
 
-#include "Configurator.h"
+#include "core/configurator/Configurator.h"
 #include "core/parameter/Parameter.h"
 
 #include "hardware/drivers/chipset/Chipset.h"
@@ -18,22 +18,24 @@
  * 	Detailed design choices van be found on the <a href="https://moekiehome.wpcomstaging.com"> WordPress Pages </a> 
  *
  * @section Introduction
- *	This is de doxygen generated documentation for this Robotic Arm project.
+ *	This is de doxygen generated documentation for this Robotic Arm project
  */
 
 Framework::Framework( int argc, char *argv[] )
 {
-	Configurator config = Singleton< Configurator >::Instance();
 	Factory& factory = Singleton< Factory >::Instance();
 
 	/** Registered Builders: */
 
+	///	- Configurator
+	factory.Register< Configurator> ( "Configurator" );
+
 	///	- Parameter 
-	factory.Register( "Parameter",  &Parameter::builder );
+	factory.Register< Parameter >( "Parameter" );
 
 	///	- Chipset
-    	factory.Register( "Chipset", &Chipset::builder );
+    	factory.Register< Chipset >( "Chipset" );
 
 	///	- Device
-	factory.Register( "Device", &Device::builder );
+	factory.Register< Device >( "Device" );
 };

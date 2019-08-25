@@ -1,8 +1,5 @@
 #pragma once
 
-#include "Configurator.h"
-#include "Singleton.h"
-
 #include "Builder.h"
 
 #include <string>
@@ -20,13 +17,13 @@ class Factory
 	 * @brief Register
 	 * @details Builders should be added to the factory before it can create new
 	 * @param _id builder name that can be later called by Create
-	 * @param _builder the builder
-	 */
-        void Register( std::string _id, Builder* _builder )
+	 */	
+	template< class T >
+        void Register( std::string _id )
         {
-            BuilderMap[ _id ] = _builder;
+            BuilderMap[ _id ] = &T::builder;
         }
-       
+
 	/**
 	 * @brief Create
 	 * @details Build new elemetns with the builder
@@ -34,11 +31,11 @@ class Factory
 	 * @param _name the name of the new creation
 	 * @return the new creation
 	 */
-        template< class U >
-        U* Create( std::string _id, std::string _name )
+        template< class T >
+        T* Create( std::string _id, std::string _name )
         {
-        	U* factory = static_cast< U* >( BuilderMap[ _id ]->build( _name ));
-            	return factory;
+        	T* obj = static_cast< T* >( BuilderMap[ _id ]->build( _name ));
+            	return obj;
         }
 
     private:

@@ -3,7 +3,7 @@
 #include "Signal.h"
 #include "Generic.h"
 
-#include "Configurator.h"
+#include "IConfigurator.h"
 
 #include <gmock/gmock.h>
 #include <string>
@@ -18,5 +18,5 @@ class MockSignal:
 		MOCK_METHOD1( read, void( int& ));
 
 	private:
-		Configurator mConfig;
+		IConfigurator* mConfig;
 };

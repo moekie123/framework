@@ -2,7 +2,6 @@
 
 #include "Generic.h"
 #include "IParameter.h"
-#include "Configurator.h"
 
 #include <gmock/gmock.h>
 #include <string>

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Configurator.h"
+#include "IConfigurator.h"
 
 #include <string>
 #include <iostream>
@@ -17,7 +17,7 @@ class Signal
 		 * @param _config The Configurator that will fill in the default values
 		 * @param _name The name of the created Signal
 		 */
-		Signal( Configurator& _config, std::string _name );
+		Signal( IConfigurator* _config, std::string _name );
 	
 		/**
 		 * @brief The setter of the signal

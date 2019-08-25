@@ -3,11 +3,13 @@
 #include "IDevice.h"
 
 #include "Generic.h"
+
+#include "Factory.h"
 #include "Builder.h"
 #include "Singleton.h"
 
 #include "Signal.h"
-#include "Configurator.h"
+#include "IConfigurator.h"
 
 #include <string>
 
@@ -27,8 +29,9 @@ class Device:
 			public:
 				Generic* build( std::string _name ) override
 				{
-					Configurator& config = Singleton< Configurator >::Instance();
-					
+					Factory& factory = Singleton< Factory >::Instance();
+					auto config = factory.Create< IConfigurator >( "Configurator", "configuration.xml" );
+
 					Signal* period = new Signal( config, _name + "/period" );
 					Signal* dutycycle = new Signal( config, _name + "/dutycycle" );
 
@@ -48,7 +51,7 @@ class Device:
 		 * @param _period The Signal to control the Period
 		 * @param _dutycycle The Signal to control the DutyCycle
 		 */
-		Device( Configurator& _config, std::string _name, Signal& _period, Signal& _dutycycle );
+		Device( IConfigurator* _config, std::string _name, Signal& _period, Signal& _dutycycle );
 		
 		/**
 		 * @brief Setter

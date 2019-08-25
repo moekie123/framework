@@ -4,7 +4,6 @@
 #include "Builder.h"
 
 #include "Generic.h"
-#include "Configurator.h"
 
 #include <string>
 
@@ -41,7 +40,7 @@ TEST( Construct, Default )
 {
     Factory *f = new Factory;
 
-    f->Register( "CB", &ConcreteBeta::builder );
+    f->Register< ConcreteBeta >( "CB" );
 
     auto ab = f->Create< InterfaceBeta >( "CB", "Name" );
 

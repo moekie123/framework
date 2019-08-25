@@ -24,6 +24,8 @@ class Actuator:
 		public:
 		Generic* build( std::string _name ) override
 		{
+			//Factory& factory = Singleton< Factory >::Instance();
+			//auto config = factory.Create< IConfigurator >( "Configurator", "configuration.xml" );
 			return new Actuator( _name );
 		}
 	};

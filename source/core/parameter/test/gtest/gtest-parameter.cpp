@@ -17,7 +17,7 @@ TEST( Default, Construct)
 	EXPECT_CALL( config, getProperty( "Parameter.default" )).WillRepeatedly( testing::ReturnRef(value));
 	EXPECT_CALL( config, getProperty( "Parameter.value" )).WillRepeatedly( testing::ReturnRef(value));
 
-	IParameter *p = new Parameter( config, "Parameter" );
+	IParameter *p = new Parameter( &config, "Parameter" );
     	ASSERT_NE( p , nullptr );
 }
 
@@ -48,7 +48,7 @@ class ParameterTest:
 		EXPECT_CALL( mConfig, getProperty( "Parameter.default" )).WillRepeatedly( testing::ReturnRef( *mReturn ));
 		EXPECT_CALL( mConfig, getProperty( "Parameter.value" )).WillRepeatedly( testing::ReturnRef( *mReturn ));
 	
-		mParameter = new Parameter( mConfig, "Parameter" );
+		mParameter = new Parameter( &mConfig, "Parameter" );
 		ASSERT_NE( mParameter , nullptr );
 	}
 

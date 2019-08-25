@@ -3,7 +3,7 @@
 #include "IParameter.h"
 
 #include "Generic.h"
-#include "Configurator.h"
+#include "IConfigurator.h"
 
 #include <map>
 
@@ -18,7 +18,7 @@ const std::map< std::string, int> defaults =
     { "value",   0 }
 };
 
-Parameter::Parameter( Configurator& _config, std::string _name )
+Parameter::Parameter( IConfigurator* _config, std::string _name )
 {
     	mName = _name;
     	mProperties.insert ( defaults.begin(), defaults.end() );
@@ -26,7 +26,7 @@ Parameter::Parameter( Configurator& _config, std::string _name )
 	for( auto it = defaults.begin(); it != defaults.end(); ++it )
 	{
 		int value;
-		 _config.getProperty( _name , it->first , value );
+		 _config->getProperty( _name + "." + it->first , value );
 
 		mProperties[ it->first ] =  value;
 	}

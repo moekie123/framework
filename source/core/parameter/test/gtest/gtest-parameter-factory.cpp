@@ -9,7 +9,7 @@
 TEST( Construct, ParameterDefault )
 {
 	Factory& factory = Singleton< Factory >::Instance();
-	factory.Register( "Parameter",  &Parameter::builder );
+	factory.Register< Parameter >( "Parameter" );
 	
     	auto ab = factory.Create< IParameter >( "Parameter", "<name>" );
 
