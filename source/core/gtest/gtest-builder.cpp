@@ -1,12 +1,9 @@
 #include "Builder.h"
 
-#include "Generic.h"
-
 #include <gtest/gtest.h>
-
 TEST( Construct, Default )
 {
-
+	/* Builder is an interface class, not testing possible */	
 }
 
 int main(int argc, char **argv) 
