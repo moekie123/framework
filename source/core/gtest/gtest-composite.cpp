@@ -1,12 +1,28 @@
 #include "Composite.h"
 
 #include <gtest/gtest.h>
+#include <gmock/gmock.h>
 
-class   Beta:
+class Beta:
     public Composite< Beta >
 {
     public:
-        std::string mName = "Beta";
+	virtual void Trigger()
+	{
+		for ( auto c : mComponents )
+		{
+			c->Trigger();
+		}
+	}
+
+  	std::string mName = "Beta";
+};
+
+class MockBeta: 
+    public Beta
+{
+	public:
+		MOCK_METHOD0( Trigger, void());
 };
 
 TEST( Construct, Default )
@@ -17,10 +33,11 @@ TEST( Construct, Default )
 
 TEST( BuildTree, Add )
 {
-    Beta *b1 = new Beta();
-    Beta *b2 = new Beta();
+    Beta *b = new Beta();
+    MockBeta m;
 
-    b1->Add( b2 );
+    b->Add( &m );
+    b->Trigger();
 }
 
 

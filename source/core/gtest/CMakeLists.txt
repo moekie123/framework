@@ -10,12 +10,12 @@ add_test( NAME singlton COMMAND gtest-singleton )
 
 # Builder Unit Tests
 add_executable( gtest-builder gtest-builder.cpp )
-target_link_libraries( gtest-builder gtest core )
+target_link_libraries( gtest-builder gtest gmock pthread core )
 add_test( NAME builder COMMAND gtest-builder )
 
 # Composite Unit Tests
 add_executable( gtest-composite gtest-composite.cpp )
-target_link_libraries( gtest-composite gtest core )
+target_link_libraries( gtest-composite gtest gmock pthread core )
 add_test( NAME composite COMMAND gtest-composite )
 
 # Observer Unit Tests

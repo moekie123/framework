@@ -20,6 +20,9 @@ class Composite
         mComponents.push_back( _node ); 
     }
 
-    private:
+    protected:
+    	/**
+	 * @brief The list of nested (composite) components
+	 */
         std::vector< T* > mComponents;
 };
