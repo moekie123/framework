@@ -7,18 +7,22 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
+// Ignore Nagy Mocks for the Configurator Get(ters)
+using ::testing::NiceMock;
+
+
 // Constructor Tests
 TEST( Default, Construct)
 {
 	int value = 0;
-	MockConfigurator config;
+	NiceMock< MockConfigurator > config;
 		
+	/* Won't work as Get is ambigious ... */
 	/*
-	EXPECT_CALL( config, GetProperty( "Parameter.const" )).WillRepeatedly( testing::ReturnRef(value));
-	EXPECT_CALL( config, GetProperty( "Parameter.default" )).WillRepeatedly( testing::ReturnRef(value));
-	EXPECT_CALL( config, GetProperty( "Parameter.value" )).WillRepeatedly( testing::ReturnRef(value));
+	EXPECT_CALL( config, Get( "Parameter.const"  , testing::_ )).WillRepeatedly( testing::Return( true ));
+	EXPECT_CALL( config, Get( "Parameter.default", testing::_ )).WillRepeatedly( testing::Return( true ));
+	EXPECT_CALL( config, Get( "Parameter.value"  , testing::_ )).WillRepeatedly( testing::Return( true));
 	*/
-
 	IParameter *p = new Parameter( &config, "Parameter" );
     	ASSERT_NE( p , nullptr );
 }
@@ -29,10 +33,11 @@ class ParameterTest:
 	public ::testing::Test 
 {
 	private:
-		int * mReturn;
+		int* mReturn;
 
 	protected:
-		MockConfigurator mConfig;
+		/* NiceMock is okay, as in the TEST above the NastyMock has been verified */
+		NiceMock< MockConfigurator > mConfig;
 		IParameter* mParameter;
 
     	ParameterTest() 
@@ -45,12 +50,6 @@ class ParameterTest:
     	virtual void SetUp() 
 	{
 		mReturn = new int( 0 );
-
-		/*
-		EXPECT_CALL( mConfig, GetProperty( "Parameter.const", mReturn )).WillRepeatedly( testing::Return( true ));
-		EXPECT_CALL( mConfig, GetProperty( "Parameter.default", mReturn )).WillRepeatedly( testing::Return( true ));
-		EXPECT_CALL( mConfig, GetProperty( "Parameter.value", mReturn )).WillRepeatedly( testing::Return( true ));
-		*/
 
 		mParameter = new Parameter( &mConfig, "Parameter" );
 		ASSERT_NE( mParameter , nullptr );
