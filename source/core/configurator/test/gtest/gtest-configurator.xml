@@ -1,6 +1,6 @@
 <Root>
 
-	<Parameter name="gtest-parameter" > 
+	<Parameter name="gtest-parameter.value" > 
 		<value>42</value>
 	</Parameter>
 

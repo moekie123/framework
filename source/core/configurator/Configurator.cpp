@@ -11,43 +11,55 @@ XMLDocument xmlDoc;
 
 Configurator::ConfiguratorBuilder Configurator::builder;
 
+XMLElement* FindElement( std::string _property )
+{
+	XMLNode * pRoot = xmlDoc.FirstChild();
+	if (pRoot == nullptr) 
+		return nullptr;
+
+	for( auto e = pRoot->FirstChildElement( "Parameter" ); e != NULL; e = e->NextSiblingElement( "Parameter" ))
+	{
+		std::string name = e->Attribute( "name" );
+	
+		if( name.compare( _property ) == 0 )
+		{		
+			return  e->FirstChildElement( "value" );
+		}
+	}
+	return nullptr;
+}
+
 Configurator::Configurator( std::string _filename ) 
 {
-	std::cout << "Configurator: read file " << _filename << "\n";
 	XMLError eResult = xmlDoc.LoadFile( _filename.c_str() );
 }
 
-bool Configurator::GetProperty( std::string _property, int& _value ) const
+bool Configurator::Get( std::string _property, int& _value ) const
 {
-/*
-	XMLNode * pRoot = xmlDoc.FirstChild();
-	if (pRoot == nullptr) 
-		return false;
-	
-	for( auto e = pRoot->FirstChildElement("Parameter"); e != NULL; e = e->NextSiblingElement("Parameter") )
+	XMLElement* pValue = FindElement( _property );
+
+	if  ( pValue != nullptr)
 	{
-		std::string name = e->Attribute("name");
-		
-		if( name.compare( _name ) == 0 )
-		{	
-			XMLElement* pValue = e->FirstChildElement( _property.c_str() );
-			if  ( pValue != nullptr)
-			{
-				int tmp;
-				pValue->QueryIntText( &tmp );
-				_value = tmp;
-				return true;
-			}
-		}
+		int tmp;
+		pValue->QueryIntText( &tmp );
+		_value = tmp;
+		return true;
 	}
 
-	return false;
-*/
 	return false;
 }
 
 
-bool Configurator::SetProperty( std::string _property, const int &_value )
+bool Configurator::Get( std::string _property, std::string& _value ) const
 {
+	XMLElement* pElement = FindElement( _property );
+
+	if  ( pElement != nullptr)
+	{
+		const char *tmp = pElement->GetText();
+		_value = std::string( tmp );
+		return true;
+	}
+
 	return false;
 }

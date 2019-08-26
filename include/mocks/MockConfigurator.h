@@ -10,5 +10,6 @@ class MockConfigurator:
     public IConfigurator
 {
         public:
-            MOCK_CONST_METHOD1( GetProperty, const int&( std::string ) );
+	    MOCK_CONST_METHOD2( Get, bool( std::string, int& ));
+	    MOCK_CONST_METHOD2( Get, bool( std::string, std::string& ));
 };

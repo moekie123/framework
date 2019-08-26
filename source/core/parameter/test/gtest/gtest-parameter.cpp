@@ -13,9 +13,11 @@ TEST( Default, Construct)
 	int value = 0;
 	MockConfigurator config;
 		
+	/*
 	EXPECT_CALL( config, GetProperty( "Parameter.const" )).WillRepeatedly( testing::ReturnRef(value));
 	EXPECT_CALL( config, GetProperty( "Parameter.default" )).WillRepeatedly( testing::ReturnRef(value));
 	EXPECT_CALL( config, GetProperty( "Parameter.value" )).WillRepeatedly( testing::ReturnRef(value));
+	*/
 
 	IParameter *p = new Parameter( &config, "Parameter" );
     	ASSERT_NE( p , nullptr );
@@ -44,10 +46,12 @@ class ParameterTest:
 	{
 		mReturn = new int( 0 );
 
-		EXPECT_CALL( mConfig, GetProperty( "Parameter.const" )).WillRepeatedly( testing::ReturnRef( *mReturn ));
-		EXPECT_CALL( mConfig, GetProperty( "Parameter.default" )).WillRepeatedly( testing::ReturnRef( *mReturn ));
-		EXPECT_CALL( mConfig, GetProperty( "Parameter.value" )).WillRepeatedly( testing::ReturnRef( *mReturn ));
-	
+		/*
+		EXPECT_CALL( mConfig, GetProperty( "Parameter.const", mReturn )).WillRepeatedly( testing::Return( true ));
+		EXPECT_CALL( mConfig, GetProperty( "Parameter.default", mReturn )).WillRepeatedly( testing::Return( true ));
+		EXPECT_CALL( mConfig, GetProperty( "Parameter.value", mReturn )).WillRepeatedly( testing::Return( true ));
+		*/
+
 		mParameter = new Parameter( &mConfig, "Parameter" );
 		ASSERT_NE( mParameter , nullptr );
 	}

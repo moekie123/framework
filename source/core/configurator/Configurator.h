@@ -6,6 +6,7 @@
 
 #include <string>
 #include <map>
+#include <iostream>
 
 /**
  * @brief This generic configuration class can be used to an configuration from an external source
@@ -36,8 +37,12 @@ class Configurator:
 		 * @param _name The configuration file 
 		 */
 		Configurator( std::string _name );
+	
 
 		/* Generic */	
-		bool GetProperty( std::string _property, int& _value ) const override;
-		bool SetProperty( std::string _property, const int& ) override;
+	private:
+		/* IConfigurator */
+		bool Get( std::string _property, int& _value ) const override;
+		bool Get( std::string _property, std::string& _value ) const override;
+
 };

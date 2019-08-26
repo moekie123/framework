@@ -36,7 +36,6 @@ class Factory
 	 * @details Build new elemetns with the builder
 	 * @param _id the name of the builder to which it is Registered on
 	 * @param _name the name of the new creation
-	 * @param _obj the storage of the new create object
 	 * @return True when creation was succesfull
 	 */
         template< class T >
