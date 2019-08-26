@@ -2,7 +2,6 @@
 
 #include "Generic.h"
 
-#include <iostream>
 #include <typeinfo>
 #include <type_traits>
 /**

@@ -26,9 +26,13 @@ Parameter::Parameter( IConfigurator* _config, std::string _name )
 	for( auto it = defaults.begin(); it != defaults.end(); ++it )
 	{
 		int value;
-		 _config->GetProperty( _name + "." + it->first , value );
+		
+		mProperties[ it->first ] =  it->second;
 
-		mProperties[ it->first ] =  value;
+	       	if ( _config->GetProperty( _name + "." + it->first , value ))
+		{
+			mProperties[ it->first ] =  value;
+		}
 	}
 }
  

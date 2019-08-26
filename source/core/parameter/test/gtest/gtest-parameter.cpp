@@ -17,12 +17,13 @@ TEST( Default, Construct)
 	int value = 0;
 	NiceMock< MockConfigurator > config;
 		
-	/* Won't work as Get is ambigious ... */
-	/*
-	EXPECT_CALL( config, Get( "Parameter.const"  , testing::_ )).WillRepeatedly( testing::Return( true ));
-	EXPECT_CALL( config, Get( "Parameter.default", testing::_ )).WillRepeatedly( testing::Return( true ));
-	EXPECT_CALL( config, Get( "Parameter.value"  , testing::_ )).WillRepeatedly( testing::Return( true));
-	*/
+	/* See MockConfigurator fot GetInteger
+	 * This is a workaround for the ambgious Get 
+	 **/
+	EXPECT_CALL( config, GetInteger( "Parameter.const"  , testing::_ )).WillRepeatedly( testing::Return( true ));
+	EXPECT_CALL( config, GetInteger( "Parameter.default", testing::_ )).WillRepeatedly( testing::Return( true ));
+	EXPECT_CALL( config, GetInteger( "Parameter.value"  , testing::_ )).WillRepeatedly( testing::Return( true));
+	
 	IParameter *p = new Parameter( &config, "Parameter" );
     	ASSERT_NE( p , nullptr );
 }
@@ -36,8 +37,7 @@ class ParameterTest:
 		int* mReturn;
 
 	protected:
-		/* NiceMock is okay, as in the TEST above the NastyMock has been verified */
-		NiceMock< MockConfigurator > mConfig;
+		MockConfigurator  mConfig;
 		IParameter* mParameter;
 
     	ParameterTest() 
@@ -50,6 +50,8 @@ class ParameterTest:
     	virtual void SetUp() 
 	{
 		mReturn = new int( 0 );
+
+		EXPECT_CALL( mConfig, GetInteger( testing::_ , testing::_ )).WillRepeatedly( testing::Return( false ));
 
 		mParameter = new Parameter( &mConfig, "Parameter" );
 		ASSERT_NE( mParameter , nullptr );
@@ -97,7 +99,7 @@ TEST_F( ParameterTest, SetProperty )
 
 	EXPECT_EQ( mParameter->SetProperty( "value", 1 ), true );
 	mParameter->GetProperty( "value", _value );
-	EXPECT_EQ( _value, 0 );
+	EXPECT_EQ( _value, 1 );
 
 	EXPECT_EQ( mParameter->SetProperty( "default", 1 ), true );
 	mParameter->GetProperty( "default", _value );

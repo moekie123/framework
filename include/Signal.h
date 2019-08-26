@@ -3,7 +3,6 @@
 #include "IConfigurator.h"
 
 #include <string>
-#include <iostream>
 
 /**
  * @brief The base Signal class to open a file descriptor to a signal

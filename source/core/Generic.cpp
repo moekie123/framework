@@ -14,7 +14,7 @@ const std::string& Generic::GetName() const
  
 bool Generic::GetProperty( std::string _property, int& _value ) const
 {
-   	if ( mProperties.find( _property ) == mProperties.end() )
+   	if ( mProperties.find( _property ) != mProperties.end() )
 	{
    		_value = mProperties.find( _property )->second;
 		return true;
@@ -25,7 +25,7 @@ bool Generic::GetProperty( std::string _property, int& _value ) const
 
 bool Generic::SetProperty( std::string _property, const int& _value )
 {
-   	if ( mProperties.find( _property ) == mProperties.end() )
+   	if ( mProperties.find( _property ) != mProperties.end() )
 	{
 		mProperties.find( _property )->second = _value;
 		return true;
