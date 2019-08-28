@@ -11,7 +11,6 @@ int main( int argc, char *argv[] )
 	std::cout << "version: " << FRAMEWORK_VERSION << '\n';
 	std::cout << "compiled: " << FRAMEWORK_COMPILE_DATE << " " << FRAMEWORK_COMPILE_TIME << '\n';
 
-
 	Framework *framework = new Framework( argc, argv );
 
 	std::cout << "Shutdown Application\n";
