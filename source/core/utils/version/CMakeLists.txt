@@ -6,7 +6,7 @@ set(VERSION_OUTPUT 	${CMAKE_SOURCE_DIR}/include/version.h)
 # Create command to compile the generate command
 add_custom_command(
     OUTPUT ${GENERATE_OUTPUT}
-    COMMAND gcc -o ${GENERATE_OUTPUT} ${GENERATE_SRCS}
+    COMMAND g++ -o ${GENERATE_OUTPUT} ${GENERATE_SRCS}
     DEPENDS ${GENERATE_SRCS}
     )
 

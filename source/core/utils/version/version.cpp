@@ -5,11 +5,13 @@
 #include <getopt.h>
 #include <time.h>
 
+#include <string>
+#include <iostream>
+
 #define VERSION_H                        \
 "/* AUTO GENERATED FILE */\n"		 \
 "\n"                                     \
-"#ifndef %s_VERSION_H\n"                 \
-"#define %s_VERSION_H\n"                 \
+"#pragma once\n"                 	 \
 "\n"                                     \
 "#define %s_VERSION_MAJOR %d\n"          \
 "#define %s_VERSION_MINOR %d\n"          \
@@ -19,8 +21,7 @@
 "#define %s_VERSION \"%d.%d.%d.%d%s\"\n" \
 "#define %s_COMPILE_DATE \"%s\"\n"       \
 "#define %s_COMPILE_TIME \"%s\"\n"       \
-"\n"                                     \
-"#endif /* %s_VERSION_H */\n"
+"\n"
 
 #define USAGE                                                                  \
 "Usage: %s [-hMmpbaPDTiB]\n"                                                   \
@@ -55,7 +56,7 @@ int main(int argc, char **argv)
 		{"build-file", required_argument, NULL, 'F'},
 	};
 	int major, minor, patch, build, c, auto_inc_build;
-	char *meta, *prefix, *datefmt, *timefmt, *buildfile;
+	std::string meta, prefix, datefmt, timefmt, buildfile;
 	time_t timer;
 	struct tm *tm_info;
 	char datestr[32];
@@ -69,7 +70,7 @@ int main(int argc, char **argv)
 	prefix = "FRAMEWORK";
 	datefmt = "%Y-%m-%d";
 	timefmt = "%H:%M:%S";
-	buildfile = NULL;
+	buildfile = "";
 
 	while ((c = getopt_long(argc, argv, "hM:m:p:b:a:P:D:T:iF:",
 		long_options, 0)) != -1) {
@@ -90,22 +91,22 @@ int main(int argc, char **argv)
 			build = atoi(optarg);
 			break;
 		case 'a':
-			meta = optarg;
+			meta = std::string( optarg ) ;
 			break;
 		case 'P':
-			prefix = optarg;
+			prefix = std::string( optarg );
 			break;
 		case 'D':
-			datefmt = optarg;
+			datefmt = std::string( optarg );
 			break;
 		case 'T':
-			timefmt = optarg;
+			timefmt = std::string( optarg );
 			break;
 		case 'i':
 			auto_inc_build = 1;
 			break;
 		case 'F':
-			buildfile = optarg;
+			buildfile = std::string( optarg );
 			break;
 		case '?':
 			exit(1);
@@ -113,10 +114,12 @@ int main(int argc, char **argv)
 	}
 
 	if (auto_inc_build) {
-		if (buildfile) {
+		if ( buildfile.compare("") != 0 ) 
+		{
+
 			/* 65535 builds should be plenty (plus null-terminator) */
 			char line[17];
-			FILE *fp = fopen(buildfile, "r");
+			FILE *fp = fopen( buildfile.c_str() , "r");
 			if (fp == NULL) {
 				/* Don't overwrite build number if we can't
 				 * open file; keep the existing value. */
@@ -129,36 +132,34 @@ int main(int argc, char **argv)
 
 			build++;
 			/* Reopen to write new value; Truncate file. */
-			fp = fopen(buildfile, "w+");
+			fp = fopen( buildfile.c_str() , "w+");
 			if (fp == NULL) {
-				fprintf(stderr, "%s: %s\n", buildfile, strerror(errno));
+				fprintf(stderr, "%s: %s\n", buildfile.c_str(), strerror(errno));
 				exit(1);
 			}
 			/* Overwrite existing build value. */
 			snprintf(line, sizeof(line), "%d", build);
 			fprintf(fp, "%d", build);
 			fclose(fp);
+
 		}
 	}
 
 	time(&timer);
 	tm_info = localtime(&timer);
 
-	strftime(datestr, sizeof(datestr), datefmt, tm_info);
-	strftime(timestr, sizeof(timestr), timefmt, tm_info);
+	strftime(datestr, sizeof(datestr), datefmt.c_str(), tm_info);
+	strftime(timestr, sizeof(timestr), timefmt.c_str(), tm_info);
 
 	printf(VERSION_H,
-		prefix,
-		prefix,
-		prefix, major,
-		prefix, minor,
-		prefix, patch,
-		prefix, build,
-		prefix, meta,
-		prefix, major, minor, patch, build, meta,
-		prefix, datestr,
-		prefix, timestr,
-		prefix);
+		prefix.c_str(), major,
+		prefix.c_str(), minor,
+		prefix.c_str(), patch,
+		prefix.c_str(), build,
+		prefix.c_str(), meta.c_str(),
+		prefix.c_str(), major, minor, patch, build, meta.c_str(),
+		prefix.c_str(), datestr,
+		prefix.c_str(), timestr);
 
 	return 0;
 }
