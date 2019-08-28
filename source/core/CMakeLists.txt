@@ -1,6 +1,8 @@
 add_subdirectory( configurator )
 add_subdirectory( parameter )
 
+add_subdirectory( utils )
+
 add_subdirectory( gtest )
 
 add_library( core                       

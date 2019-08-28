@@ -30,3 +30,6 @@ tags
 # Ignore Doxygen generated files	
 CMakeDoxyfile.in 
 CMakeDoxygenDefaults.cmake
+
+# Ignore Version generated files
+include/version.h
