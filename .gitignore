@@ -33,3 +33,4 @@ CMakeDoxygenDefaults.cmake
 
 # Ignore Version generated files
 include/version.h
+.buildnumber
