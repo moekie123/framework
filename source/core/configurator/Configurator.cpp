@@ -20,7 +20,7 @@ XMLElement* FindElement( std::string _property )
 	for( auto e = pRoot->FirstChildElement( "Parameter" ); e != NULL; e = e->NextSiblingElement( "Parameter" ))
 	{
 		std::string name = e->Attribute( "name" );
-	
+
 		if( name.compare( _property ) == 0 )
 		{		
 			return  e->FirstChildElement( "value" );
