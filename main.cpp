@@ -1,10 +1,13 @@
 #include "Framework.h"
-
 #include "version.h"
 
 #include <iostream>
+#include <cstring>
 
-int main( int argc, char *argv[] )
+#include <mosquitto.h>
+
+
+int main(int argc, char* argv[])
 {
 	std::cout << "Booting Application\n";
 
@@ -14,4 +17,6 @@ int main( int argc, char *argv[] )
 	Framework *framework = new Framework( argc, argv );
 
 	std::cout << "Shutdown Application\n";
+
+   	return 0;
 }

@@ -2,7 +2,7 @@
 add_executable( step_definition step_definitions/step_definitions.cpp ) 
 
 # Link the executable
-target_link_libraries( step_definition gtest gmock pthread core cucumber-cpp )
+target_link_libraries( step_definition gtest gmock pthread core cucumber-cpp tinyxml2 )
 
 # Cucumber requires first the steps running 
 add_custom_target( cucumber 

@@ -23,14 +23,21 @@ set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/binairy )
 
 message( "Download External Dependencies" )
 include(ExternalProject)
-ExternalProject_Add( tinyxml
- 	PREFIX		${CMAKE_SOURCE_DIR}/external/tinyxml2
-	GIT_REPOSITORY  https://github.com/leethomason/tinyxml2.git
-)
 
 ExternalProject_Add( googletest 
- 	PREFIX		${CMAKE_SOURCE_DIR}/external/googletest
+ 	PREFIX ${CMAKE_SOURCE_DIR}/external/googletest
 	GIT_REPOSITORY https://github.com/google/googletest
+)
+
+ExternalProject_Add( mqtt
+ 	PREFIX ${CMAKE_SOURCE_DIR}/external/mqtt
+	CMAKE_ARGS "-DDOCUMENTATION=OFF"
+	GIT_REPOSITORY  https://github.com/eclipse/mosquitto.git
+)
+
+ExternalProject_Add( tinyxml 
+ 	PREFIX ${CMAKE_SOURCE_DIR}/external/tinyxml2
+	GIT_REPOSITORY  https://github.com/leethomason/tinyxml2.git
 )
 
 # Setup CTags
@@ -66,7 +73,8 @@ add_executable( Framework
 target_link_libraries( Framework PUBLIC
 				core
 				hardware 
-				tinyxml2 )
+				tinyxml2
+			      	mosquitto )
 
 add_dependencies( Framework
 			version )
