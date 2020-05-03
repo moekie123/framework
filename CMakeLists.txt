@@ -24,9 +24,8 @@ set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/binairy )
 # Setup CTags
 message( "Configure CTags" )
 set_source_files_properties( tags PROPERTIES GENERATED true)
-add_custom_command ( OUTPUT tags
-   	COMMAND ctags -R --c++-kinds=+p --fields=+iaS --extras=+q . 
-   	COMMENT "Generating CTags"
+add_custom_command ( OUTPUT tags ALL
+	COMMAND ctags -R --c++-kinds=+p --fields=+iaS --extras=+q .    
     	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR} )
 
 # Validate Source
@@ -42,13 +41,15 @@ message( "Setup the directory tree" )
 include_directories( include )
 add_subdirectory( source )
 
+message( "Configure Cucumber Enviroment" )
+add_subdirectory( features )
+
 # Build Project
 message( "Building Framework" )
 
 add_executable( Framework 
 			main.cpp 
-			source/Framework.cpp 
-			tags )
+			source/Framework.cpp )
 
 target_link_libraries( Framework PUBLIC
 				core

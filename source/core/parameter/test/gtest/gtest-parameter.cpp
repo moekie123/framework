@@ -10,7 +10,6 @@
 // Ignore Nagy Mocks for the Configurator Get(ters)
 using ::testing::NiceMock;
 
-
 // Constructor Tests
 TEST( Default, Construct)
 {
