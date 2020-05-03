@@ -14,12 +14,18 @@ echo "Modify users"
 	# Change Root Password	
 	echo  $PASSWORD":root" | sudo chpasswd
 
-	# Create new user
-	sudo adduser $USERNAME --gecos "-,-,-,-" --disabled-password
-	echo $PASSWORD":"$USERNAME | sudo chpasswd
+	id -u $USERNAME
+	if [ $? -eq 0 ]; then
+		# Create new user
+		sudo adduser $USERNAME --gecos "-,-,-,-" --disabled-password
+		echo $PASSWORD":"$USERNAME | sudo chpasswd
+	fi
 
-	# Remote Default User
-	userdel pi
+	id -u pi
+	if [ $? -eq 0 ]; then
+		# Remote Default User
+		userdel pi
+	fi
 
 echo "Update Dependencies"
 	apt-get update
