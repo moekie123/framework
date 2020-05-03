@@ -24,4 +24,4 @@ add_library( core
         
                 # Include others
                 $<TARGET_OBJECTS:parameter> 
-)
+		)

@@ -1,4 +1,4 @@
-cmake_minimum_required( VERSION 3.0.0 )
+cmake_minimum_required( VERSION 3.13.0 )
 
 message( "Building Framework" )
 Project( Framework )
@@ -20,6 +20,18 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 set( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/library )
 set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/binairy )
+
+message( "Download External Dependencies" )
+include(ExternalProject)
+ExternalProject_Add( tinyxml
+ 	PREFIX		${CMAKE_SOURCE_DIR}/external/tinyxml2
+	GIT_REPOSITORY  https://github.com/leethomason/tinyxml2.git
+)
+
+ExternalProject_Add( googletest 
+ 	PREFIX		${CMAKE_SOURCE_DIR}/external/googletest
+	GIT_REPOSITORY https://github.com/google/googletest
+)
 
 # Setup CTags
 message( "Configure CTags" )
@@ -53,7 +65,8 @@ add_executable( Framework
 
 target_link_libraries( Framework PUBLIC
 				core
-				hardware )
+				hardware 
+				tinyxml2 )
 
 add_dependencies( Framework
 			version )

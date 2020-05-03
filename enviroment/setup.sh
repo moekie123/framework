@@ -99,21 +99,23 @@ echo "Install Code Validator"
 	apt-get install cppcheck $FORCE
 
 echo "Install TDD Framework (GTest)"
+
+	echo "GTest will be installed through CMake"
 	# Checkout Repository
-	git clone https://github.com/google/googletest.git
-	cd googletest
+#	git clone https://github.com/google/googletest.git
+#	cd googletest
 
 	# Build Gtest Framework
-	cmake -DBUILD_SHARED_LIBS=ON .
-	make
+#	cmake -DBUILD_SHARED_LIBS=ON .
+#	make
 
 	# Copy the files to the shared directories
-	cp -r googlemock/include/gmock/ /usr/include/
-	cp -r googletest/include/gtest/ /usr/include/
-	cp lib/libg* /usr/lib/
+#	cp -r googlemock/include/gmock/ /usr/include/
+#	cp -r googletest/include/gtest/ /usr/include/
+#	cp lib/libg* /usr/lib/
 		
 	# Verify gtest is installed
-	ldconfig -v |grep gtest
+#	ldconfig -v |grep gtest
 
 echo "Install BDD Framework (Cucumber)"
 	apt-get install cucumber

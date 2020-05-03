@@ -1,6 +1,6 @@
 add_executable( gtest-configurator gtest-configurator.cpp )
 
-target_link_libraries( gtest-configurator gtest gmock pthread core )
+target_link_libraries( gtest-configurator gtest gmock pthread core tinyxml2 )
 
 add_test( NAME configurator COMMAND gtest-configurator WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY} )
 
