@@ -29,6 +29,10 @@ add_custom_command ( OUTPUT tags
    	COMMENT "Generating CTags"
     	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR} )
 
+# Validate Source
+message( "Check source code" )
+set(CMAKE_CXX_CPPCHECK "cppcheck")
+
 # Build Test Enviroment
 message( "Configure Test Enviroment" )
 include( CTest )
