@@ -24,13 +24,14 @@ The installation of your development enviroment is documenent on <a href="https:
 
 In summary it describes how to get a automatated script:
 ```
-$ git clone http://github.com/moekie123/rpi-env/setup.sh
-$ sudo ./setup.sh
+$ sudo ./<framework>/enviroment/setup.sh
 ```
 
 The script automatically installs:
 * [GoogleTest]
+* [Cucumber]
 * [Doxygen]
+* [MQTT Mosquito Broker]
 
 ## Running the tests
 The framework has implemented both TTD (Test Driven Development) with googletest and BDD(Behavior Driven Developement) with cucumber.
@@ -41,7 +42,9 @@ $ make test
 ```
 
 The cucumber tests can be triggerd:
-<TODO: Implemented Cuccumber Test>
+```
+$ make cucumber
+```
 
 ## Deployment
 The basic install command should be sufficient to install the framework
@@ -54,7 +57,7 @@ Mind that doxygen will install the documentation in '/var/www/html' so you can o
 
 ## Contributing
 
-Untill the source of the framework is still at a MAJOR Version '0' there will be no contribution accepted.
+Until the source of the framework is still at a MAJOR Version '0' there will be no contribution accepted.
 
 ## Versioning
 <TODO: Create Release branches>

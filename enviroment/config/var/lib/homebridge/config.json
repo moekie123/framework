@@ -1,0 +1,64 @@
+{
+	"bridge": {
+		"name": "Homebridge",
+		"username": "CC:22:3D:E3:CE:30",
+		"manufacturer": "homebridge.io",
+		"model": "homebridge",
+		"port": 51826,
+		"pin": "031-45-154"
+  	},
+ 	"description": "PartyBridge",
+ 	"ports": {
+		"start": 52100,
+		"end": 52150,
+		"comment": "Range of ports for devices"
+  	},
+
+	"accessories": [
+	{
+	    "accessory": "mqttthing",
+	    "type": "lightbulb",
+	    "name": "PiGlow",
+	    "url": "http://localhost:1883",
+	    "username": "rsalm",
+	    "password": "rsalm",
+	    "mqttOptions": { "keepalive": 30 },
+	    "mqttPubOptions": { "retain": true },
+	    "logMqtt": true,
+	    "topics": {
+		"getOn": "home/sandbox/lightbulb/get/on",
+                "setOn": "home/sandbox/lightbulb/set/on",
+		"getBrightness": "home/sandbox/lightbulb/get/brightness",
+                "setBrightness": "home/sandbox/lightbulb/set/brightness"
+	    },
+	    "integerValue": false,
+	    "onValue": "Online",
+	    "offValue": "Offline",
+
+	    "confirmationPeriodms": 1000,
+	    "retryLimit": 5
+	},
+	{
+	    "accessory": "mqttthing",
+	    "type": "motionSensor",
+	    "name": "My Motion Sensor",
+	    "url": "http://localhost:1883",
+	    "username": "rsalm",
+	    "password": "rsalm",
+	    "mqttOptions": { "keepalive": 30 },
+	    "mqttPubOptions": { "retain": true },
+	    "logMqtt": true,
+	    "topics": {
+		"getMotionDetected": "home/sandbox/motion/get/detected"
+	    },
+	    "integerValue": false,
+	    "onValue": "Online",
+	    "offValue": "Offline",
+	    "startPub": [
+		{ "topic": "home/sandbox/motion/hello", "message": "hello world" }
+	    ],
+	    "confirmationPeriodms": 1000,
+	    "retryLimit": 5
+	}
+	]
+}
