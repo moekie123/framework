@@ -23,7 +23,6 @@ set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/binairy )
 
 add_subdirectory( external )
 
-
 # Setup CTags
 message( "Configure CTags" )
 set_source_files_properties( tags PROPERTIES GENERATED true)
@@ -63,10 +62,6 @@ target_link_libraries( Framework PUBLIC
 add_dependencies( Framework
 			version )
 
-message( "Reload Dynamice linker") 
-add_custom_command ( OUTPUT ldconfig ALL
-	COMMAND ldconfig 
-    	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR} )
 
 # Documentation
 message( "Configure Documentation" )

@@ -7,9 +7,16 @@ find_library( GMOCK_LIB gmock )
 if( NOT GTEST_LIB OR NOT GMOCK_LIB )
 
 	ExternalProject_Add( googletest 
- 		PREFIX ${CMAKE_SOURCE_DIR}/external/googletest
+		PREFIX ${CMAKE_SOURCE_DIR}/external/googletest
+		CMAKE_ARGS "-DBUILD_SHARED_LIBS=ON"
 		GIT_REPOSITORY https://github.com/google/googletest
 	)
+
+	ExternalProject_Add_Step( googletest refresh
+		ALWAYS TRUE
+		DEPENDEES "install"
+		COMMENT "refresh shared library cache" 
+		COMMAND ldconfig )
 
 else()
 	message( STATUS "Google Test Library already installed" )
@@ -25,6 +32,12 @@ if( NOT MQTT_LIB )
 		GIT_REPOSITORY  https://github.com/eclipse/mosquitto.git
 	)
 
+	ExternalProject_Add_Step( mqtt refresh
+		ALWAYS TRUE
+		DEPENDEES "install"
+		COMMENT "refresh shared library cache" 
+		COMMAND ldconfig )
+
 else()
 	message( STATUS "Mosquitto Library already installed" )
 endif()
@@ -37,6 +50,12 @@ if( NOT XML_LIB )
 		PREFIX ${CMAKE_SOURCE_DIR}/external/tinyxml2
 		GIT_REPOSITORY  https://github.com/leethomason/tinyxml2.git
 	)
+
+	ExternalProject_Add_Step( tinyxml refresh
+		ALWAYS TRUE
+		DEPENDEES "install"
+		COMMENT "refresh shared library cache" 
+		COMMAND ldconfig )
 
 else()
 	message( STATUS "TinyXml2 Library already installed" )
