@@ -3,8 +3,8 @@
 build/
 library/
 binairy/
-Testing/
 documentation/
+external/
 
 # Ignore VIM temporary files
 *.~

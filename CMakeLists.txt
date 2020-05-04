@@ -21,24 +21,8 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/library )
 set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/binairy )
 
-message( "Download External Dependencies" )
-include(ExternalProject)
+add_subdirectory( external )
 
-ExternalProject_Add( googletest 
- 	PREFIX ${CMAKE_SOURCE_DIR}/external/googletest
-	GIT_REPOSITORY https://github.com/google/googletest
-)
-
-ExternalProject_Add( mqtt
- 	PREFIX ${CMAKE_SOURCE_DIR}/external/mqtt
-	CMAKE_ARGS "-DDOCUMENTATION=OFF"
-	GIT_REPOSITORY  https://github.com/eclipse/mosquitto.git
-)
-
-ExternalProject_Add( tinyxml 
- 	PREFIX ${CMAKE_SOURCE_DIR}/external/tinyxml2
-	GIT_REPOSITORY  https://github.com/leethomason/tinyxml2.git
-)
 
 # Setup CTags
 message( "Configure CTags" )
@@ -78,6 +62,11 @@ target_link_libraries( Framework PUBLIC
 
 add_dependencies( Framework
 			version )
+
+message( "Reload Dynamice linker") 
+add_custom_command ( OUTPUT ldconfig ALL
+	COMMAND ldconfig 
+    	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR} )
 
 # Documentation
 message( "Configure Documentation" )
