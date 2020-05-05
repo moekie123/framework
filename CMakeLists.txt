@@ -21,6 +21,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/library )
 set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/binairy )
 
+# Include external dependencies
 add_subdirectory( external )
 
 # Setup CTags
