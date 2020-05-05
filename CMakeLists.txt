@@ -1,6 +1,5 @@
 cmake_minimum_required( VERSION 3.13.0 )
 
-message( "Building Framework" )
 Project( Framework )
 
 # Framework Version
@@ -10,7 +9,7 @@ set(VERSION_PATCH   0   CACHE STRING "Project patch version number.")
 set(VERSION_META "-alpha")
 
 mark_as_advanced(VERSION_MAJOR VERSION_MINOR VERSION_PATCH)
-message( "Version " ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH} )
+message( "Build Framework [${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}]" )
 
 # Setup Enviroment
 message( "Configure Compiler" )
