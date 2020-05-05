@@ -43,6 +43,7 @@ include( CTest )
 message( "Setup the directory tree" )
 include_directories( include )
 add_subdirectory( source )
+add_subdirectory( prototype )
 
 message( "Configure Cucumber Enviroment" )
 add_subdirectory( features )

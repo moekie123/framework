@@ -5,4 +5,6 @@ set( FRAMEWORK_SOURCES
 add_subdirectory( core )
 add_subdirectory( hardware )
 
-add_library( framework ${FRAMEWORK_SOURCES} )
+add_library( framework 
+		${FRAMEWORK_SOURCES} 
+		)

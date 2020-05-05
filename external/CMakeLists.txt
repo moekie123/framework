@@ -44,7 +44,7 @@ endif()
 
 # Install the tinyxml library
 find_library( XML_LIB tinyxml2 )
-if( XML_LIB )
+if( NOT XML_LIB )
 
 	ExternalProject_Add( tinyxml 
 		PREFIX ${CMAKE_SOURCE_DIR}/external/tinyxml2
