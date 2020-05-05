@@ -50,18 +50,15 @@ add_subdirectory( features )
 # Build Project
 message( "Building Framework" )
 
-add_executable( Framework 
-			main.cpp 
-			source/Framework.cpp )
+# Collect Framework sources
+add_executable( Framework main.cpp )
 
 target_link_libraries( Framework PUBLIC
-				core
-				hardware 
+				framework
 				tinyxml2
 			      	mosquitto )
 
-add_dependencies( Framework
-			version )
+add_dependencies( Framework version )
 
 
 # Documentation
