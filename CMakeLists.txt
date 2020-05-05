@@ -60,7 +60,6 @@ target_link_libraries( Framework PUBLIC
 
 add_dependencies( Framework version )
 
-
 # Documentation
 message( "Configure Documentation" )
 add_subdirectory( documentation )
