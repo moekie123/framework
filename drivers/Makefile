@@ -5,7 +5,7 @@ LDIR=/lib/modules/$(shell uname -r)/kernel/drivers/pwm/
 
 all:
 	@echo "Build Kernel Modules"
-	make -C ${KDIR} O=$(PWD) M=$(PWD) modules
+	make -C ${KDIR}  M=$(PWD) modules
 
 install:
 	@echo "Install Kernel Modules"
