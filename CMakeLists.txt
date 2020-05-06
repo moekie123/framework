@@ -44,6 +44,9 @@ include_directories( include )
 add_subdirectory( source )
 add_subdirectory( prototype )
 
+# Include drivers
+add_subdirectory( drivers )
+
 message( "Configure Cucumber Enviroment" )
 add_subdirectory( features )
 
