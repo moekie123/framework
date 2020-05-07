@@ -38,7 +38,7 @@ The framework has implemented both TTD (Test Driven Development) with googletest
 
 The (googletest) unittests can be triggered with
 ```
-$ make test
+$ ctest
 ```
 
 The cucumber tests can be triggerd:
@@ -69,4 +69,9 @@ Until the source of the framework is still at a MAJOR Version '0' there will be 
 This project is free for use. 
 
 ## Acknowledgments
+
+
+<!-- Every thing below the following line will be printed in the section "Unit Tests"-->
+\page unittest Unit Tests    
+\htmlinclude gtest.php
 

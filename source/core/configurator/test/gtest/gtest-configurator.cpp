@@ -6,6 +6,11 @@
 
 #include <string>
 
+#include <unistd.h>
+#include <iostream>
+
+static std::string filename = "gtest-configurator.xml";
+
 TEST( Default, Construct )
 {
 	Configurator *cf = new Configurator( "gtest-configurator.xml" );
@@ -48,6 +53,14 @@ TEST( Exception, UnknownString )
 
 int main(int argc, char **argv) 
 {
-    ::testing::InitGoogleTest(&argc, argv); 
-    return RUN_ALL_TESTS();
+
+	if( access( filename.c_str(), F_OK ) != -1 )
+	{
+		::testing::InitGoogleTest(&argc, argv);
+		return RUN_ALL_TESTS();
+	}
+	else
+		std::cout << "Couldn't find [" << filename << "]\n";
+	
+	return 0;
 }

@@ -60,7 +60,7 @@ int main(int argc, const char * argv[])
 		XMLElement* newElement = doc.NewElement( "Subelement" );
 		
 		// Insert add new element to XML (in memeory)
-		std::cout << "\t- add new element to xml-tree\n"
+		std::cout << "\t- add new element to xml-tree\n";
 		root->InsertEndChild( newElement );
 
 		/* Write XML-File */

@@ -6,6 +6,9 @@ find_package( Doxygen )
 
 if ( DOXYGEN_FOUND )
 	# set input and output files
+	set( DOXYGEN_LAYOUT ${CMAKE_SOURCE_DIR}/documentation/DoxygenLayout.xml  )
+
+
 	set( DOXYGEN_IN  ${CMAKE_SOURCE_DIR}/documentation/Doxyfile.in )
     	set( DOXYGEN_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile ) 
 
