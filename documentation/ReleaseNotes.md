@@ -11,6 +11,9 @@ Improve the fundamentals of the framework
 ## Core Feature
 	- Implemented an argument parser to the Framework
 
+## Development Enviroment
+	- Added PWM-driver demo
+
 # Version 0.1.0
 The initial setup of the framework 
 
@@ -20,6 +23,9 @@ The initial setup of the framework
 	- Version and build number generator
 	- Doxygen extend with dynamic untitest
 	- Included prototype directory as sandbox for new features
+		- Added Mosquitto demo
+		- Added RapidJSON demo
+		- Added TinyXml2 demo
 
 ## Core Features
 	- Design patterns added
@@ -43,3 +49,4 @@ The initial setup of the framework
 	- Included Mosquitto library
 	- Included RapidJson library
 	- Included TinyXml2 library
+
