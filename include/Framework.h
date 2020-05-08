@@ -2,6 +2,7 @@
 
 /**
  * @brief The Framework is the Facaad that constructs the full core and drivers
+ * @details This class should be declared such that the class will initialized at startup of the program
  */
 class Framework
 {
@@ -9,8 +10,6 @@ class Framework
 
 		/**
 		 * @brief This constructor will initialize all utilities and drivers.
-		 * @details 	In the constructor it will register the Builders of all avaliable classes and store them in a Singleton Factory.
-		 * 		This Factory can be used in the project to create new classes.
 		 */
 		Framework( int argc, char *argv[] );
 };

@@ -13,7 +13,7 @@ Framework::Framework( int argc, char *argv[] )
 {
 	Factory& factory = Singleton< Factory >::Instance();
 
-	/** Registered Builders: */
+	/** Current registered builders: */
 
 	///	- Configurator
 	factory.Register< Configurator> ( "Configurator" );
