@@ -1,6 +1,3 @@
-#include "Framework.h"
-#include "version.h"
-
 #include <cstring>
 
 #include <iostream> // printing
@@ -62,12 +59,6 @@ int main(int argc, char* argv[])
 
 	signal(SIGINT, abort);
 	signal(SIGTERM, abort);
-
-	std::cout << "version: " << FRAMEWORK_VERSION << '\n';
-	std::cout << "compiled: " << FRAMEWORK_COMPILE_DATE << " " << FRAMEWORK_COMPILE_TIME << '\n';
-
-	std::cout << "Initialize Framework";
-	Framework *framework = new Framework( argc, argv );
 
 	std::cout << "Initialize Mosquitto Library";
 	mosquitto_lib_init();

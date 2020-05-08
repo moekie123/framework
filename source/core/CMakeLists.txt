@@ -1,8 +1,6 @@
 add_subdirectory( configurator )
 add_subdirectory( parameter )
 
-add_subdirectory( utils )
-
 add_subdirectory( mosquitto )
 
 add_subdirectory( gtest )

@@ -3,13 +3,11 @@ cmake_minimum_required( VERSION 3.13.0 )
 Project( Framework )
 
 # Framework Version
-set(VERSION_MAJOR   0   CACHE STRING "Project major version number.")
-set(VERSION_MINOR   2   CACHE STRING "Project minor version number.")
-set(VERSION_PATCH   0   CACHE STRING "Project patch version number.")
+set(VERSION_MAJOR   0)
+set(VERSION_MINOR   3)
+set(VERSION_PATCH   0)
 set(VERSION_META "-alpha")
-
 mark_as_advanced(VERSION_MAJOR VERSION_MINOR VERSION_PATCH)
-message( "Build Framework [${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}]" )
 
 # Setup Enviroment
 message( "Configure Compiler" )
@@ -55,14 +53,18 @@ add_subdirectory( features )
 message( "Building Framework" )
 
 # Collect Framework sources
-add_executable( Framework main.cpp )
 
+add_executable( Framework main.cpp )
+add_custom_command( TARGET Framework 
+	COMMAND echo "Build Framework [${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}${VERSION_META}]"
+	PRE_BUILD)
+	
 target_link_libraries( Framework PUBLIC
 				framework
 				tinyxml2
 			      	mosquitto )
 
-add_dependencies( Framework version )
+#add_dependencies( Framework version )
 
 # Documentation
 message( "Configure Documentation" )

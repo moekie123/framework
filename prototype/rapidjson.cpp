@@ -1,7 +1,5 @@
 #include <iostream>
 
-
-// rapidjson/example/simpledom/simpledom.cpp`
 #include "rapidjson/document.h"
 #include "rapidjson/writer.h"
 #include "rapidjson/stringbuffer.h"

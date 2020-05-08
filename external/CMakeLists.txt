@@ -85,4 +85,33 @@ else()
 	message( STATUS "RapidJson [${RAPIDJSON_VERSION}] already installed" )
 endif()
 
+find_program( GENERATOR generator )
+if( NOT GENERATOR )
 
+	message("Build Version Generator")
+	ExternalProject_Add( EXTERNAL_VERSION
+		PREFIX ${CMAKE_SOURCE_DIR}/external/version
+		INSTALL_COMMAND ""
+		GIT_REPOSITORY https://github.com/erichschroeter/cmake-auto-increment-build-number.git
+	)
+
+	add_executable( generator ${CMAKE_CURRENT_SOURCE_DIR}/version/src/generate.c )
+else()
+	message( STATUS "Version generator already installed" )
+endif()
+
+add_custom_target( version ALL
+	COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/generator
+		 -P "FRAMEWORK"
+		 -M "${VERSION_MAJOR}"
+		 -m ${VERSION_MINOR}
+		 -p ${VERSION_PATCH}
+		 -a "${VERSION_META}"
+		 -F "${CMAKE_SOURCE_DIR}/.buildnumber"
+		 -i
+	> ${CMAKE_SOURCE_DIR}/include/version.h 
+
+	DEPENDS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/generator
+    	COMMENT "Generating version tags"
+    	VERBATIM
+    )
