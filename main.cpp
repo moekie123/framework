@@ -4,9 +4,6 @@
 #include <iostream>
 #include <cstring>
 
-#include <mosquitto.h>
-
-
 int main(int argc, char* argv[])
 {
 	std::cout << "Booting Application\n";
