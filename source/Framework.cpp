@@ -17,7 +17,7 @@
 "\n"                                                                           	\
 "Options:\n"                                                                   	\
 "  -h, --help        Print this menu and exit.\n"                              	\
-"  -c, --config      The configuation file\n"                              	\
+"  -c, --config      The configuation file [default: %s].\n"                   	\
 "\n"
 
 Framework::Framework( int argc, char *argv[] ):
@@ -68,7 +68,7 @@ int Framework::parseArguments( int argc, char* argv[] )
 				break;
 			case 'h':
 			case '?':
-				printf( FRAMEWORK_USAGE, argv[0] );
+				printf( FRAMEWORK_USAGE, argv[0], mConfigurationFilename.c_str() );
 				return -1;
 		}
 	}
