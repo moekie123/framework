@@ -816,8 +816,9 @@ WARN_LOGFILE           =
 # Note: If this tag is empty the current directory is searched.
 INPUT                  =  @PROJECT_SOURCE_DIR@/include \
                           @PROJECT_SOURCE_DIR@/source \
-                          @PROJECT_SOURCE_DIR@/README.md \
-                          @PROJECT_SOURCE_DIR@/documentation/gtest.php 
+                          @PROJECT_SOURCE_DIR@/documentation
+#                          @PROJECT_SOURCE_DIR@/documentation/README.md \
+#                          @PROJECT_SOURCE_DIR@/documentation/gtest.php 
 
 
 # This tag can be used to specify the character encoding of the source files
