@@ -64,7 +64,9 @@ target_link_libraries( Framework PUBLIC
 				tinyxml2
 			      	mosquitto )
 
-#add_dependencies( Framework version )
+add_dependencies( Framework version )
+
+install( TARGETS Framework DESTINATION ${CMAKE_INSTALL_OUTPUT_DIRECTORY} )
 
 # Documentation
 message( "Configure Documentation" )
