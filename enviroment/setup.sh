@@ -48,12 +48,7 @@ echo "Install Boost"
 	apt-get install libboost-all-dev --fix-missing $FORCE
 
 echo "Add Alias"
-	cp ~/.bashrc > /tmp/.bashrc
-
-	sed 's/# alias/alias/g' ~/.bashrc 	>> /tmp/.bashrc
-	echo "alias='i2cdetect -y 1'" 		>> /tmp/.bashrc
-
-	mv /tmp/.bashrc ~/.bashrc
+	cp ./bash_profile > ~/.bash_profile
 
 echo "MQTT-broker"
 	# install mosquitto broker, sub & pub
