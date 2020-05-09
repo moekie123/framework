@@ -14,9 +14,11 @@ FRAMEWORK="/root/framework"
 if [ -d "$FRAMEWORK" ]; then
 	alias cdf='cd '$FRAMEWORK
 	alias cdb='cd '$FRAMEWORK/binairy
+	alias cdi='cd '$FRAMEWORK/include
 	alias cds='cd '$FRAMEWORK/source
 	alias cdc='cd '$FRAMEWORK/source/core
 	alias cdh='cd '$FRAMEWORK/source/hardware
+
 	alias makef='make --no-print-directory -C '$FRAMEWORK'/build/'
 
 	export PATH=$PATH:$FRAMEWORK/binairy/
