@@ -9,8 +9,10 @@
  * @brief The generic interface for a Chipset
  */
 class IChipset:
-    public Generic,
+
+//    public Generic,
     public Composite< IChipset >,
+
     public Observer< IChipset >,
     public Subject< IChipset >
 {

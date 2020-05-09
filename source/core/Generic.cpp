@@ -1,6 +1,7 @@
 #include "Generic.h"
 
 #include <string>
+#include <iostream>
 
 Generic::Generic()
 {
@@ -14,7 +15,7 @@ const std::string& Generic::GetName() const
  
 bool Generic::GetProperty( std::string _property, int& _value ) const
 {
-   	if ( mProperties.find( _property ) != mProperties.end() )
+	if ( mProperties.find( _property ) != mProperties.end() )
 	{
    		_value = mProperties.find( _property )->second;
 		return true;
@@ -32,3 +33,4 @@ bool Generic::SetProperty( std::string _property, const int& _value )
 	}
 	return false;
 }
+

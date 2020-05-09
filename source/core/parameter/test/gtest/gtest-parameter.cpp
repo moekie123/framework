@@ -79,13 +79,13 @@ TEST_F( ParameterTest, GetProperty )
 {
 	int _value;
 
-	EXPECT_EQ( mParameter->GetProperty( "const", _value ), true );
+	EXPECT_EQ( mParameter->GetProperty( "Parameter.const", _value ), true );
 	EXPECT_EQ( _value, 0 );
 
-    	EXPECT_EQ( mParameter->GetProperty( "value", _value ), true );
+    	EXPECT_EQ( mParameter->GetProperty( "Parameter.value", _value ), true );
 	EXPECT_EQ( _value, 0 );
 
-	EXPECT_EQ( mParameter->GetProperty( "default" , _value ), true );
+	EXPECT_EQ( mParameter->GetProperty( "Parameter.default" , _value ), true );
 	EXPECT_EQ( _value, 0 );
 }
 
@@ -96,16 +96,16 @@ TEST_F( ParameterTest, SetProperty )
 {
 	int _value;
 
-	EXPECT_EQ( mParameter->SetProperty( "value", 1 ), true );
-	mParameter->GetProperty( "value", _value );
+	EXPECT_EQ( mParameter->SetProperty( "Parameter.value", 1 ), true );
+	mParameter->GetProperty( "Parameter.value", _value );
 	EXPECT_EQ( _value, 1 );
 
-	EXPECT_EQ( mParameter->SetProperty( "default", 1 ), true );
-	mParameter->GetProperty( "default", _value );
+	EXPECT_EQ( mParameter->SetProperty( "Parameter.default", 1 ), true );
+	mParameter->GetProperty( "Parameter.default", _value );
 	EXPECT_EQ( _value, 1 );
 
-	EXPECT_EQ( mParameter->SetProperty( "const", 1 ), true );
-	mParameter->GetProperty( "const", _value );
+	EXPECT_EQ( mParameter->SetProperty( "Parameter.const", 1 ), true );
+	mParameter->GetProperty( "Parameter.const", _value );
 	EXPECT_EQ( _value, 1 );
 }
 
@@ -117,8 +117,8 @@ TEST_F( ParameterTest, DefaultIsValue )
 {
 	int _value, _default;
 
-    	ASSERT_EQ( mParameter->GetProperty( "value", _value ), true );
-	ASSERT_EQ( mParameter->GetProperty( "default" , _default ), true );
+    	ASSERT_EQ( mParameter->GetProperty( "Parameter.value", _value ), true );
+	ASSERT_EQ( mParameter->GetProperty( "Parameter.default" , _default ), true );
 	ASSERT_EQ( _value, _default );
 }
 
@@ -129,23 +129,23 @@ TEST_F( ParameterTest, SetConstValue )
 {
 	int _const, _value;
 
-    	ASSERT_EQ( mParameter->GetProperty( "const" , _const ), true );
+    	ASSERT_EQ( mParameter->GetProperty( "Parameter.const" , _const ), true );
 	ASSERT_EQ( _const , 0 );
 
-    	mParameter->SetProperty( "value" , 42 );
-    	ASSERT_EQ( mParameter->GetProperty("value", _value ), true );
+    	mParameter->SetProperty( "Parameter.value" , 42 );
+    	ASSERT_EQ( mParameter->GetProperty("Parameter.value", _value ), true );
 	ASSERT_EQ( _value, 42 );
     
-	ASSERT_EQ( mParameter->SetProperty( "const", 1 ) , true );
-    	mParameter->GetProperty( "const", _const );
+	ASSERT_EQ( mParameter->SetProperty( "Parameter.const", 1 ) , true );
+    	mParameter->GetProperty( "Parameter.const", _const );
 	ASSERT_EQ( _const , 1 );
 
-	ASSERT_EQ( mParameter->SetProperty( "value" , 0 ), false );
-    	mParameter->GetProperty("value", _value );
+	ASSERT_EQ( mParameter->SetProperty( "Parameter.value" , 0 ), false );
+    	mParameter->GetProperty("Parameter.value", _value );
 	ASSERT_EQ( _value, 42 );
 
-	ASSERT_EQ( mParameter->SetProperty( "const" , 0 ), false ) ;
-     	mParameter->GetProperty( "const", _const );
+	ASSERT_EQ( mParameter->SetProperty( "Parameter.const" , 0 ), false ) ;
+     	mParameter->GetProperty( "Parameter.const", _const );
 	ASSERT_EQ( _const , 1 );
 }
 
@@ -156,16 +156,17 @@ TEST_F( ParameterTest, Reset )
 {
 	int _value, _default;
 
-	mParameter->SetProperty( "value" , 42 );
+	mParameter->SetProperty( "Parameter.value" , 42 );
 	
-	mParameter->GetProperty( "value", _value );
-	mParameter->GetProperty( "default", _default );
+	mParameter->GetProperty( "Parameter.value", _value );
+	mParameter->GetProperty( "Parameter.default", _default );
     	ASSERT_NE( _value, _default );
 
     	mParameter->Reset();
- 	mParameter->GetProperty( "value", _value );
-	mParameter->GetProperty( "default", _default );
-    	ASSERT_EQ( _value, _default );
+ 	mParameter->GetProperty( "Parameter.value", _value );
+	mParameter->GetProperty( "Parameter.default", _default );
+    	
+	ASSERT_EQ( _value, _default );
 }
 
 /**

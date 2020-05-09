@@ -9,6 +9,8 @@
 #include "hardware/drivers/chipset/Chipset.h"
 #include "hardware/drivers/device/Device.h"
 
+#include "hardware/actuators/Actuator.h"
+
 #include <getopt.h>
 #include <iostream>
 
@@ -27,15 +29,14 @@ Framework::Framework( int argc, char *argv[] ):
 
 	// Parse Arguments
 	ret = parseArguments( argc, argv );
-	if( !ret ) 
-		return;
 
 	// Construct Factory
 	Factory& factory = Singleton< Factory >::Instance();
-	
+		
 	/** Current registered builders: */
 
 	///	- Configurator
+	Configurator::mConfigFileName = mConfigurationFilename;
 	factory.Register< Configurator> ( "Configurator" );
 
 	///	- Parameter 
@@ -46,6 +47,10 @@ Framework::Framework( int argc, char *argv[] ):
 
 	///	- Device
 	factory.Register< Device >( "Device" );
+
+	///	- Actuator
+	factory.Register< Actuator >( "Actuator" );
+
 };
 
 

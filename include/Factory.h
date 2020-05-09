@@ -5,6 +5,8 @@
 #include <string>
 #include <map>
 
+#include <iostream>
+
 /**
  * @brief An (abstract) Factory that creates new instances with the registed Builders
  * @details This generic constructional design pattern of a generic (abstract) Factory that accepts Builders
@@ -46,6 +48,7 @@ class Factory
 		{
         		return dynamic_cast<  T* >( mBuilderMap[ _id ]->Build( _name ));
         	}
+
 		return nullptr;
 	}
 

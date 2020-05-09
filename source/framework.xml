@@ -1,0 +1,20 @@
+<Root>
+	<Parameter name="pca9685/config/refresh.default" >
+		<value> 50 </value>
+	</Parameter>
+	<Parameter name="pca9685/config/log.default" >
+		<value> 3 </value>
+	</Parameter>
+	<Parameter name="pca9685/config/mode.default" >
+		<value> 1 </value>
+	</Parameter>
+	<Parameter name="pca9685/config/stepsize.default" >
+		<value> 10 </value>
+	</Parameter>
+	<Parameter name="pca9685/config/period.default" >
+		<value> 1000000 </value>
+	</Parameter>
+	<Parameter name="pca9685/config/profile.default" >
+		<value> 42 </value>
+	</Parameter>
+</Root>

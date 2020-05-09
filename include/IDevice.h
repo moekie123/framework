@@ -8,8 +8,8 @@
  * @brief The generic interface class for an Device
  */
 class IDevice:
-	public Generic,
-	public Composite< IDevice >,
+
+//	public Generic,
 	public Composite< IParameter >
 {
 	public:

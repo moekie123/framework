@@ -56,6 +56,7 @@ int main(int argc, char **argv)
 
 	if( access( filename.c_str(), F_OK ) != -1 )
 	{
+		Configurator::mConfigFileName = filename;
 		::testing::InitGoogleTest(&argc, argv);
 		return RUN_ALL_TESTS();
 	}

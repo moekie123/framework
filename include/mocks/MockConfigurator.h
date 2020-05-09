@@ -22,4 +22,5 @@ class MockConfigurator:
 		{
 			return GetString( _property, _value );
 		}
+
 };

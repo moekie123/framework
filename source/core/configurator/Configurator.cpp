@@ -10,6 +10,7 @@ using namespace tinyxml2;
 XMLDocument xmlDoc;
 
 Configurator::ConfiguratorBuilder Configurator::builder;
+std::string Configurator::mConfigFileName;
 
 XMLElement* FindElement( std::string _property )
 {
@@ -29,9 +30,11 @@ XMLElement* FindElement( std::string _property )
 	return nullptr;
 }
 
-Configurator::Configurator( std::string _filename ) 
+Configurator::Configurator( std::string _name ) 
 {
-	XMLError eResult = xmlDoc.LoadFile( _filename.c_str() );
+	xmlDoc.LoadFile( mConfigFileName.c_str() );
+	if( xmlDoc.ErrorID() != 0 )
+		std::cerr << "Failed reading from file [" << xmlDoc.ErrorID() <<"]\n";
 }
 
 bool Configurator::Get( std::string _property, int& _value ) const
@@ -43,6 +46,7 @@ bool Configurator::Get( std::string _property, int& _value ) const
 		int tmp;
 		pValue->QueryIntText( &tmp );
 		_value = tmp;
+	
 		return true;
 	}
 
@@ -63,3 +67,4 @@ bool Configurator::Get( std::string _property, std::string& _value ) const
 
 	return false;
 }
+

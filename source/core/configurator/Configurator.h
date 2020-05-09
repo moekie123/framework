@@ -8,6 +8,8 @@
 #include <map>
 #include <iostream>
 
+#include "Singleton.h"
+
 /**
  * @brief This generic configuration class can be used to an configuration from an external source
  */
@@ -22,9 +24,9 @@ class Configurator:
 			public Builder
 		{
 			public:
-				Generic* Build( std::string _filename ) override
+				Generic* Build( std::string _name ) override
 				{
-					return new Configurator( _filename );
+					return new Configurator( _name );
 				}
 		};
 		/**
@@ -37,12 +39,17 @@ class Configurator:
 		 * @param _name The configuration file 
 		 */
 		Configurator( std::string _name );
-	
 
-		/* Generic */	
+		/** 
+		 * @brief The name of the configuration file
+		 */
+		static std::string mConfigFileName;
+
+		/* Generic methods **/
+
 	private:
 		/* IConfigurator */
 		bool Get( std::string _property, int& _value ) const override;
 		bool Get( std::string _property, std::string& _value ) const override;
-
+	
 };

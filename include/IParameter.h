@@ -13,8 +13,10 @@
  * @brief The generic interface class for a Poramater
  */
 class IParameter:
-    public Generic,
+
+//    public Generic,
     public Composite< IParameter >,
+
     public Observer< IParameter >,
     public Subject< IParameter >
 {

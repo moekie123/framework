@@ -7,15 +7,11 @@
 #include "IParameter.h"
 
 #include <string>
+#include <iostream>
+
+Actuator::ActuatorBuilder Actuator::builder;
 
 Actuator::Actuator( std::string _name ) 
 {
     	mName = _name;
-
-    	Factory& factory = Singleton< Factory >::Instance(); 
-
-   	auto ip = factory.Create< IParameter >( "Parameter", "TargetPosition" );
-
-    	Composite< IParameter >::Add( ip );
 }
-
