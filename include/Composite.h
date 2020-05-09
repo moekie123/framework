@@ -23,6 +23,10 @@ class Composite:
 	*/
 	void Add ( T* _node )
 	{
+		std::string nName = _node->GetName();
+		
+		_node->SetName( mName + "/" + nName );
+
         	mComponents.push_back( _node ); 
    	}
 
@@ -36,16 +40,16 @@ class Composite:
 	bool GetProperty( std::string _name, int& _value ) const override
 	{
 		bool result = false;
-		
+	
 		result = Generic::GetProperty( _name, _value );	
 		if( result )
 			return result;	
-		
+
 		for( auto* component : mComponents )
 		{
 			result = component->GetProperty( _name, _value );
 		
-			if( result ) 
+			if( result )
 				break;
 		}
 		return result;

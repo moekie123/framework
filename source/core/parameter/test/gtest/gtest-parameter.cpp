@@ -90,6 +90,26 @@ TEST_F( ParameterTest, GetProperty )
 }
 
 /**
+ * GTest: (Composite Pattern) Added nested parameter
+ */
+TEST_F( ParameterTest, NestedGetPropertyParameters )
+{
+	int _value;
+
+	Parameter *cParameter = new Parameter( &mConfig, "Nested" );
+	mParameter->Add( cParameter );
+
+	EXPECT_EQ( mParameter->GetProperty( "Parameter/Nested.const", _value ), true );
+	EXPECT_EQ( _value, 0 );
+
+    	EXPECT_EQ( mParameter->GetProperty( "Parameter/Nested.value", _value ), true );
+	EXPECT_EQ( _value, 0 );
+
+	EXPECT_EQ( mParameter->GetProperty( "Parameter/Nested.default" , _value ), true );
+	EXPECT_EQ( _value, 0 );
+}
+
+/**
  * GTest: set default properties
  */
 TEST_F( ParameterTest, SetProperty )
@@ -109,6 +129,28 @@ TEST_F( ParameterTest, SetProperty )
 	EXPECT_EQ( _value, 1 );
 }
 
+/**
+ * GTest: (Composite Pattern) set default properties
+ */
+TEST_F( ParameterTest, NestedSetPropertyParameters )
+{
+	int _value;
+
+	Parameter *cParameter = new Parameter( &mConfig, "Nested" );
+	mParameter->Add( cParameter );
+
+	EXPECT_EQ( mParameter->SetProperty( "Parameter/Nested.value", 1 ), true );
+	mParameter->GetProperty( "Parameter/Nested.value", _value );
+	EXPECT_EQ( _value, 1 );
+
+	EXPECT_EQ( mParameter->SetProperty( "Parameter/Nested.default", 1 ), true );
+	mParameter->GetProperty( "Parameter/Nested.default", _value );
+	EXPECT_EQ( _value, 1 );
+
+	EXPECT_EQ( mParameter->SetProperty( "Parameter/Nested.const", 1 ), true );
+	mParameter->GetProperty( "Parameter/Nested.const", _value );
+	EXPECT_EQ( _value, 1 );
+}
 
 /**
  * GTest: Value is Default value at creation
@@ -149,6 +191,35 @@ TEST_F( ParameterTest, SetConstValue )
 	ASSERT_EQ( _const , 1 );
 }
 
+/*
+ * GTest: (Composited Pattern) Verify behaviour of the const property
+ */
+TEST_F( ParameterTest, NestedSetConstValue )
+{
+	int _const, _value;
+
+	Parameter *cParameter = new Parameter( &mConfig, "Nested" );
+	mParameter->Add( cParameter );
+
+    	mParameter->GetProperty( "Parameter.const" , _const );
+
+    	ASSERT_EQ( mParameter->GetProperty( "Parameter/Nested.const" , _const ), true );
+	ASSERT_EQ( _const , 0 );
+
+    	mParameter->SetProperty( "Parameter/Nested.value" , 42 );
+
+    	ASSERT_EQ( mParameter->GetProperty("Parameter/Nested.value", _value ), true );
+	ASSERT_EQ( _value, 42 );
+
+	mParameter->SetProperty( "Parameter.const", 1 ) ;
+
+	ASSERT_EQ( mParameter->SetProperty( "Parameter/Nested.value" , 0 ), false );
+    	mParameter->GetProperty("Parameter/Nested.value", _value );
+	ASSERT_EQ( _value, 42 );
+}
+
+
+
 /**
  * GTest: Verify the Reset functionallity
  */
@@ -168,6 +239,30 @@ TEST_F( ParameterTest, Reset )
     	
 	ASSERT_EQ( _value, _default );
 }
+
+/**
+ * GTest: Verify the Reset functionallity
+ */
+TEST_F( ParameterTest, NestedReset )
+{
+	int _value, _default;
+
+	Parameter *cParameter = new Parameter( &mConfig, "Nested" );
+	mParameter->Add( cParameter );
+
+	mParameter->SetProperty( "Parameter/Nested.value" , 42 );
+
+	mParameter->GetProperty( "Parameter/Nested.value", _value );
+	mParameter->GetProperty( "Parameter/Nested.default", _default );
+    	ASSERT_NE( _value, _default );
+
+    	mParameter->Reset();
+
+ 	mParameter->GetProperty( "Parameter/Nested.value", _value );
+	mParameter->GetProperty( "Parameter/Nested.default", _default );
+	ASSERT_EQ( _value, _default );
+}
+
 
 /**
  * GTest: (Observer Pattern) Attach and Notify

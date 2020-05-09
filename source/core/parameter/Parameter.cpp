@@ -21,29 +21,28 @@ const std::map< std::string, int> defaults =
 
 Parameter::Parameter( IConfigurator* _config, std::string _name )
 {
-    	mName = _name;
-    	mProperties.insert ( defaults.begin(), defaults.end() );
+	SetName( _name );
+    	
+	mProperties.insert ( defaults.begin(), defaults.end() );
 
 	for( auto it = defaults.begin(); it != defaults.end(); ++it )
 	{
 		int value;
 		
-		std::string pName = mName + "." + it->first;
-		
-		mProperties[ pName ] =  it->second;
+		mProperties[ it->first ] =  it->second;
 	
-	       	if ( _config->GetProperty( pName , value ))
+	       	if ( _config->GetProperty(( mName + "." + it->first ), value ))
 		{
-			mProperties[ pName ] =  value;
+			mProperties[ it->first ] =  value;
 		}
 	}
 }
  
 void Parameter::Reset()
 {
-	if ( mProperties.find( mName + ".const" )->second == 0 )
+	if ( mProperties.find( "const" )->second == 0 )
 	{
-		SetProperty( mName + ".value",  mProperties.find( mName + ".default" )->second );
+		SetProperty( mName + ".value",  mProperties.find( "default" )->second );
 
 		// Composite
 	    	for( auto* component : mComponents )
@@ -58,23 +57,23 @@ bool Parameter::SetProperty( std::string _property, const int& _value )
 {
 	bool result = false;
 
-	if ( mProperties.find( mName + ".const" )->second == 0 )
-	{
-		result = Generic::SetProperty( _property, _value );
+	if ( mProperties.find( "const" )->second == 1 )
+		goto exit;
 
-		//  TODO: Ff const is set, also the nested (composite) elements needs to be set to const
-	}
-	else
+	result = Generic::SetProperty( _property, _value );
+	if ( result ) 
 	{
-		// Composite
-		for( auto* component : mComponents )
-		{
-			result = component->SetProperty( _property, _value );
-			if( result ) 
-				break;
-		}
+		goto exit;
 	}
-	
+	// Composite
+	for( auto* component : mComponents )
+	{
+		result = component->SetProperty( _property, _value );
+		if( result ) 
+			break;
+	}
+
+exit:
 	return result;
 }
 

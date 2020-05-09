@@ -23,6 +23,13 @@ class Generic
         const std::string& GetName() const;
  
 	/** 
+         *  @brief Set the name of the derived class
+      	 *  @param _name The new name of the derived class
+	 *  @return True, when the renaming was succesfull
+         */
+       	bool SetName( std::string _name );
+
+	/** 
     	*  @brief Get an property of the class
       	*  @param _property The name of the requested property
 	*  @param _value The storage location of the value
@@ -36,7 +43,7 @@ class Generic
       	*  @param _value The storage location of the value
 	*  @return True, when the value has been succelfully 'Set'
  	*/ 
-	virtual bool SetProperty( std::string, const int& );
+	virtual bool SetProperty( std::string _property, const int& _value );
 
     protected:
 
