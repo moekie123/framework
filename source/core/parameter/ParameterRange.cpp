@@ -23,7 +23,9 @@ ParameterRange::ParameterRange( Configurator& _config, std::string _name ):
     mProperties.insert ( defaults.begin(), defaults.end() );
 }
  
-void ParameterRange::setProperty( std::string _property, int _value )
+bool ParameterRange::SetProperty( std::string _property, const int& _value )
+
+void ParameterRange::SetProperty( std::string _property, int _value )
 {
     if ( mProperties.find( "const" )->second == 0 )
     {
