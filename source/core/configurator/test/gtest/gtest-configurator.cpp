@@ -5,16 +5,29 @@
 #include "../../Configurator.h"
 
 #include <string>
+#include <typeinfo>  
 
 #include <unistd.h>
 #include <iostream>
 
 static std::string filename = "gtest-configurator.xml";
 
+template<typename T>
+struct TypedTest : public testing::Test
+{
+    using ParamType = T;
+};
+
+using Types = testing::Types<int, std::string>;
+TYPED_TEST_CASE( TypedTest, Types);
+
 TEST( Default, Construct )
 {
-	Configurator *cf = new Configurator( "gtest-configurator.xml" );
+	Configurator *cf1 = new Configurator( "gtest-configurator.xml" );
+
+	Configurator *cf2 = new Configurator( "gtest-configurator.xml" );
 }
+
 
 TEST( Specalization, Integer )
 {
@@ -22,7 +35,7 @@ TEST( Specalization, Integer )
 
 	IConfigurator *cf = new Configurator( "gtest-configurator.xml" );
 	
-	ASSERT_EQ( cf->GetProperty< int > ( "gtest-parameter.value", value ), true );
+	ASSERT_EQ( cf->GetProperty< int > ( "gtest-parameter" , "value", value ), true );
 	ASSERT_EQ( value, 42 );
 }
 
@@ -32,23 +45,44 @@ TEST( Specalization, String )
 
 	IConfigurator *cf = new Configurator( "gtest-configurator.xml" );
 	
-	ASSERT_EQ( cf->GetProperty< std::string > ( "gtest-parameter.value", value ), true );
+	ASSERT_EQ( cf->GetProperty< std::string > ( "gtest-parameter", "value", value ), true );
 	ASSERT_EQ( value, "42" );
 }
 
-TEST( Exception, UnknownInteger )
+TEST( IntegerException, Unknown )
 {
 	int value;
 	IConfigurator *cf = new Configurator( "gtest-configurator.xml" );
-	ASSERT_EQ( cf->GetProperty< int > ( "gtest-parameter.unknown", value ), false );
+	ASSERT_EQ( cf->GetProperty< int > ( "unknown", "unknown", value ), false );
 }
 
-TEST( Exception, UnknownString )
+TYPED_TEST( TypedTest, UnknownNameAndAttribute )
 {
-	std::string value;
+	using ParamType  = typename TestFixture::ParamType;
+	ParamType value;
+
 	IConfigurator *cf = new Configurator( "gtest-configurator.xml" );
-	ASSERT_EQ( cf->GetProperty< std::string > ( "gtest-parameter.unknown", value ), false );
+	ASSERT_EQ( cf->GetProperty< ParamType > ( "unknown", "unknown", value ), false );
 }
+
+TYPED_TEST( TypedTest, UnknownName )
+{
+	using ParamType  = typename TestFixture::ParamType;
+	ParamType value;
+
+	IConfigurator *cf = new Configurator( "gtest-configurator.xml" );
+	ASSERT_EQ( cf->GetProperty< ParamType > ( "unknown", "value", value ), false );
+}
+
+TYPED_TEST( TypedTest, UnknownAttribute )
+{
+	using ParamType  = typename TestFixture::ParamType;
+	ParamType value;
+
+	IConfigurator *cf = new Configurator( "gtest-configurator.xml" );
+	ASSERT_EQ( cf->GetProperty< ParamType > ( "gtest-parameter", "unknown", value ), false );
+}
+
 
 
 int main(int argc, char **argv) 

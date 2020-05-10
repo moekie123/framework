@@ -5,66 +5,95 @@
 #include <string>
 #include <fstream>
 #include <iostream>
+#include <cstring>
 
 using namespace tinyxml2;
-XMLDocument xmlDoc;
+XMLDocument* document;
 
 Configurator::ConfiguratorBuilder Configurator::builder;
 std::string Configurator::mConfigFileName;
 
-XMLElement* FindElement( std::string _property )
-{
-	XMLNode * pRoot = xmlDoc.FirstChild();
-	if (pRoot == nullptr) 
-		return nullptr;
-
-	for( auto e = pRoot->FirstChildElement( "Parameter" ); e != NULL; e = e->NextSiblingElement( "Parameter" ))
-	{
-		std::string name = e->Attribute( "name" );
-
-		if( name.compare( _property ) == 0 )
-		{		
-			return  e->FirstChildElement( "value" );
-		}
-	}
-	return nullptr;
-}
-
 Configurator::Configurator( std::string _name ) 
 {
-	xmlDoc.LoadFile( mConfigFileName.c_str() );
-	if( xmlDoc.ErrorID() != 0 )
-		std::cerr << "Failed reading from file [" << xmlDoc.ErrorID() <<"]\n";
+	if( !document )
+	{
+		document = new XMLDocument();
+		document->LoadFile( mConfigFileName.c_str() );
+	}
 }
 
-bool Configurator::Get( std::string _property, int& _value ) const
+class XMLParameter: public XMLVisitor
 {
-	XMLElement* pValue = FindElement( _property );
-
-	if  ( pValue != nullptr)
-	{
-		int tmp;
-		pValue->QueryIntText( &tmp );
-		_value = tmp;
+	std::string mName;
+	std::string mAttribute;
 	
-		return true;
-	}
+	public:
 
-	return false;
-}
+	const XMLElement* property;
 
-
-bool Configurator::Get( std::string _property, std::string& _value ) const
-{
-	XMLElement* pElement = FindElement( _property );
-
-	if  ( pElement != nullptr)
+	XMLParameter( std::string _name, std::string _attribute )
 	{
-		const char *tmp = pElement->GetText();
-		_value = std::string( tmp );
-		return true;
+		mName = _name;
+		mAttribute = _attribute;
 	}
 
+	bool VisitEnter ( const XMLElement& e, const XMLAttribute* a )
+	{
+		// Check if it is a parameter
+		if( strcmp( "Parameter" , e.Name() ) != 0 )
+			return true;
+		
+
+		// Check the name of the parameter
+		if ( e.Attribute( "name", mName.c_str() ) )
+		{
+			property = e.FirstChildElement( mAttribute.c_str() );
+			return false;
+		}
+		return true;
+	}	
+};
+
+bool Configurator::Get( std::string _name, std::string _attribute, int& _value ) const
+{
+	XMLElement* root;
+
+	// Find root of the tree
+	if( !document ) return false;
+
+	root = document->RootElement();
+	
+	// Search for property
+	XMLParameter* parameter = new XMLParameter( _name, _attribute );
+	root->Accept( parameter );
+	
+	if( parameter->property )
+		// Get Integer 
+		return ( parameter->property->QueryIntText( &_value ) == XML_SUCCESS );
+	
 	return false;
 }
 
+
+bool Configurator::Get( std::string _name, std::string _attribute, std::string& _value ) const
+{
+	XMLElement* root;
+
+	// Find root of the tree
+	if( !document ) return false;
+	root = document->RootElement();
+
+	// Search for property
+	XMLParameter* parameter = new XMLParameter( _name, _attribute );
+	root->Accept( parameter );
+	
+	if( parameter->property )
+	{
+		// Get String
+		_value = parameter->property->GetText();
+		return true;
+	}
+	
+	return false;
+}
+	 

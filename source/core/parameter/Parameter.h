@@ -34,6 +34,7 @@ public:
 				return new Parameter( config, _name );
 			}
 	};
+
 	/**
 	 * @brief The global ParameterBuilder
 	 */

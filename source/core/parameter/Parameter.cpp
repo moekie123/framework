@@ -31,7 +31,7 @@ Parameter::Parameter( IConfigurator* _config, std::string _name )
 		
 		mProperties[ it->first ] =  it->second;
 	
-	       	if ( _config->GetProperty(( mName + "." + it->first ), value ))
+	       	if ( _config->GetProperty( mName, it->first, value ))
 		{
 			mProperties[ it->first ] =  value;
 		}
