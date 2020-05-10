@@ -11,16 +11,16 @@ class MockConfigurator:
 {
         public:
 
-		MOCK_CONST_METHOD2( GetInteger, bool( std::string, int& ));
-		bool Get( std::string _property, int& _value ) const override
+		MOCK_CONST_METHOD3( GetInteger, bool( std::string, std::string, int& ));
+		bool Get( std::string _name, std::string _attribute, int& _value ) const override
 		{
-			return GetInteger( _property, _value );
+			return GetInteger( _name, _attribute, _value );
 		}
 
-		MOCK_CONST_METHOD2( GetString, bool( std::string, std::string& ));
-		bool Get( std::string _property, std::string& _value ) const override
+		MOCK_CONST_METHOD3( GetString, bool( std::string, std::string, std::string& ));
+		bool Get( std::string _name, std::string _attribute, std::string& _value ) const override
 		{
-			return GetString( _property, _value );
+			return GetString( _name, _attribute, _value );
 		}
 
 };

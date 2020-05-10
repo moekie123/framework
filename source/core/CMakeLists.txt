@@ -22,6 +22,9 @@ set( CORE_SOURCES
         
 	# Include others
       	$<TARGET_OBJECTS:parameter> 
+
+	# Include the Configurator
+        $<TARGET_OBJECTS:mqtt>
 )
 
 set( FRAMEWORK_SOURCES

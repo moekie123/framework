@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Builder.h"
+#include "IConfigurator.h"
 
 #include <string>
 #include <map>
@@ -15,6 +16,23 @@ class Factory
 {
     public:
 	
+    	/** 
+         *  @brief The default constructor
+         */
+        Factory()
+	{
+		
+	}
+
+    	/** 
+         *  @brief The default constructor
+         *  @param _config the configurator
+         */
+        Factory( IConfigurator* _config )
+	{
+		
+	}
+
 	/**
 	 * @brief Register
 	 * @details Builders should be added to the factory before it can create new

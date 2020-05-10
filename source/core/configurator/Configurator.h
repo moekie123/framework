@@ -26,7 +26,8 @@ class Configurator:
 			public:
 				Generic* Build( std::string _name ) override
 				{
-					return new Configurator( _name );
+					Configurator& configurator = Singleton< Configurator >::Instance();
+					return &configurator;
 				}
 		};
 		/**
@@ -36,9 +37,8 @@ class Configurator:
 
 		/** 
 		 * @brief The configuration file will loaded in the in the constructor
-		 * @param _name The configuration file 
 		 */
-		Configurator( std::string _name );
+		Configurator();
 
 		/** 
 		 * @brief The name of the configuration file

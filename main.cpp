@@ -17,15 +17,17 @@ int main(int argc, char* argv[])
 
 	Framework *framework = new Framework( argc, argv );
 
+	/*
 	Factory& factory = Singleton< Factory >::Instance();
     	auto ab = factory.Create< IActuator >( "Actuator", "pca9685" );
-	
+
 	if( ab )
 		std::cout << "[Succes]\n";
 	else
 		std::cout << "[Failed]\n";
 
 	std::cout << "Shutdown Application\n";
+	*/
 
    	return 0;
 }

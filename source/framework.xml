@@ -1,20 +1,27 @@
 <Root>
-	<Parameter name="pca9685/config/refresh.default" >
+	<Parameter name="mosquitto">
+		<port>1883</port>
+		<username>"rsalm"</username>
+		<password>"rsalm"</password>
+		<hostname>"localhost"</hostname>
+	</Parameter>
+
+	<Parameter name="pca9685/config/refresh" >
 		<value> 50 </value>
 	</Parameter>
-	<Parameter name="pca9685/config/log.default" >
+	<Parameter name="pca9685/config/log" >
 		<value> 3 </value>
 	</Parameter>
-	<Parameter name="pca9685/config/mode.default" >
+	<Parameter name="pca9685/config/mode" >
 		<value> 1 </value>
 	</Parameter>
-	<Parameter name="pca9685/config/stepsize.default" >
+	<Parameter name="pca9685/config/stepsize" >
 		<value> 10 </value>
 	</Parameter>
-	<Parameter name="pca9685/config/period.default" >
+	<Parameter name="pca9685/config/period" >
 		<value> 1000000 </value>
 	</Parameter>
-	<Parameter name="pca9685/config/profile.default" >
+	<Parameter name="pca9685/config/profile" >
 		<value> 42 </value>
 	</Parameter>
 </Root>

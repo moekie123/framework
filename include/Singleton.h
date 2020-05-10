@@ -23,6 +23,17 @@ public:
 		return *(Singleton::_instance);
 	}
 
+	/**
+	 * @brief Configure the singleton with a predefined instance
+	 */
+	static void Register( T* _instance )
+    	{
+        	if (Singleton::_instance == 0)
+        	{
+            		Singleton::_instance = _instance;
+        	}
+	}
+
 protected:
     	virtual ~Singleton()
     	{

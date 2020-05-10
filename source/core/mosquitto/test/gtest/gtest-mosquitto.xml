@@ -1,0 +1,8 @@
+<Root>
+	<Parameter name="mosquitto">
+		<port>1883</port>
+		<username>"rsalm"</username>
+		<password>"rsalm"</password>
+		<hostname>"localhost"</hostname>
+	</Parameter>
+</Root>

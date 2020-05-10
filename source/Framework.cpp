@@ -5,6 +5,7 @@
 
 #include "core/configurator/Configurator.h"
 #include "core/parameter/Parameter.h"
+#include "core/mosquitto/Mosquitto.h"
 
 #include "hardware/drivers/chipset/Chipset.h"
 #include "hardware/drivers/device/Device.h"
@@ -30,27 +31,39 @@ Framework::Framework( int argc, char *argv[] ):
 	// Parse Arguments
 	ret = parseArguments( argc, argv );
 
+	Configurator::mConfigFileName = mConfigurationFilename;
+
+	// Open Configuration File
+	Configurator* configurator = new Configurator();
+	Singleton< Configurator >::Register( configurator );
+
+	// Open Connection
+	Mosquitto* mosquitto = new Mosquitto( configurator );
+	Singleton< Mosquitto >::Register( mosquitto );
+
 	// Construct Factory
-	Factory& factory = Singleton< Factory >::Instance();
-		
+	Factory* factory = new Factory( configurator );
+	Singleton< Factory >::Register( factory );
+	
 	/** Current registered builders: */
 
 	///	- Configurator
-	Configurator::mConfigFileName = mConfigurationFilename;
-	factory.Register< Configurator> ( "Configurator" );
+	factory->Register< Configurator> ( "Configurator" );
 
 	///	- Parameter 
-	factory.Register< Parameter >( "Parameter" );
+	factory->Register< Parameter >( "Parameter" );
+
+	///	- Mosquitto
+	factory->Register< Mosquitto >( "Mosquitto" );
 
 	///	- Chipset
-    	factory.Register< Chipset >( "Chipset" );
+    	factory->Register< Chipset >( "Chipset" );
 
 	///	- Device
-	factory.Register< Device >( "Device" );
+	factory->Register< Device >( "Device" );
 
 	///	- Actuator
-	factory.Register< Actuator >( "Actuator" );
-
+	factory->Register< Actuator >( "Actuator" );
 };
 
 

@@ -23,9 +23,7 @@ TYPED_TEST_CASE( TypedTest, Types);
 
 TEST( Default, Construct )
 {
-	Configurator *cf1 = new Configurator( "gtest-configurator.xml" );
-
-	Configurator *cf2 = new Configurator( "gtest-configurator.xml" );
+	Configurator *cf1 = new Configurator();
 }
 
 
@@ -33,7 +31,7 @@ TEST( Specalization, Integer )
 {
 	int value;
 
-	IConfigurator *cf = new Configurator( "gtest-configurator.xml" );
+	IConfigurator *cf = new Configurator();
 	
 	ASSERT_EQ( cf->GetProperty< int > ( "gtest-parameter" , "value", value ), true );
 	ASSERT_EQ( value, 42 );
@@ -43,7 +41,7 @@ TEST( Specalization, String )
 {
 	std::string value;
 
-	IConfigurator *cf = new Configurator( "gtest-configurator.xml" );
+	IConfigurator *cf = new Configurator();
 	
 	ASSERT_EQ( cf->GetProperty< std::string > ( "gtest-parameter", "value", value ), true );
 	ASSERT_EQ( value, "42" );
@@ -52,7 +50,7 @@ TEST( Specalization, String )
 TEST( IntegerException, Unknown )
 {
 	int value;
-	IConfigurator *cf = new Configurator( "gtest-configurator.xml" );
+	IConfigurator *cf = new Configurator();
 	ASSERT_EQ( cf->GetProperty< int > ( "unknown", "unknown", value ), false );
 }
 
@@ -61,7 +59,7 @@ TYPED_TEST( TypedTest, UnknownNameAndAttribute )
 	using ParamType  = typename TestFixture::ParamType;
 	ParamType value;
 
-	IConfigurator *cf = new Configurator( "gtest-configurator.xml" );
+	IConfigurator *cf = new Configurator();
 	ASSERT_EQ( cf->GetProperty< ParamType > ( "unknown", "unknown", value ), false );
 }
 
@@ -70,7 +68,7 @@ TYPED_TEST( TypedTest, UnknownName )
 	using ParamType  = typename TestFixture::ParamType;
 	ParamType value;
 
-	IConfigurator *cf = new Configurator( "gtest-configurator.xml" );
+	IConfigurator *cf = new Configurator();
 	ASSERT_EQ( cf->GetProperty< ParamType > ( "unknown", "value", value ), false );
 }
 
@@ -79,7 +77,7 @@ TYPED_TEST( TypedTest, UnknownAttribute )
 	using ParamType  = typename TestFixture::ParamType;
 	ParamType value;
 
-	IConfigurator *cf = new Configurator( "gtest-configurator.xml" );
+	IConfigurator *cf = new Configurator();
 	ASSERT_EQ( cf->GetProperty< ParamType > ( "gtest-parameter", "unknown", value ), false );
 }
 

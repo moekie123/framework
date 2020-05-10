@@ -6,9 +6,6 @@
 #include "Subject.h"
 #include "Observer.h"
 
-#include <string>
-#include <map>
-
 /**
  * @brief The generic interface class for a Poramater
  */

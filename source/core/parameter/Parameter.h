@@ -30,7 +30,7 @@ public:
 			{
 				Factory& factory = Singleton< Factory >::Instance();
 				
-				auto config = factory.Create< IConfigurator >( "Configurator", "configuration.xml" ); 
+				auto config = factory.Create< IConfigurator >( "Configurator", "configuration.xml" );
 				return new Parameter( config, _name );
 			}
 	};

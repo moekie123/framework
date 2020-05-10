@@ -13,7 +13,7 @@ XMLDocument* document;
 Configurator::ConfiguratorBuilder Configurator::builder;
 std::string Configurator::mConfigFileName;
 
-Configurator::Configurator( std::string _name ) 
+Configurator::Configurator() 
 {
 	if( !document )
 	{
@@ -60,7 +60,6 @@ class XMLParameter: public XMLVisitor
 		// Check if it is a parameter
 		if( strcmp( "Parameter" , e.Name() ) != 0 )
 			return true;
-		
 
 		// Check the name of the parameter
 		if ( e.Attribute( "name", mName.c_str() ) )
@@ -103,6 +102,7 @@ bool Configurator::Get( std::string _name, std::string _attribute, std::string& 
 
 	// Search for property
 	XMLParameter* parameter = new XMLParameter( _name, _attribute );
+
 	root->Accept( parameter );
 	
 	if( parameter->property )
