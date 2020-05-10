@@ -12,12 +12,18 @@ alias cdl='cd /usr/src/linux/'
 
 FRAMEWORK="/root/framework"
 if [ -d "$FRAMEWORK" ]; then
-	alias cdf='cd '$FRAMEWORK
-	alias cdb='cd '$FRAMEWORK/binairy
-	alias cdi='cd '$FRAMEWORK/include
-	alias cds='cd '$FRAMEWORK/source
-	alias cdc='cd '$FRAMEWORK/source/core
-	alias cdh='cd '$FRAMEWORK/source/hardware
+	alias  cdf='cd '$FRAMEWORK
+	alias  cdb='cd '$FRAMEWORK/binairy
+	alias  cdi='cd '$FRAMEWORK/include
+	
+	alias  cds='cd '$FRAMEWORK/source
+	alias  cdc='cd '$FRAMEWORK/source/core
+	alias cdcp='cd '$FRAMEWORK/source/core/parameter
+	alias cdcc='cd '$FRAMEWORK/source/core/configurator
+
+	alias  cdh='cd '$FRAMEWORK/source/hardware
+
+	alias  cde='cd '$FRAMEWORK/source/enviroment
 
 	alias makef='make --no-print-directory -C '$FRAMEWORK'/build/'
 
