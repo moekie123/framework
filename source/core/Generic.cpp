@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include <vector>
+#include <algorithm>
 
 const std::map< std::string, int> defaults =
 {
@@ -31,43 +32,44 @@ bool Generic::SetName( std::string _name )
 
 bool Generic::GetProperty( std::string _property, int& _value ) const
 {
-	std::vector< std::string > keys;
-	for( auto it =  mProperties.begin(); it != mProperties.end(); ++it)
+	auto property = std::find_if( mProperties.begin(), mProperties.end(), [ this, _property ]( auto const& property )
 	{
-		keys.push_back( it->first );
-	}
-
-	for( auto key : keys )
-	{
-		if ( _property.compare( (mName + "." + key) ) == 0 )
+		if( _property.compare( mName + "." + property.first ) == 0 )
 		{
-			_value = mProperties.find( key )->second;
 			return true;
 		}
-	}
 
+		return false;
+	});
+
+	if( property != mProperties.end() )
+	{
+		_value = property->second;
+		return true;
+	}
+		
 	return false;
 }
 
 bool Generic::SetProperty( std::string _property, const int& _value )
 {
-	std::vector< std::string > keys;
-
 	if( mProperties.find( "const" )->second == 1 )
 		return false;
 
-	for( auto it =  mProperties.begin(); it != mProperties.end(); ++it)
+	auto property = std::find_if( mProperties.begin(), mProperties.end(), [ this, _property ]( auto const& property )
 	{
-		keys.push_back( it->first );
-	}
-
-	for( auto key : keys )
-	{
-		if ( _property.compare( (mName + "." + key) ) == 0 )
+		if( _property.compare( mName + "." + property.first ) == 0 )
 		{
-			mProperties.find( key )->second = _value;
-			return true;	
+			return true;
 		}
+
+		return false;
+	});
+
+	if( property != mProperties.end() )
+	{
+		property->second = _value;
+		return true;
 	}
 
 	return false;
