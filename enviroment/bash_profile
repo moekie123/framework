@@ -20,6 +20,7 @@ if [ -d "$FRAMEWORK" ]; then
 	alias  cdc='cd '$FRAMEWORK/source/core
 	alias cdcp='cd '$FRAMEWORK/source/core/parameter
 	alias cdcc='cd '$FRAMEWORK/source/core/configurator
+	alias cdcm='cd '$FRAMEWORK/source/core/mosquitto
 
 	alias  cdh='cd '$FRAMEWORK/source/hardware
 
