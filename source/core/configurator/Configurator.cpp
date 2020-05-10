@@ -22,6 +22,9 @@ Configurator::Configurator( std::string _name )
 	}
 }
 
+/**
+ * @brief (Visitor Pattern) Custom XML-Parser for Parameter elements
+ */
 class XMLParameter: public XMLVisitor
 {
 	std::string mName;
@@ -29,14 +32,29 @@ class XMLParameter: public XMLVisitor
 	
 	public:
 
-	const XMLElement* property;
+	/*
+	 * @brief The colected property after the visitor has been visited
+	 * @details will be a nullptr when nothing has been found
+	 */
+	const XMLElement* property = nullptr;
 
+	/**
+	 * @brief The constructor
+	 * @param _name The name of the paramter that needs to be found
+	 * @param _attribute The attribute that request is searching for
+	 */
 	XMLParameter( std::string _name, std::string _attribute )
 	{
 		mName = _name;
 		mAttribute = _attribute;
 	}
 
+	/**
+	 * @brief (Visitor) Visited when a XMLDocument enters a new element.
+	 * @param e The visited element
+	 * @param a The corrosponding attributes of the vistied element
+	 * @return True, if the XMLParameter needs to keep search for a match
+	 */
 	bool VisitEnter ( const XMLElement& e, const XMLAttribute* a )
 	{
 		// Check if it is a parameter

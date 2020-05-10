@@ -19,9 +19,9 @@ TEST( Default, Construct)
 	/* See MockConfigurator fot GetInteger
 	 * This is a workaround for the ambgious Get 
 	 **/
-	EXPECT_CALL( config, GetInteger( "Parameter.const"  , testing::_ )).WillRepeatedly( testing::Return( true ));
-	EXPECT_CALL( config, GetInteger( "Parameter.default", testing::_ )).WillRepeatedly( testing::Return( true ));
-	EXPECT_CALL( config, GetInteger( "Parameter.value"  , testing::_ )).WillRepeatedly( testing::Return( true));
+	EXPECT_CALL( config, GetInteger( "Parameter", "const"  , testing::_ )).WillRepeatedly( testing::Return( true ));
+	EXPECT_CALL( config, GetInteger( "Parameter", "default", testing::_ )).WillRepeatedly( testing::Return( true ));
+	EXPECT_CALL( config, GetInteger( "Parameter", "value"  , testing::_ )).WillRepeatedly( testing::Return( true));
 	
 	IParameter *p = new Parameter( &config, "Parameter" );
     	ASSERT_NE( p , nullptr );
@@ -50,7 +50,7 @@ class ParameterTest:
 	{
 		mReturn = new int( 0 );
 
-		EXPECT_CALL( mConfig, GetInteger( testing::_ , testing::_ )).WillRepeatedly( testing::Return( false ));
+		EXPECT_CALL( mConfig, GetInteger( testing::_ , testing::_, testing::_ )).WillRepeatedly( testing::Return( false ));
 
 		mParameter = new Parameter( &mConfig, "Parameter" );
 		ASSERT_NE( mParameter , nullptr );
