@@ -22,6 +22,7 @@ class Framework
 
 		/**
 		 * @brief The name of the configuration file
+		 * TODO Renamen such that it corrosponds the (static) configuration or link to it by a refrence
 		 */
 		std::string mConfigurationFilename;
 };

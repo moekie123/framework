@@ -38,11 +38,11 @@ Framework::Framework( int argc, char *argv[] ):
 	Singleton< Configurator >::Register( *configurator );
 
 	// Open Connection
-	Mosquitto* mosquitto = new Mosquitto( configurator );
+	Mosquitto* mosquitto = new Mosquitto( *configurator );
 	Singleton< Mosquitto >::Register( *mosquitto );
 
 	// Construct Factory
-	Factory* factory = new Factory( configurator );
+	Factory* factory = new Factory( *configurator );
 	Singleton< Factory >::Register( *factory );
 	
 	/** Current registered builders: */

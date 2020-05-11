@@ -21,13 +21,13 @@ class Composite:
 	/**
 	* @brief The 'add'-method will store the compontens that should be triggered when a command is send.
 	*/
-	void Add ( T* _node )
+	void Add ( T& _node )
 	{
-		std::string nName = _node->GetName();
+		std::string nName = _node.GetName();
 		
-		_node->SetName( mName + "/" + nName );
+		_node.SetName( std::string( mName + "/" + nName ) );
 
-        	mComponents.push_back( _node ); 
+        	mComponents.push_back( &_node ); 
    	}
 
 	/** 
@@ -37,7 +37,7 @@ class Composite:
 	*  @param _value The storage location of the value
 	*  @return True, when the value has been succesfully 'Get'
       	*/
-	bool GetProperty( std::string _name, int& _value ) const override
+	bool GetProperty( const std::string& _name, int& _value ) const override
 	{
 		bool result = false;
 	
@@ -62,7 +62,7 @@ class Composite:
       	*  @param _value The storage location of the value
 	*  @return True, when the value has been succelfully 'Set'
  	*/ 
-	bool SetProperty( std::string _name, const int& _value ) override
+	bool SetProperty( const std::string& _name, const int& _value ) override
 	{
 		bool result = false;
 

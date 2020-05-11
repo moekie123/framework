@@ -23,7 +23,7 @@ TEST( Default, Construct)
 	EXPECT_CALL( config, GetInteger( "Parameter", "default", testing::_ )).WillRepeatedly( testing::Return( true ));
 	EXPECT_CALL( config, GetInteger( "Parameter", "value"  , testing::_ )).WillRepeatedly( testing::Return( true));
 	
-	IParameter *p = new Parameter( &config, "Parameter" );
+	IParameter *p = new Parameter( config, "Parameter" );
     	ASSERT_NE( p , nullptr );
 }
 
@@ -36,7 +36,7 @@ class ParameterTest:
 		int* mReturn;
 
 	protected:
-		MockConfigurator  mConfig;
+		MockConfigurator mConfig;
 		IParameter* mParameter;
 
     	ParameterTest() 
@@ -52,7 +52,7 @@ class ParameterTest:
 
 		EXPECT_CALL( mConfig, GetInteger( testing::_ , testing::_, testing::_ )).WillRepeatedly( testing::Return( false ));
 
-		mParameter = new Parameter( &mConfig, "Parameter" );
+		mParameter = new Parameter( mConfig, "Parameter" );
 		ASSERT_NE( mParameter , nullptr );
 	}
 
@@ -96,8 +96,8 @@ TEST_F( ParameterTest, NestedGetPropertyParameters )
 {
 	int _value;
 
-	Parameter *cParameter = new Parameter( &mConfig, "Nested" );
-	mParameter->Add( cParameter );
+	Parameter *cParameter = new Parameter( mConfig, "Nested" );
+	mParameter->Add( *cParameter );
 
 	EXPECT_EQ( mParameter->GetProperty( "Parameter/Nested.const", _value ), true );
 	EXPECT_EQ( _value, 0 );
@@ -136,8 +136,8 @@ TEST_F( ParameterTest, NestedSetPropertyParameters )
 {
 	int _value;
 
-	Parameter *cParameter = new Parameter( &mConfig, "Nested" );
-	mParameter->Add( cParameter );
+	Parameter *cParameter = new Parameter( mConfig, "Nested" );
+	mParameter->Add( *cParameter );
 
 	EXPECT_EQ( mParameter->SetProperty( "Parameter/Nested.value", 1 ), true );
 	mParameter->GetProperty( "Parameter/Nested.value", _value );
@@ -198,8 +198,8 @@ TEST_F( ParameterTest, NestedSetConstValue )
 {
 	int _const, _value;
 
-	Parameter *cParameter = new Parameter( &mConfig, "Nested" );
-	mParameter->Add( cParameter );
+	Parameter *cParameter = new Parameter( mConfig, "Nested" );
+	mParameter->Add( *cParameter );
 
     	mParameter->GetProperty( "Parameter.const" , _const );
 
@@ -247,8 +247,8 @@ TEST_F( ParameterTest, NestedReset )
 {
 	int _value, _default;
 
-	Parameter *cParameter = new Parameter( &mConfig, "Nested" );
-	mParameter->Add( cParameter );
+	Parameter *cParameter = new Parameter( mConfig, "Nested" );
+	mParameter->Add( *cParameter );
 
 	mParameter->SetProperty( "Parameter/Nested.value" , 42 );
 
@@ -270,10 +270,11 @@ TEST_F( ParameterTest, NestedReset )
 TEST_F( ParameterTest, AttachAndNotify )
 {
 	MockParameter mock;
-    	mParameter->Attach( mock );
-
+ 	
+	mParameter->Attach( mock );
     	EXPECT_CALL( mock, Update( mParameter ));
-    	mParameter->Notify();
+    	
+	mParameter->Notify();
 }
 
 int main(int argc, char **argv) 

@@ -35,8 +35,9 @@ class Subject
         {
             for ( auto it = mObservers.begin(); it != mObservers.end(); it++ ) 
             {
+
 		/* All should pass, return false immedially when one fails */
-		if( (*it)->Update( static_cast<U *>( this )) == false )
+		if( (*it)->Update( static_cast< U* >( this )) == false )
 			return false;
             }
 
@@ -44,5 +45,5 @@ class Subject
         }
 
    private:
-      std::vector<Observer<T> *> mObservers;
+      std::vector< Observer<T> *> mObservers;
 };

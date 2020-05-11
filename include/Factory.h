@@ -7,6 +7,7 @@
 #include <map>
 
 #include <iostream>
+#include <stdexcept>
 
 /**
  * @brief An (abstract) Factory that creates new instances with the registed Builders
@@ -28,7 +29,7 @@ class Factory
          *  @brief The default constructor
          *  @param _config the configurator
          */
-        Factory( IConfigurator* _config )
+        Factory( const IConfigurator& _config )
 	{
 		
 	}
@@ -39,7 +40,7 @@ class Factory
 	 * @param _id builder name that can be later called by Create
 	 */	
 	template< class T >
-        bool Register( std::string _id )
+        bool Register( const std::string& _id )
         {
 		/* Check if _id already excists as key in map */
 		if ( mBuilderMap.find( _id ) == mBuilderMap.end() ) 
@@ -59,15 +60,14 @@ class Factory
 	 * @return True when creation was succesfull
 	 */
         template< class T >
-        T* Create( std::string _id, std::string _name )
+        T& Create( const std::string& _id, const std::string& _name )
         {
 		/* Check if _id already excists as key in map */
 		if ( mBuilderMap.find( _id ) != mBuilderMap.end() ) 
 		{
-        		return dynamic_cast<  T* >( mBuilderMap[ _id ]->Build( _name ));
+        		return dynamic_cast< T& >( mBuilderMap[ _id ]->Build( _name ));
         	}
-
-		return nullptr;
+		throw std::invalid_argument( "received negative value" );
 	}
 
     private:

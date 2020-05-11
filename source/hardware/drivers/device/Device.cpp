@@ -6,7 +6,7 @@
 
 Device::DeviceBuilder Device::builder;
 
-Device::Device( IConfigurator* _config, std::string _name, Signal& _period, Signal& _dutycycle )
+Device::Device( const IConfigurator& _config, const std::string& _name, const Signal& _period, const Signal& _dutycycle )
 {
 
 }

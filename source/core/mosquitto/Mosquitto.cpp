@@ -12,14 +12,14 @@ Mosquitto::Mosquitto()
 	std::cout << "Construct Mosquitto\n";
 }
 
-Mosquitto::Mosquitto( IConfigurator* _config )
+Mosquitto::Mosquitto( const IConfigurator& _config )
 {
 	std::cout << "Construct Mosquitto\n";
 	
-	_config->GetProperty( "mosquitto", "hostname", mHostname );
-	_config->GetProperty( "mosquitto", "port"    , mPort );
-	_config->GetProperty( "mosquitto", "username", mUsername );
-	_config->GetProperty( "mosquitto", "password", mPassword );
+	_config.GetProperty( "mosquitto", "hostname", mHostname );
+	_config.GetProperty( "mosquitto", "port"    , mPort );
+	_config.GetProperty( "mosquitto", "username", mUsername );
+	_config.GetProperty( "mosquitto", "password", mPassword );
 
 	std::cout << "Mosquitto Client Configured [" << mHostname << ":" << mPort << "][" << mUsername << ":" <<  mPassword << "]\n";
 
@@ -34,7 +34,7 @@ Mosquitto::Mosquitto( IConfigurator* _config )
 	}
 }
 
-bool Mosquitto::Connect( std::string _hostname, std::string _port)
+bool Mosquitto::Connect( const std::string& _hostname, const std::string& _port)
 {
 	int ret;
 	std::cout << "Mosquitto::Client\n";

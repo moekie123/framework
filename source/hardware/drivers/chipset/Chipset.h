@@ -23,13 +23,13 @@ class Chipset:
 		public Builder
 	{
 		public:
-		Generic* Build( std::string _name ) override
+		Generic& Build( const std::string& _name ) override
 		{
 			Factory& factory = Singleton< Factory >::Instance();
-
 		
-			auto config = factory.Create< IConfigurator >( "Configurator", "configuration.xml" );
-			return new Chipset( config, _name );
+			IConfigurator& config = factory.Create< IConfigurator >( "Configurator", "configuration.xml" );
+			IChipset* chipset = new Chipset( config, _name );
+			return *chipset;
 		}
 	};
 
@@ -44,9 +44,9 @@ class Chipset:
 	 * @param _config The Configurator to fill in the default values
 	 * @param _name The name of the new Chipset
 	 */
-   	Chipset( IConfigurator* _config, std::string _name );
+   	Chipset( const IConfigurator& _config, std::string _name );
 
-        bool Update( IChipset *subject) override;
+        bool Update( const IChipset* subject) override;
 };
 
 

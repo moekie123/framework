@@ -27,16 +27,17 @@ class Device:
 			public Builder
 		{
 			public:
-				Generic* Build( std::string _name ) override
+				Generic& Build( const std::string& _name ) override
 				{
 					Factory& factory = Singleton< Factory >::Instance();
 
-					auto config = factory.Create< IConfigurator >( "Configurator", "configuration.xml" );
+					IConfigurator& config = factory.Create< IConfigurator >( "Configurator", "configuration.xml" );
 
 					Signal* period = new Signal( config, _name + "/period" );
 					Signal* dutycycle = new Signal( config, _name + "/dutycycle" );
+					Device* device = new Device( config, _name, *period, *dutycycle );
 
-					return new Device( config, _name, *period, *dutycycle );
+					return *device;
 				}
 		};
 		/**
@@ -52,13 +53,13 @@ class Device:
 		 * @param _period The Signal to control the Period
 		 * @param _dutycycle The Signal to control the DutyCycle
 		 */
-		Device( IConfigurator* _config, std::string _name, Signal& _period, Signal& _dutycycle );
+		Device( const IConfigurator& _config, const std::string& _name, const Signal& _period, const Signal& _dutycycle );
 		
 		/**
 		 * @brief Setter
 		 * @details TODO This can be replaced by the default Generic SetProperty
 		 */
-		void Set( std::string, int )
+		void Set( const std::string&, const int& )
 		{
 
 		}

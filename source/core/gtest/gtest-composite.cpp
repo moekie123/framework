@@ -36,7 +36,7 @@ TEST( BuildTree, Add )
     Beta *b = new Beta();
     MockBeta m;
 
-    b->Add( &m );
+    b->Add( m );
     b->Trigger();
 }
 

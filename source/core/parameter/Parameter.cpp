@@ -19,7 +19,7 @@ const std::map< std::string, int> defaults =
     { "value",   0 }
 };
 
-Parameter::Parameter( IConfigurator* _config, std::string _name )
+Parameter::Parameter( const IConfigurator& _config, const std::string& _name )
 {
 	SetName( _name );
     	
@@ -31,7 +31,7 @@ Parameter::Parameter( IConfigurator* _config, std::string _name )
 		
 		mProperties[ it->first ] =  it->second;
 	
-	       	if ( _config->GetProperty( mName, it->first, value ))
+	       	if ( _config.GetProperty( mName, it->first, value ))
 		{
 			mProperties[ it->first ] =  value;
 		}
@@ -53,7 +53,7 @@ void Parameter::Reset()
 
 }
 
-bool Parameter::SetProperty( std::string _property, const int& _value )
+bool Parameter::SetProperty( const std::string& _property, const int& _value )
 {
 	bool result = false;
 
@@ -77,7 +77,7 @@ exit:
 	return result;
 }
 
-bool Parameter::Update( IParameter *subject )
+bool Parameter::Update( const IParameter* subject )
 {
 	// Composite
 	for( auto* component : mComponents )

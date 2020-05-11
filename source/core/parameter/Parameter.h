@@ -26,12 +26,15 @@ public:
 		public Builder
 	{
 		public:
-			Generic* Build( std::string _name ) override
+			Generic& Build( const std::string& _name ) override
 			{
 				Factory& factory = Singleton< Factory >::Instance();
 				
-				auto config = factory.Create< IConfigurator >( "Configurator", "configuration.xml" );
-				return new Parameter( config, _name );
+				IConfigurator& config = factory.Create< IConfigurator >( "Configurator", "configuration.xml" );
+				
+				Parameter *param = new Parameter( config, _name );
+				
+				return *param;
 			}
 	};
 
@@ -45,17 +48,16 @@ public:
          *  @param _config the configurator
 	 *  @param _name the name of the Parameter
          */
-        Parameter( IConfigurator* _config, std::string _name );
-        
+        Parameter( const IConfigurator& _config, const std::string& _name );
         
 	/* IParameter methods */
 	void Reset() override;
 
 	/* Generic methods **/
-	bool SetProperty( std::string _property, const int& _value ) override;
+	bool SetProperty( const std::string& _property, const int& _value ) override;
 
         /* Observer methods **/
-        bool Update( IParameter *subject ) override; 
+        bool Update( const IParameter* subject ) override; 
 
 	
 

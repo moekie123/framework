@@ -30,6 +30,7 @@ public:
     	{
         	if (Singleton::_instance == 0)
         	{
+			// TODO Make a copy
             		Singleton::_instance = &_instance;
         	}
 	}

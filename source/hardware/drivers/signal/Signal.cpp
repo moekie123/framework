@@ -6,7 +6,7 @@
 #include <iostream>
 #include <fstream>
 
-Signal::Signal( IConfigurator* _config, std::string _name ):
+Signal::Signal( const IConfigurator& _config, const std::string& _name ):
 	mName( _name )
 {
 

@@ -24,10 +24,10 @@ class Configurator:
 			public Builder
 		{
 			public:
-				Generic* Build( std::string _name ) override
+				Generic& Build( const std::string& _name ) override
 				{
 					Configurator& configurator = Singleton< Configurator >::Instance();
-					return &configurator;
+					return configurator;
 				}
 		};
 		/**
@@ -49,7 +49,7 @@ class Configurator:
 
 	private:
 		/* IConfigurator */
-		bool Get( std::string _name, std::string _attribute, int& _value ) const override;
-		bool Get( std::string _name, std::string _attribute,  std::string& _value ) const override;
+		bool Get( const std::string& _name, const std::string& _attribute, int& _value ) const override;
+		bool Get( const std::string& _name, const std::string& _attribute,  std::string& _value ) const override;
 	
 };

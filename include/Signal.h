@@ -16,7 +16,7 @@ class Signal
 		 * @param _config The Configurator that will fill in the default values
 		 * @param _name The name of the created Signal
 		 */
-		Signal( IConfigurator* _config, std::string _name );
+		Signal( const IConfigurator& _config, const std::string& _name );
 	
 		/**
 		 * @brief The setter of the signal

@@ -13,7 +13,7 @@ TEST( Construct, Default )
 	MockSignal period;
 	MockSignal dutycycle;
 
-	IDevice* d = new Device( &config, "device" , period, dutycycle );
+	IDevice* d = new Device( config, "device" , period, dutycycle );
 }
 
 int main(int argc, char **argv) 

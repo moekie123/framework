@@ -27,12 +27,12 @@ Configurator::Configurator()
  */
 class XMLParameter: public XMLVisitor
 {
-	std::string mName;
-	std::string mAttribute;
+	const std::string& mName;
+	const std::string& mAttribute;
 	
 	public:
 
-	/*
+	/**
 	 * @brief The colected property after the visitor has been visited
 	 * @details will be a nullptr when nothing has been found
 	 */
@@ -43,10 +43,11 @@ class XMLParameter: public XMLVisitor
 	 * @param _name The name of the paramter that needs to be found
 	 * @param _attribute The attribute that request is searching for
 	 */
-	XMLParameter( std::string _name, std::string _attribute )
+	XMLParameter( const std::string& _name, const std::string& _attribute ):
+		mName( _name ), 
+		mAttribute( _attribute )
 	{
-		mName = _name;
-		mAttribute = _attribute;
+
 	}
 
 	/**
@@ -71,7 +72,7 @@ class XMLParameter: public XMLVisitor
 	}	
 };
 
-bool Configurator::Get( std::string _name, std::string _attribute, int& _value ) const
+bool Configurator::Get( const std::string& _name, const std::string& _attribute, int& _value ) const
 {
 	XMLElement* root;
 
@@ -92,7 +93,7 @@ bool Configurator::Get( std::string _name, std::string _attribute, int& _value )
 }
 
 
-bool Configurator::Get( std::string _name, std::string _attribute, std::string& _value ) const
+bool Configurator::Get( const std::string& _name, const std::string& _attribute, std::string& _value ) const
 {
 	XMLElement* root;
 

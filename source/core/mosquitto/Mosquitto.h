@@ -20,11 +20,11 @@ class Mosquitto:
 		public Builder
 	{
 		public:
-			Generic* Build( std::string _name ) override
+			Generic& Build( const std::string& _name ) override
 			{
 				// Retrieve the client
 				Mosquitto& mosquitto = Singleton< Mosquitto >::Instance();
-				return &mosquitto;
+				return mosquitto;
 			}
 	};
 
@@ -42,7 +42,7 @@ class Mosquitto:
 	/**
 	 * @brief The constructor
 	 */
-	Mosquitto( IConfigurator* _config );
+	Mosquitto( const IConfigurator& _config );
 
 	/**
 	 * @brief The global ParameterBuilder
@@ -57,7 +57,7 @@ class Mosquitto:
 	 * @param _port The server port
 	 * @details The connection credentials are loaded in the constructor
 	 */
-	bool Connect( std::string _hostname, std::string _port );
+	bool Connect( const std::string& _hostname, const std::string& _port );
 
 	/*
 	 * @brief Disonnect from the broker

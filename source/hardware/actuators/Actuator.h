@@ -1,6 +1,7 @@
 #pragma once
 
 #include "IActuator.h"
+#include "IParameter.h"
 
 #include "Builder.h"
 #include "Singleton.h"
@@ -25,14 +26,14 @@ class Actuator:
 		public Builder
 	{
 		public:
-		Generic* Build( std::string _name ) override
+		Generic& Build( const std::string& _name ) override
 		{
 			Factory& factory = Singleton< Factory >::Instance();
 			//auto config = factory.Create< IConfigurator >( "Configurator", _name );
 
 			Actuator* actuator = new Actuator( _name );
 
-			std::string parameters[] = 
+			const std::string parameters[] = 
 			{ 
 				"/config/refresh",
 				"/config/log",
@@ -42,13 +43,13 @@ class Actuator:
 				"/config/profile",
 			};
 
-			for( auto& parameter: parameters )
+			for( const std::string& parameter: parameters )
 			{
-				auto p = factory.Create< IParameter >( "Parameter", _name + parameter );
+				IParameter& p = factory.Create< IParameter >( "Parameter", _name + parameter );
 				actuator->Add( p );
 			}
 			
-			return actuator;
+			return *actuator;
 		}
 	};
 

@@ -11,7 +11,7 @@ class InterfaceBeta:
 	public Generic
 {
     public:
-        virtual void execute() = 0;
+        virtual void execute(){ }
 };
 
 class ConcreteBeta:
@@ -25,9 +25,10 @@ class ConcreteBeta:
 		public Builder
 	{
 		public:
-		Generic* Build( std::string _name ) override
+		Generic& Build( const std::string& _name ) override
 		{
-			return new ConcreteBeta();
+			InterfaceBeta* iBeta = new ConcreteBeta();
+			return *iBeta;
 		}
 	};
 	static ConcreteBetaBuilder builder;
@@ -39,7 +40,6 @@ class ConcreteBeta:
 };
 
 ConcreteBeta::ConcreteBetaBuilder ConcreteBeta::builder;
-
 
 TEST( Construct, Default )
 {
@@ -66,18 +66,13 @@ TEST( Create, Default )
     ASSERT_EQ( f->Register< ConcreteBeta >( "CB" ), true );
     
     auto ab = f->Create< InterfaceBeta >( "CB", "Name" );
-	
-    ASSERT_NE( ab, nullptr );
-    ab->execute();
+    ab.execute();
 }
 
 TEST( Create, UnknownBuilder )
 {
-    Factory *f = new Factory;
-
-    auto ab = f->Create< InterfaceBeta >( "BC", "Name" );
-	
-    ASSERT_EQ( ab, nullptr );
+    	Factory *f = new Factory;
+	ASSERT_ANY_THROW( f->Create< InterfaceBeta >( "BC", "Name" ) );
 }
 
 int main(int argc, char **argv) 

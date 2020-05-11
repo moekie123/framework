@@ -9,7 +9,7 @@ class Beta:
     public Observer< Beta >
 {
     public:
-        bool Update( Beta* subject ) override
+        bool Update( const Beta* subject ) override
         {
 	       return false;	
         }
@@ -18,7 +18,7 @@ class Beta:
 class MockBeta: public Beta
 {
     public:
-        MOCK_METHOD1( Update, bool( Beta* ) );
+        MOCK_METHOD1( Update, bool( const Beta* ) );
 };
 
 TEST( Construct, Default )
