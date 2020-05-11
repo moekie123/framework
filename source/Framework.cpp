@@ -35,15 +35,15 @@ Framework::Framework( int argc, char *argv[] ):
 
 	// Open Configuration File
 	Configurator* configurator = new Configurator();
-	Singleton< Configurator >::Register( configurator );
+	Singleton< Configurator >::Register( *configurator );
 
 	// Open Connection
 	Mosquitto* mosquitto = new Mosquitto( configurator );
-	Singleton< Mosquitto >::Register( mosquitto );
+	Singleton< Mosquitto >::Register( *mosquitto );
 
 	// Construct Factory
 	Factory* factory = new Factory( configurator );
-	Singleton< Factory >::Register( factory );
+	Singleton< Factory >::Register( *factory );
 	
 	/** Current registered builders: */
 
