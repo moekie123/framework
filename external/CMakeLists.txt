@@ -85,6 +85,25 @@ else()
 	message( STATUS "RapidJson [${RAPIDJSON_VERSION}] already installed" )
 endif()
 
+# Install the tinyfsm library
+pkg_search_module( TINYFSM REQUIRED tinyfsm )
+if( NOT TINYFSM_FOUND )
+
+	ExternalProject_Add( EXTERNAL_FSM
+		PREFIX ${CMAKE_SOURCE_DIR}/external/tinyfsm
+		GIT_REPOSITORY https://github.com/digint/tinyfsm
+	)
+
+	ExternalProject_Add_Step( EXTERNAL_FSM refresh
+		ALWAYS TRUE
+		DEPENDEES "install"
+		COMMENT "refresh shared library cache" 
+		COMMAND ldconfig )
+
+else()
+	message( STATUS "TinyFsm already installed" )
+endif()
+
 find_program( GENERATOR generator )
 if( NOT GENERATOR )
 
