@@ -8,12 +8,22 @@ This page provides information regarding
 # Version 0.2.0
 Improve the fundamentals of the framework
 
+	- Huge Refactoring on all classes
+		- Arguments are now given are const refrence
+
 ## Core Feature
 	- Implemented an argument parser to the Framework
+	- Configurator now used a Vistor pattern to search through xml document
+	- Mosquitto client added
+
+## Hardware Features
+	- Initial setup for a Actuator added
 
 ## Development Enviroment
 	- Added PWM-driver demo
-
+	- Extended enviroment setup
+		- Create Symbolic links for bash_profile and vim
+	
 # Version 0.1.0
 The initial setup of the framework 
 
