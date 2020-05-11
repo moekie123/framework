@@ -47,8 +47,21 @@ echo "Install Documentation Utilities"
 echo "Install Boost"
 	apt-get install libboost-all-dev --fix-missing $FORCE
 
-echo "Add Alias"
-	cp ./bash_profile > ~/.bash_profile
+echo "Configure Enviroment"
+
+files=( ".bash_profile" ".vimrc" )
+
+for FILE in "${files[@]}"
+do
+	ABS="$HOME/"$FILE
+	
+	if [ -f $ABS ]; then
+		echo -e "\e[31m $FILE already exist \e[0m"
+	else
+		echo "Copy $FILE to home directory"
+		ln -s $(pwd)/$FILE $ABS
+	fi
+done
 
 echo "MQTT-broker"
 	# install mosquitto broker, sub & pub
