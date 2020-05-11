@@ -5,9 +5,12 @@ include(ExternalProject)
 
 #Install the googletest framework
 
+set( ALL_EXTERNALS_BUILD ON PARENT_SCOPE )
+
 #find_package( GTest )
 pkg_search_module(GTEST REQUIRED gtest_main)
 if( NOT GTEST_FOUND )
+	set( ALL_EXTERNALS_BUILD OFF PARENT_SCOPE )
 
 	ExternalProject_Add( EXTERNAL_GTEST 
 		PREFIX ${CMAKE_SOURCE_DIR}/external/googletest
@@ -29,9 +32,10 @@ endif()
 #find_package( Mosquitto )
 pkg_search_module( MOSQUITTO REQUIRED libmosquitto )
 if( NOT MOSQUITTO_FOUND )
+	set( ALL_EXTERNALS_BUILD OFF PARENT_SCOPE )
 
 	ExternalProject_Add( EXTERNAL_MQTT
-		PREFIX ${CMAKE_SOURCE_DIR}/external/mosquitto
+		PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/mosquitto
 		CMAKE_ARGS "-DDOCUMENTATION=OFF"
 		GIT_REPOSITORY  https://github.com/eclipse/mosquitto.git
 	)
@@ -49,9 +53,10 @@ endif()
 # Install the tinyxml library
 pkg_search_module( TINYXML2 REQUIRED tinyxml2 )
 if( NOT TINYXML2_FOUND )
+	set( ALL_EXTERNALS_BUILD OFF PARENT_SCOPE )
 
 	ExternalProject_Add( EXTERNAL_XML
-		PREFIX ${CMAKE_SOURCE_DIR}/external/tinyxml2
+		PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/tinyxml2
 		GIT_REPOSITORY  https://github.com/leethomason/tinyxml2.git
 	)
 
@@ -69,9 +74,10 @@ endif()
 #find_package( RapidJSON )
 pkg_search_module( RAPIDJSON REQUIRED RapidJSON )
 if( NOT RAPIDJSON_FOUND )
+	set( ALL_EXTERNALS_BUILD OFF PARENT_SCOPE )
 
 	ExternalProject_Add( EXTERNAL_JSON
-		PREFIX ${CMAKE_SOURCE_DIR}/external/rapidjson
+		PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/rapidjson
 		GIT_REPOSITORY https://github.com/Tencent/rapidjson.git
 	)
 
@@ -86,51 +92,72 @@ else()
 endif()
 
 # Install the tinyfsm library
-pkg_search_module( TINYFSM REQUIRED tinyfsm )
-if( NOT TINYFSM_FOUND )
+IF( NOT EXISTS ${CMAKE_SOURCE_DIR}/external/tinyfsm )
+	set( ALL_EXTERNALS_BUILD OFF PARENT_SCOPE )
 
 	ExternalProject_Add( EXTERNAL_FSM
-		PREFIX ${CMAKE_SOURCE_DIR}/external/tinyfsm
+		PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/tinyfsm
 		GIT_REPOSITORY https://github.com/digint/tinyfsm
+		UPDATE_COMMAND ""
+		CONFIGURE_COMMAND ""
+		BUILD_COMMAND ""
+		INSTALL_COMMAND ""
+		TEST_COMMAND ""
 	)
 
-	ExternalProject_Add_Step( EXTERNAL_FSM refresh
-		ALWAYS TRUE
-		DEPENDEES "install"
-		COMMENT "refresh shared library cache" 
-		COMMAND ldconfig )
+	# Create Package Config file based on the input-file
+	include(CMakePackageConfigHelpers)
+	write_basic_package_version_file(
+    		"${CMAKE_CURRENT_SOURCE_DIR}/cmake/tinyfsm.cmake.in"
+    		VERSION 0.2
+    		COMPATIBILITY AnyNewerVersion
+	)
+
+	# Create Package Config for the library
+	include(CMakePackageConfigHelpers)
+	configure_package_config_file(
+    		"${CMAKE_CURRENT_SOURCE_DIR}/cmake/tinyfsm.cmake.in"
+    		"${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/cmake/tinyfsm.cmake"
+    		INSTALL_DESTINATION lib/cmake/tinyfsm
+	)
+
+	# Copy the files to the installion directories
+	install(FILES "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/cmake/tinyfsm.cmake" DESTINATION /lib/cmake/tinyfsm )
+	install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tinyfsm/src/EXTERNAL_FSM/include/  DESTINATION /usr/local/include )
 
 else()
 	message( STATUS "TinyFsm already installed" )
+	include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/tinyfsm/src/EXTERNAL_FSM/include/tinyfsm.hpp )
 endif()
 
-find_program( GENERATOR generator )
-if( NOT GENERATOR )
 
-	message("Build Version Generator")
+IF( NOT EXISTS ${CMAKE_SOURCE_DIR}/external/version )
+	set( ALL_EXTERNALS_BUILD OFF PARENT_SCOPE )
+
 	ExternalProject_Add( EXTERNAL_VERSION
-		PREFIX ${CMAKE_SOURCE_DIR}/external/version
-		INSTALL_COMMAND ""
+		PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/version
+		INSTALL_COMMAND cp ${CMAKE_CURRENT_SOURCE_DIR}/version/src/EXTERNAL_VERSION/generate.c ${CMAKE_CURRENT_SOURCE_DIR}/version/
 		GIT_REPOSITORY https://github.com/erichschroeter/cmake-auto-increment-build-number.git
 	)
 
-	add_executable( generator ${CMAKE_CURRENT_SOURCE_DIR}/version/src/generate.c )
 else()
 	message( STATUS "Version generator already installed" )
+	add_executable( generator ${CMAKE_CURRENT_SOURCE_DIR}/version/generate.c )
+
+	add_custom_target( version ALL
+		COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/generator
+			 -P "FRAMEWORK"
+			 -M "${VERSION_MAJOR}"
+			 -m ${VERSION_MINOR}
+			 -p ${VERSION_PATCH}
+			 -a "${VERSION_META}"
+			 -F "${CMAKE_SOURCE_DIR}/.buildnumber"
+			 -i
+		> ${CMAKE_SOURCE_DIR}/include/version.h 
+
+		DEPENDS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/generator
+		COMMENT "Generating version tags"
+		VERBATIM
+	    )
+	add_dependencies( version generator )
 endif()
-
-add_custom_target( version ALL
-	COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/generator
-		 -P "FRAMEWORK"
-		 -M "${VERSION_MAJOR}"
-		 -m ${VERSION_MINOR}
-		 -p ${VERSION_PATCH}
-		 -a "${VERSION_META}"
-		 -F "${CMAKE_SOURCE_DIR}/.buildnumber"
-		 -i
-	> ${CMAKE_SOURCE_DIR}/include/version.h 
-
-	DEPENDS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/generator
-    	COMMENT "Generating version tags"
-    	VERBATIM
-    )

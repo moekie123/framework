@@ -22,6 +22,11 @@ set( CMAKE_INSTALL_OUTPUT_DIRECTORY /opt/framework/ )
 # Include external dependencies
 add_subdirectory( external )
 
+if( NOT ${ALL_EXTERNALS_BUILD} )	
+	message( "Not all externals are build yet" )
+	return()
+endif()
+
 # Setup CTags
 message( "Configure CTags" )
 set_source_files_properties( tags PROPERTIES GENERATED true)

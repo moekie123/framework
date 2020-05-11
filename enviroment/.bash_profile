@@ -10,15 +10,28 @@ alias mv='mv -i'
 
 alias cdl='cd /usr/src/linux/'
 
-FRAMEWORK="/root/framework"
-if [ -d "$FRAMEWORK" ]; then
+FRAMEWORK='/root/framework'
+FRAMEWORK_BUILD=${FRAMEWORK}'/build/'
+
+echo "Build Direcotry " ${FRAMEWORK_BUILD}
+
+if [ -d "${FRAMEWORK}" ]; then
+
+	function Rebuild 
+	{
+       		echo "Rebuild the complete project"
+		rm -rf ${FRAMEWORK_BUILD}
+		cmake -S${FRAMEWORK} -B${FRAMEWORK_BUILD}
+       		make --no-print-directory -C ${FRAMEWORK_BUILD}
+	}
+
 	alias  cdf='cd '$FRAMEWORK
-	alias  cdb='cd '$FRAMEWORK/build
+	alias  cdb='cd '${FRAMEWORK_BUILD}
 	
 	alias  cdi='cd '$FRAMEWORK/include
 	alias cdim='cd '$FRAMEWORK/include/mocks
 
-	alias  cde='cd '$FRAMEWORK/enviroment
+	alias  cde='cd '$FRAMEWORK/external
 
 	alias  cds='cd '$FRAMEWORK/source
 	alias  cdc='cd '$FRAMEWORK/source/core
@@ -28,7 +41,7 @@ if [ -d "$FRAMEWORK" ]; then
 
 	alias  cdh='cd '$FRAMEWORK/source/hardware
 
-	alias makef='make --no-print-directory -C '$FRAMEWORK'/build/'
+	alias makef='make --no-print-directory -C '${FRAMEWORK_BUILD}
 
 	export PATH=$PATH:$FRAMEWORK/binairy/
 fi

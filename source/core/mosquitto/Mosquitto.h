@@ -51,7 +51,7 @@ class Mosquitto:
 
 	protected:
 	
-	/*
+	/**
 	 * @brief Connect to the broker 
 	 * @param _hostname The server address
 	 * @param _port The server port
@@ -59,34 +59,34 @@ class Mosquitto:
 	 */
 	bool Connect( const std::string& _hostname, const std::string& _port );
 
-	/*
+	/**
 	 * @brief Disonnect from the broker
 	 */
 	bool Disconnect();
 
 	private:
 
-	/*
+	/**
 	 * @brief The mosquitto client
 	 */
 	struct mosquitto* mClient;
 
-	/*
+	/**
 	 * @brief The network addres of the mqtt broker
 	 */
 	std::string mHostname;
 
-	/*
+	/**
 	 * @brief The network port of the mqtt broker
 	 */
 	std::string mPort;
 
-	/*
+	/**
 	 * @brief The Username of the mqtt broker 
 	 */
 	std::string mUsername;
 
-	/*
+	/**
 	 * @brief The Password of the mqtt broker
 	 */
 	std::string mPassword;
