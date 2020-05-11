@@ -14,8 +14,10 @@ FRAMEWORK="/root/framework"
 if [ -d "$FRAMEWORK" ]; then
 	alias  cdf='cd '$FRAMEWORK
 	alias  cdb='cd '$FRAMEWORK/build
-	alias  cdi='cd '$FRAMEWORK/include
 	
+	alias  cdi='cd '$FRAMEWORK/include
+	alias cdim='cd '$FRAMEWORK/include/mocks
+
 	alias  cde='cd '$FRAMEWORK/enviroment
 
 	alias  cds='cd '$FRAMEWORK/source
