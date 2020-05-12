@@ -5,6 +5,12 @@ include(ExternalProject)
 
 set( ALL_EXTERNALS_BUILD ON PARENT_SCOPE )
 
+add_subdirectory( tmp )
+# CMake trick, modify the CMakeLists.txt to force a project rebuild
+add_custom_target( rebuild ALL 
+	COMMENT "----------------- [Force a Rebuild] ---------------------"
+	COMMAND echo "" >> ${CMAKE_CURRENT_SOURCE_DIR}/tmp/CMakeLists.txt )
+
 # Instal the Google Test Framework
 add_library( ext-gtest INTERFACE )
 pkg_search_module( GTEST gtest_main )
@@ -24,7 +30,7 @@ if( NOT GTEST_FOUND )
 		COMMENT "refresh shared library cache" 
 		COMMAND ldconfig )
 
-	add_dependencies( ext-gtest EXTERNAL_GTEST )
+	add_dependencies( ext-gtest rebuild EXTERNAL_GTEST )
 else()
 	message( STATUS "Google Test [${GTEST_VERSION}] already installed" )
 endif()
@@ -47,7 +53,7 @@ if( NOT MOSQUITTO_FOUND )
 		COMMENT "refresh shared library cache" 
 		COMMAND ldconfig )
 
-	add_dependencies( ext-mqtt EXTERNAL_MQTT )
+	add_dependencies( ext-mqtt rebuild EXTERNAL_MQTT )
 else()
 	message( STATUS "Mosquitto [${MOSQUITTO_VERSION}] already installed" )
 endif()
@@ -69,7 +75,7 @@ if( NOT TINYXML2_FOUND )
 		COMMENT "refresh shared library cache" 
 		COMMAND ldconfig )
 
-	add_dependencies( ext-xml EXTERNAL_XML )
+	add_dependencies( ext-xml rebuild EXTERNAL_XML )
 else()
 	message( STATUS "TinyXml2 [${TINYXML2_VERSION}] already installed" )
 endif()
@@ -91,7 +97,7 @@ if( NOT RAPIDJSON_FOUND )
 		COMMENT "refresh shared library cache" 
 		COMMAND ldconfig )
 
-	add_dependencies( ext-json EXTERNAL_JSON )
+	add_dependencies( ext-json rebuild EXTERNAL_JSON )
 else()
 	message( STATUS "RapidJson [${RAPIDJSON_VERSION}] already installed" )
 endif()
@@ -115,7 +121,7 @@ IF( NOT EXISTS ${CMAKE_SOURCE_DIR}/external/tinyfsm )
 	include(CMakePackageConfigHelpers)
 	write_basic_package_version_file(
     		"${CMAKE_CURRENT_SOURCE_DIR}/cmake/tinyfsm.cmake.in"
-    		VERSION 0.2
+    		VERSION 0.3
     		COMPATIBILITY AnyNewerVersion
 	)
 
@@ -131,7 +137,7 @@ IF( NOT EXISTS ${CMAKE_SOURCE_DIR}/external/tinyfsm )
 	install(FILES "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/cmake/tinyfsm.cmake" DESTINATION /lib/cmake/tinyfsm )
 	install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tinyfsm/src/EXTERNAL_FSM/include/  DESTINATION /usr/local/include )
 
-	add_dependencies( ext-fsm EXTERNAL_FSM )
+	add_dependencies( ext-fsm rebuild EXTERNAL_FSM )
 else()
 	message( STATUS "TinyFsm already installed" )
 endif()
@@ -153,10 +159,6 @@ IF( NOT EXISTS ${CMAKE_SOURCE_DIR}/external/version/generate.c )
 		TEST_COMMAND ""
 		)
 
-	# CMake Refresh Trick
-	# 	With the 'EXTERNAL_VERSION-Refresh'-Step the CMakeLists.txt, in version, will be modified
-	#	Because this file has been changed CMake will rebuild the project 
-	#	During the rebuild the code will fall in the else-statmenet
 	ExternalProject_Add_Step( EXTERNAL_VERSION refresh
 		ALWAYS TRUE	
 		DEPENDEES "build"
@@ -164,7 +166,8 @@ IF( NOT EXISTS ${CMAKE_SOURCE_DIR}/external/version/generate.c )
 		COMMAND cp ${CMAKE_CURRENT_SOURCE_DIR}/version/src/EXTERNAL_VERSION/generate.c ${CMAKE_CURRENT_SOURCE_DIR}/version/
 	)
 
-	add_custom_target( Generate DEPENDS EXTERNAL_VERSION )
+	#add_custom_target( Generate DEPENDS EXTERNAL_VERSION )
+	add_dependencies( ext-version rebuild EXTERNAL_VERSION )
 else()
 	message( STATUS "Version generator is installed" )
 
@@ -190,12 +193,3 @@ else()
 	    )
 	add_dependencies( version generator )
 endif()
-
-# Include external dependencies
-if( NOT ${ALL_EXTERNALS_BUILD} )
-	message( AUTHOR_WARNING "Force a rebuild" )
- 	add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/tmp )
-	add_custom_command( OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/tmp COMMAND echo "" >> ${CMAKE_CURRENT_SOURCE_DIR}/tmp/CMakeLists.txt )
-endif()
-
-
