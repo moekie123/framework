@@ -20,9 +20,10 @@ set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/binairy )
 set( CMAKE_INSTALL_OUTPUT_DIRECTORY /opt/framework/ )
 
 # Include external dependencies
+set( ALL_EXTERNALS_BUILD OFF )
 add_subdirectory( external )
-if( NOT ${ALL_EXTERNALS_BUILD} )	
-	message( AUTHOR_WARNING "Externals are updated, run 'make' again" )
+if( NOT ${ALL_EXTERNALS_BUILD} )
+	message( AUTHOR_WARNING "Externals are not ready yet, try again..." )
 	return()
 endif()
 

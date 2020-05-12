@@ -134,9 +134,7 @@ IF( NOT EXISTS ${CMAKE_SOURCE_DIR}/external/tinyfsm )
 	add_dependencies( ext-fsm EXTERNAL_FSM )
 else()
 	message( STATUS "TinyFsm already installed" )
-#	include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/tinyfsm/src/EXTERNAL_FSM/include/tinyfsm.hpp )
 endif()
-
 
 # Instal Version Generator
 add_library( ext-version INTERFACE )
@@ -164,11 +162,9 @@ IF( NOT EXISTS ${CMAKE_SOURCE_DIR}/external/version/generate.c )
 		DEPENDEES "build"
 		COMMENT "Copy downloaded files" 
 		COMMAND cp ${CMAKE_CURRENT_SOURCE_DIR}/version/src/EXTERNAL_VERSION/generate.c ${CMAKE_CURRENT_SOURCE_DIR}/version/
-		COMMAND echo "" >> ${CMAKE_CURRENT_SOURCE_DIR}/version/CMakeLists.txt
 	)
 
 	add_custom_target( Generate DEPENDS EXTERNAL_VERSION )
-	add_subdirectory( version )
 else()
 	message( STATUS "Version generator is installed" )
 
@@ -193,6 +189,13 @@ else()
 		VERBATIM
 	    )
 	add_dependencies( version generator )
+endif()
+
+# Include external dependencies
+if( NOT ${ALL_EXTERNALS_BUILD} )
+	message( AUTHOR_WARNING "Force a rebuild" )
+ 	add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/tmp )
+	add_custom_command( OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/tmp COMMAND echo "" >> ${CMAKE_CURRENT_SOURCE_DIR}/tmp/CMakeLists.txt )
 endif()
 
 
