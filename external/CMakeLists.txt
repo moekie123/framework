@@ -3,28 +3,23 @@ message( "Download External Dependencies" )
 find_package(PkgConfig)
 include(ExternalProject)
 
-#Install the googletest framework
-
 set( ALL_EXTERNALS_BUILD ON PARENT_SCOPE )
 
-#find_package( GTest )
-pkg_search_module(GTEST REQUIRED gtest_main)
-if( NOT GTEST_FOUND )
-	set( ALL_EXTERNALS_BUILD OFF PARENT_SCOPE )
+#Install the googletest framework
+ExternalProject_Add( gexternal
+	PREFIX ${CMAKE_SOURCE_DIR}/external/googletest
+	CMAKE_ARGS "-DBUILD_SHARED_LIBS=ON"
+	GIT_REPOSITORY https://github.com/google/googletest
+)
 
-	ExternalProject_Add( EXTERNAL_GTEST 
-		PREFIX ${CMAKE_SOURCE_DIR}/external/googletest
-		CMAKE_ARGS "-DBUILD_SHARED_LIBS=ON"
-		GIT_REPOSITORY https://github.com/google/googletest
-	)
+ExternalProject_Add_Step( gexternal refresh
+	ALWAYS TRUE
+	DEPENDEES "install"
+	COMMENT "refresh shared library cache" 
+	COMMAND ldconfig )
 
-	ExternalProject_Add_Step( EXTERNAL_GTEST refresh
-		ALWAYS TRUE
-		DEPENDEES "install"
-		COMMENT "refresh shared library cache" 
-		COMMAND ldconfig )
-
-else()
+pkg_search_module(GTEST gtest_main)
+if( GTEST_FOUND )
 	message( STATUS "Google Test [${GTEST_VERSION}] already installed" )
 endif()
 

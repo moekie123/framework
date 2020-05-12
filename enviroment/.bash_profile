@@ -13,8 +13,6 @@ alias cdl='cd /usr/src/linux/'
 FRAMEWORK='/root/framework'
 FRAMEWORK_BUILD=${FRAMEWORK}'/build/'
 
-echo "Build Direcotry " ${FRAMEWORK_BUILD}
-
 if [ -d "${FRAMEWORK}" ]; then
 
 	function Rebuild 
@@ -32,6 +30,8 @@ if [ -d "${FRAMEWORK}" ]; then
 	alias cdim='cd '$FRAMEWORK/include/mocks
 
 	alias  cde='cd '$FRAMEWORK/external
+
+	alias  cdp='cd '$FRAMEWORK/prototype
 
 	alias  cds='cd '$FRAMEWORK/source
 	alias  cdc='cd '$FRAMEWORK/source/core
