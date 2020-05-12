@@ -15,6 +15,7 @@ Improve the fundamentals of the framework
 	- Implemented an argument parser to the Framework
 	- Configurator now used a Vistor pattern to search through xml document
 	- Mosquitto client added
+	- Finite State Machine integrated
 
 ## Hardware Features
 	- Initial setup for a Actuator added
@@ -23,6 +24,7 @@ Improve the fundamentals of the framework
 	- Added PWM-driver demo
 	- Extended enviroment setup
 		- Create Symbolic links for bash_profile and vim
+	- Missing externals force rebuild cmake after download/installation
 	
 # Version 0.1.0
 The initial setup of the framework 

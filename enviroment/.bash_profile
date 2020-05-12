@@ -26,6 +26,8 @@ if [ -d "${FRAMEWORK}" ]; then
 	alias  cdf='cd '$FRAMEWORK
 	alias  cdb='cd '${FRAMEWORK_BUILD}
 	
+	alias  cdd='cd '$FRAMEWORK/documentation
+
 	alias  cdi='cd '$FRAMEWORK/include
 	alias cdim='cd '$FRAMEWORK/include/mocks
 
@@ -42,6 +44,7 @@ if [ -d "${FRAMEWORK}" ]; then
 	alias  cdh='cd '$FRAMEWORK/source/hardware
 
 	alias makef='make --no-print-directory -C '${FRAMEWORK_BUILD}
+	alias maker='make --no-print-directory -C  ${FRAMEWORK_BUILD} -j4'
 
 	export PATH=$PATH:$FRAMEWORK/binairy/
 fi
