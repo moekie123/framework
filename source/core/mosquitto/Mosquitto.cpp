@@ -25,6 +25,7 @@ Mosquitto::Mosquitto( const IConfigurator& _config )
 
 	
 	std::cout << "Initialize Mosquitto Library";
+/*
 	mosquitto_lib_init();
 
 	{
@@ -32,10 +33,12 @@ Mosquitto::Mosquitto( const IConfigurator& _config )
 		mosquitto_lib_version( &x, &y, &z );
 		std::cout << "mosquito version " << x << y << z << "\n";
 	}
+*/
 }
 
 bool Mosquitto::Connect( const std::string& _hostname, const std::string& _port)
 {
+/*
 	int ret;
 	std::cout << "Mosquitto::Client\n";
 
@@ -62,7 +65,7 @@ bool Mosquitto::Connect( const std::string& _hostname, const std::string& _port)
 		std::cerr << "Failed to connect [" << mosquitto_strerror( errno ) << "]\n";
 		return false;
 	}
-
+*/
 	return true;
 }
 
@@ -74,5 +77,7 @@ bool Mosquitto::Disconnect()
 Mosquitto::~Mosquitto()
 {
 	std::cout << "Cleanup Mosquitto Library\n";
+/*
 	mosquitto_lib_cleanup();
+*/
 }

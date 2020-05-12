@@ -38,7 +38,6 @@ class Mosquitto:
 	 */
 	~Mosquitto();
 
-
 	/**
 	 * @brief The constructor
 	 */
