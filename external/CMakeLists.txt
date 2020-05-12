@@ -7,12 +7,11 @@ set( ALL_EXTERNALS_BUILD ON PARENT_SCOPE )
 
 add_subdirectory( tmp )
 # CMake trick, modify the CMakeLists.txt to force a project rebuild
-add_custom_target( rebuild ALL 
-	COMMENT "----------------- [Force a Rebuild] ---------------------"
+add_custom_target( REBUILD
+	COMMENT "----------------- [Force a rebuild after download ] ---------------------"
 	COMMAND echo "" >> ${CMAKE_CURRENT_SOURCE_DIR}/tmp/CMakeLists.txt )
 
 # Instal the Google Test Framework
-add_library( ext-gtest INTERFACE )
 pkg_search_module( GTEST gtest_main )
 if( NOT GTEST_FOUND )
 	set( ALL_EXTERNALS_BUILD OFF PARENT_SCOPE )
@@ -30,13 +29,12 @@ if( NOT GTEST_FOUND )
 		COMMENT "refresh shared library cache" 
 		COMMAND ldconfig )
 
-	add_dependencies( ext-gtest rebuild EXTERNAL_GTEST )
+	add_dependencies( EXTERNAL_GTES  REBUILD )
 else()
 	message( STATUS "Google Test [${GTEST_VERSION}] already installed" )
 endif()
 
 # Install the mosquitto library
-add_library( ext-mqtt INTERFACE )
 pkg_search_module( MOSQUITTO REQUIRED libmosquitto )
 if( NOT MOSQUITTO_FOUND )
 	set( ALL_EXTERNALS_BUILD OFF PARENT_SCOPE )
@@ -53,13 +51,12 @@ if( NOT MOSQUITTO_FOUND )
 		COMMENT "refresh shared library cache" 
 		COMMAND ldconfig )
 
-	add_dependencies( ext-mqtt rebuild EXTERNAL_MQTT )
+	add_dependencies( EXTERNAL_MQTT REBUILD )
 else()
 	message( STATUS "Mosquitto [${MOSQUITTO_VERSION}] already installed" )
 endif()
 
 # Install the tinyxml library
-add_library( ext-xml INTERFACE )
 pkg_search_module( TINYXML2 REQUIRED tinyxml2 )
 if( NOT TINYXML2_FOUND )
 	set( ALL_EXTERNALS_BUILD OFF PARENT_SCOPE )
@@ -75,13 +72,12 @@ if( NOT TINYXML2_FOUND )
 		COMMENT "refresh shared library cache" 
 		COMMAND ldconfig )
 
-	add_dependencies( ext-xml rebuild EXTERNAL_XML )
+	add_dependencies( EXTERNAL_XML REBUILD )
 else()
 	message( STATUS "TinyXml2 [${TINYXML2_VERSION}] already installed" )
 endif()
 
 # Install the rapid json library
-add_library( ext-json INTERFACE )
 pkg_search_module( RAPIDJSON REQUIRED RapidJSON )
 if( NOT RAPIDJSON_FOUND )
 	set( ALL_EXTERNALS_BUILD OFF PARENT_SCOPE )
@@ -97,13 +93,12 @@ if( NOT RAPIDJSON_FOUND )
 		COMMENT "refresh shared library cache" 
 		COMMAND ldconfig )
 
-	add_dependencies( ext-json rebuild EXTERNAL_JSON )
+	add_dependencies( EXTERNAL_JSON REBUILD )
 else()
 	message( STATUS "RapidJson [${RAPIDJSON_VERSION}] already installed" )
 endif()
 
 # Install the tinyfsm library
-add_library( ext-fsm INTERFACE )
 IF( NOT EXISTS ${CMAKE_SOURCE_DIR}/external/tinyfsm )
 	set( ALL_EXTERNALS_BUILD OFF PARENT_SCOPE )
 
@@ -137,13 +132,12 @@ IF( NOT EXISTS ${CMAKE_SOURCE_DIR}/external/tinyfsm )
 	install(FILES "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/cmake/tinyfsm.cmake" DESTINATION /lib/cmake/tinyfsm )
 	install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tinyfsm/src/EXTERNAL_FSM/include/  DESTINATION /usr/local/include )
 
-	add_dependencies( ext-fsm rebuild EXTERNAL_FSM )
+	add_dependencies( EXTERNAL_FSM REBUILD )
 else()
 	message( STATUS "TinyFsm already installed" )
 endif()
 
 # Instal Version Generator
-add_library( ext-version INTERFACE )
 IF( NOT EXISTS ${CMAKE_SOURCE_DIR}/external/version/generate.c )
 	message( STATUS "Install version generator" )
 
@@ -167,13 +161,12 @@ IF( NOT EXISTS ${CMAKE_SOURCE_DIR}/external/version/generate.c )
 	)
 
 	#add_custom_target( Generate DEPENDS EXTERNAL_VERSION )
-	add_dependencies( ext-version rebuild EXTERNAL_VERSION )
+	add_dependencies( EXTERNAL_VERSION REBUILD )
 else()
 	message( STATUS "Version generator is installed" )
 
 	# Create Generator
 	add_executable( generator ${CMAKE_CURRENT_SOURCE_DIR}/version/generate.c )
-	add_dependencies( generator ext-version )
 
 	# Generate Version Control Header
 	add_custom_target( version ALL
