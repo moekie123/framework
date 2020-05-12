@@ -5,26 +5,32 @@ include(ExternalProject)
 
 set( ALL_EXTERNALS_BUILD ON PARENT_SCOPE )
 
-#Install the googletest framework
-ExternalProject_Add( gexternal
-	PREFIX ${CMAKE_SOURCE_DIR}/external/googletest
-	CMAKE_ARGS "-DBUILD_SHARED_LIBS=ON"
-	GIT_REPOSITORY https://github.com/google/googletest
-)
+# Instal the Google Test Framework
+add_library( ext-gtest INTERFACE )
+pkg_search_module( GTEST gtest_main )
+if( NOT GTEST_FOUND )
+	set( ALL_EXTERNALS_BUILD OFF PARENT_SCOPE )
 
-ExternalProject_Add_Step( gexternal refresh
-	ALWAYS TRUE
-	DEPENDEES "install"
-	COMMENT "refresh shared library cache" 
-	COMMAND ldconfig )
+	#Install the googletest framework
+	ExternalProject_Add( EXTERNAL_GTEST
+		PREFIX ${CMAKE_SOURCE_DIR}/external/googletest
+		CMAKE_ARGS "-DBUILD_SHARED_LIBS=ON"
+		GIT_REPOSITORY https://github.com/google/googletest
+	)
 
-pkg_search_module(GTEST gtest_main)
-if( GTEST_FOUND )
+	ExternalProject_Add_Step( EXTERNAL_GTEST refresh
+		ALWAYS TRUE
+		DEPENDEES "install"
+		COMMENT "refresh shared library cache" 
+		COMMAND ldconfig )
+
+	add_dependencies( ext-gtest EXTERNAL_GTEST )
+else()
 	message( STATUS "Google Test [${GTEST_VERSION}] already installed" )
 endif()
 
 # Install the mosquitto library
-#find_package( Mosquitto )
+add_library( ext-mqtt INTERFACE )
 pkg_search_module( MOSQUITTO REQUIRED libmosquitto )
 if( NOT MOSQUITTO_FOUND )
 	set( ALL_EXTERNALS_BUILD OFF PARENT_SCOPE )
@@ -41,11 +47,13 @@ if( NOT MOSQUITTO_FOUND )
 		COMMENT "refresh shared library cache" 
 		COMMAND ldconfig )
 
+	add_dependencies( ext-mqtt EXTERNAL_MQTT )
 else()
 	message( STATUS "Mosquitto [${MOSQUITTO_VERSION}] already installed" )
 endif()
 
 # Install the tinyxml library
+add_library( ext-xml INTERFACE )
 pkg_search_module( TINYXML2 REQUIRED tinyxml2 )
 if( NOT TINYXML2_FOUND )
 	set( ALL_EXTERNALS_BUILD OFF PARENT_SCOPE )
@@ -61,12 +69,13 @@ if( NOT TINYXML2_FOUND )
 		COMMENT "refresh shared library cache" 
 		COMMAND ldconfig )
 
+	add_dependencies( ext-xml EXTERNAL_XML )
 else()
 	message( STATUS "TinyXml2 [${TINYXML2_VERSION}] already installed" )
 endif()
 
 # Install the rapid json library
-#find_package( RapidJSON )
+add_library( ext-json INTERFACE )
 pkg_search_module( RAPIDJSON REQUIRED RapidJSON )
 if( NOT RAPIDJSON_FOUND )
 	set( ALL_EXTERNALS_BUILD OFF PARENT_SCOPE )
@@ -82,11 +91,13 @@ if( NOT RAPIDJSON_FOUND )
 		COMMENT "refresh shared library cache" 
 		COMMAND ldconfig )
 
+	add_dependencies( ext-json EXTERNAL_JSON )
 else()
 	message( STATUS "RapidJson [${RAPIDJSON_VERSION}] already installed" )
 endif()
 
 # Install the tinyfsm library
+add_library( ext-fsm INTERFACE )
 IF( NOT EXISTS ${CMAKE_SOURCE_DIR}/external/tinyfsm )
 	set( ALL_EXTERNALS_BUILD OFF PARENT_SCOPE )
 
@@ -120,25 +131,52 @@ IF( NOT EXISTS ${CMAKE_SOURCE_DIR}/external/tinyfsm )
 	install(FILES "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/cmake/tinyfsm.cmake" DESTINATION /lib/cmake/tinyfsm )
 	install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tinyfsm/src/EXTERNAL_FSM/include/  DESTINATION /usr/local/include )
 
+	add_dependencies( ext-fsm EXTERNAL_FSM )
 else()
 	message( STATUS "TinyFsm already installed" )
-	include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/tinyfsm/src/EXTERNAL_FSM/include/tinyfsm.hpp )
+#	include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/tinyfsm/src/EXTERNAL_FSM/include/tinyfsm.hpp )
 endif()
 
 
-IF( NOT EXISTS ${CMAKE_SOURCE_DIR}/external/version )
+# Instal Version Generator
+add_library( ext-version INTERFACE )
+IF( NOT EXISTS ${CMAKE_SOURCE_DIR}/external/version/generate.c )
+	message( STATUS "Install version generator" )
+
 	set( ALL_EXTERNALS_BUILD OFF PARENT_SCOPE )
 
 	ExternalProject_Add( EXTERNAL_VERSION
 		PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/version
-		INSTALL_COMMAND cp ${CMAKE_CURRENT_SOURCE_DIR}/version/src/EXTERNAL_VERSION/generate.c ${CMAKE_CURRENT_SOURCE_DIR}/version/
 		GIT_REPOSITORY https://github.com/erichschroeter/cmake-auto-increment-build-number.git
+		UPDATE_COMMAND ""
+		CONFIGURE_COMMAND ""
+		BUILD_COMMAND ""
+		INSTALL_COMMAND ""
+		TEST_COMMAND ""
+		)
+
+	# CMake Refresh Trick
+	# 	With the 'EXTERNAL_VERSION-Refresh'-Step the CMakeLists.txt will overwrite the (dummy) CMakeLists in the version-dir
+	#	Because this file has been changed, during the first make CMake will rebuild the project 
+	#	During the rebuild the code will fall in the else-statmenet
+	ExternalProject_Add_Step( EXTERNAL_VERSION refresh
+		ALWAYS TRUE	
+		DEPENDEES "build"
+		COMMENT "Copy downloaded files" 
+		COMMAND cp ${CMAKE_CURRENT_SOURCE_DIR}/version/src/EXTERNAL_VERSION/generate.c ${CMAKE_CURRENT_SOURCE_DIR}/version/
+		COMMAND cp ${CMAKE_CURRENT_SOURCE_DIR}/version/src/EXTERNAL_VERSION/CMakeLists.txt ${CMAKE_CURRENT_SOURCE_DIR}/version/
 	)
 
+	add_custom_target( Generate DEPENDS EXTERNAL_VERSION )
+	add_subdirectory( version )
 else()
-	message( STATUS "Version generator already installed" )
-	add_executable( generator ${CMAKE_CURRENT_SOURCE_DIR}/version/generate.c )
+	message( STATUS "Version generator is installed" )
 
+	# Create Generator
+	add_executable( generator ${CMAKE_CURRENT_SOURCE_DIR}/version/generate.c )
+	add_dependencies( generator ext-version )
+
+	# Generate Version Control Header
 	add_custom_target( version ALL
 		COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/generator
 			 -P "FRAMEWORK"
@@ -155,4 +193,7 @@ else()
 		VERBATIM
 	    )
 	add_dependencies( version generator )
+
 endif()
+
+
