@@ -21,9 +21,8 @@ set( CMAKE_INSTALL_OUTPUT_DIRECTORY /opt/framework/ )
 
 # Include external dependencies
 add_subdirectory( external )
-
 if( NOT ${ALL_EXTERNALS_BUILD} )	
-	message( "Not all externals are build yet" )
+	message( AUTHOR_WARNING "Externals are updated, run 'make' again" )
 	return()
 endif()
 
@@ -34,23 +33,21 @@ add_custom_command ( OUTPUT tags ALL
 	COMMAND ctags -R --c++-kinds=+p --fields=+iaS --extras=+q .    
     	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR} )
 
-# Validate Source
-message( "Check source code" )
-set(CMAKE_CXX_CPPCHECK "cppcheck")
-
 # Build Test Enviroment
 message( "Configure Test Enviroment" )
-
 function( gsetup gtest-name )
 	message("Setup [gtest-${gtest-name}] target")
 	add_executable( gtest-${gtest-name} gtest-${gtest-name}.cpp )
-	add_dependencies( gtest-${gtest-name} gexternal )
+	add_dependencies( gtest-${gtest-name} ext-gtest )
 	target_link_libraries( gtest-${gtest-name} gtest gmock pthread )
 	add_test( NAME ${gtest-name} COMMAND gtest-${gtest-name} WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY} )
 	install( TARGETS gtest-${gtest-name} DESTINATION ${CMAKE_INSTALL_OUTPUT_DIRECTORY}/gtest )
 endfunction()
-
 include( CTest )
+
+# Validate Source
+message( "Check source code" )
+set(CMAKE_CXX_CPPCHECK "cppcheck")
 
 # Build Enviroment
 message( "Setup the directory tree" )

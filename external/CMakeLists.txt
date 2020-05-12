@@ -156,15 +156,15 @@ IF( NOT EXISTS ${CMAKE_SOURCE_DIR}/external/version/generate.c )
 		)
 
 	# CMake Refresh Trick
-	# 	With the 'EXTERNAL_VERSION-Refresh'-Step the CMakeLists.txt will overwrite the (dummy) CMakeLists in the version-dir
-	#	Because this file has been changed, during the first make CMake will rebuild the project 
+	# 	With the 'EXTERNAL_VERSION-Refresh'-Step the CMakeLists.txt, in version, will be modified
+	#	Because this file has been changed CMake will rebuild the project 
 	#	During the rebuild the code will fall in the else-statmenet
 	ExternalProject_Add_Step( EXTERNAL_VERSION refresh
 		ALWAYS TRUE	
 		DEPENDEES "build"
 		COMMENT "Copy downloaded files" 
 		COMMAND cp ${CMAKE_CURRENT_SOURCE_DIR}/version/src/EXTERNAL_VERSION/generate.c ${CMAKE_CURRENT_SOURCE_DIR}/version/
-		COMMAND cp ${CMAKE_CURRENT_SOURCE_DIR}/version/src/EXTERNAL_VERSION/CMakeLists.txt ${CMAKE_CURRENT_SOURCE_DIR}/version/
+		COMMAND echo "" >> ${CMAKE_CURRENT_SOURCE_DIR}/version/CMakeLists.txt
 	)
 
 	add_custom_target( Generate DEPENDS EXTERNAL_VERSION )
@@ -193,7 +193,6 @@ else()
 		VERBATIM
 	    )
 	add_dependencies( version generator )
-
 endif()
 
 
