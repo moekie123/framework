@@ -14,21 +14,26 @@ if ( DOXYGEN_FOUND )
     	# request to configure the file
     	configure_file( ${DOXYGEN_IN} ${DOXYGEN_OUT} @ONLY )
     	
-	message( "Doxygen build started" )
-	
-	# note the option ALL which allows to build the docs together with the application
+	message( "Including Doxygen Commands" )
+
+	add_custom_target(
+    		doc_diagrams
+		COMMENT "Generate State Diagrams"
+    		COMMAND python ${CMAKE_SOURCE_DIR}/documentation/statemachine.py --root ${CMAKE_SOURCE_DIR} --output ${CMAKE_SOURCE_DIR}/documentation/generated/
+	)
+
 	add_custom_target( doc_verify ALL
 		COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
 	        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         	COMMENT "Verify documentation for Doxygen"
         	VERBATIM )
+	add_dependencies( doc_verify doc_diagrams )
 
 	add_custom_target( doc_install
-		COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
 		COMMAND cp -r ${CMAKE_CURRENT_BINARY_DIR}/html /var/www 
-		WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
 		COMMENT "Install documentation for Doxygen"
 	       	VERBATIM )
+	add_dependencies( doc_install doc_verify )
 
 	install( DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/html DESTINATION /var/www )
  
