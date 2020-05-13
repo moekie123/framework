@@ -5,7 +5,6 @@
 
 #include <unistd.h>
 
-FSM_INITIAL_STATE( MqttStateMachine , MqttStateIdle )
 
 int main(int argc, char* argv[])
 {
@@ -13,11 +12,17 @@ int main(int argc, char* argv[])
 	
 	MqttStateMachine::start();
 
-	for( int index = 0; index < 4; index++ )
+	for( int index = 0; index < 20; index++ )
 	{
 		auto current_state = MqttStateMachine::current_state_ptr;
 		current_state->cycle();
 		
+		std::cout << "Cycle " << index << "\n";
+
+		if( index == 10 )
+			MqttStateMachine::dispatch( MqttEventDisconnect() );
+
+/*		
 		switch( index )
 		{
 			case 0:
@@ -33,6 +38,7 @@ int main(int argc, char* argv[])
 				MqttStateMachine::dispatch( MqttEventTerminated() );
 				break;
 		}
+*/
 		sleep(1);
 	}
 
