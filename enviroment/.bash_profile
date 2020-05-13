@@ -46,6 +46,8 @@ if [ -d "${FRAMEWORK}" ]; then
 	alias makef='make --no-print-directory -C '${FRAMEWORK_BUILD}
 	alias maker='make --no-print-directory -C  ${FRAMEWORK_BUILD} -j4'
 
+	alias documention='make --no-print-directory -C  ${FRAMEWORK_BUILD} -j4 doc_install'
+
 	export PATH=$PATH:$FRAMEWORK/binairy/
 fi
 
