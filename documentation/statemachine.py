@@ -30,8 +30,6 @@ for key, fsmfile in files.items():
 
 	docfile = args.output + key.replace(".cpp",".md")
 	with open( docfile, "w+" ) as f:
-		print( "Write to " + docfile )
-
 		wrapper = """
 				@dot
 					digraph D
