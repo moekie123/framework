@@ -25,9 +25,8 @@ class IConfigurator:
 		{
 			return Get( _name, _attribute, _value );	
 		}
-	
-	protected:
 
+	protected:
 		/**
 		 * @brief The specialized Getter for an integer
 		 * @details (On purpose) This method is not abstract because otherwise it could be generarated by the Factory

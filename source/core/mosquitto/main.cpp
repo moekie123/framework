@@ -1,8 +1,13 @@
 #include <iostream>
 #include <signal.h>
 
+#include "Observer.h"
+
 #include "Mosquitto.h"
 #include "StateMachine.h"
+
+#include "../configurator/Configurator.h"
+#include "IParameter.h"
 
 void abort(int s)
 {
@@ -10,15 +15,54 @@ void abort(int s)
 	MqttStateMachine::dispatch( MqttEventTerminate() );
 }
 
+class Dummy: public IParameter
+{
+	public:
+	Dummy()
+	{
+		SetName( "#" );
+	}
+
+        /* Observer methods **/
+        bool Update( const IParameter* subject )
+	{
+		std::cout << "Dummy Update\n";
+		return true;
+	}
+};
+
 
 int main(int argc, char* argv[])
 {
 	std::cout << "Booting Application\n";
 
+	// Link Callbacks
 	signal(SIGINT, abort);
 	signal(SIGTERM, abort);
 
-	Mosquitto mosquitto;
+	Configurator::mConfigFileName = "mosquitto.xml";
+
+	// Open Configuration File
+	Configurator* configurator = new Configurator();
+
+	// Build Mosquitto Instance
+	std::string* hostname = new std::string();
+	configurator->GetProperty( "mosquitto", "hostname", (std::string&) *hostname );
+
+	std::string* username = new std::string();
+	configurator->GetProperty( "mosquitto", "username", (std::string&) *username );
+
+	std::string* password = new std::string();
+	configurator->GetProperty( "mosquitto", "password", (std::string&) *password );
+
+	int* port = new int();
+	configurator->GetProperty( "mosquitto", "port", (int&) *port );
+
+	Mosquitto mosquitto( *configurator, *hostname, *port, *username, *password );
+	IParameter *param = new Dummy();
+
+	// Start State Machine
+	mosquitto.Attach( *param );
 	MqttStateMachine::Accept( mosquitto );
 
 	std::cout << "Shutdown Application\n";

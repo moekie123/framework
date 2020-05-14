@@ -37,8 +37,20 @@ Framework::Framework( int argc, char *argv[] ):
 	Configurator* configurator = new Configurator();
 	Singleton< Configurator >::Register( *configurator );
 
-	// Open Connection
-	Mosquitto* mosquitto = new Mosquitto( *configurator );
+	// Build Mosquitto Instance
+	std::string* hostname = new std::string();
+	configurator->GetProperty( "mosquitto", "hostname", (std::string&) *hostname );
+
+	std::string* username = new std::string();
+	configurator->GetProperty( "mosquitto", "username", (std::string&) *username );
+
+	std::string* password = new std::string();
+	configurator->GetProperty( "mosquitto", "password", (std::string&) *password );
+
+	int* port = new int();
+	configurator->GetProperty( "mosquitto", "port", (int&) *port );
+
+	Mosquitto* mosquitto = new Mosquitto( *configurator, *hostname, *port, *username, *password );
 	Singleton< Mosquitto >::Register( *mosquitto );
 
 	// Construct Factory

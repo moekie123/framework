@@ -10,6 +10,7 @@
 #include "Singleton.h"
 #include "Generic.h"
 #include "Builder.h"
+#include "Factory.h"
 
 #include "StateMachine.h"
 
@@ -28,6 +29,30 @@ class Mosquitto:
 		public:
 			Generic& Build( const std::string& _name ) override
 			{
+				if( !Singleton< Mosquitto >::IsConstructed() )
+				{
+					std::cout << "Construct Mosquitto Client on-the-fly\n";
+
+					// Build Instance if not already done
+					Factory& factory = Singleton< Factory >::Instance();
+					IConfigurator& config = factory.Create< IConfigurator >( "Configurator", "configuration.xml" );
+					
+					std::string* hostname = new std::string();
+					config.GetProperty( "mosquitto", "hostname", (std::string&) *hostname );
+			
+					std::string* username = new std::string();
+					config.GetProperty( "mosquitto", "username", (std::string&) *username );
+
+					std::string* password = new std::string();
+					config.GetProperty( "mosquitto", "password", (std::string&) *password );
+
+					int* port = new int();
+					config.GetProperty( "mosquitto", "port", (int&) *port );
+
+					Mosquitto* mosquitto = new Mosquitto( config, *hostname, *port, *username, *password );
+					Singleton< Mosquitto >::Register( *mosquitto );
+				}
+
 				// Retrieve the client
 				Mosquitto& mosquitto = Singleton< Mosquitto >::Instance();
 				return mosquitto;
@@ -47,7 +72,7 @@ class Mosquitto:
 	/**
 	 * @brief The constructor
 	 */
-	Mosquitto( const IConfigurator& _config );
+	Mosquitto( const IConfigurator& _config, const std::string&, const int&, const std::string&, const std::string&);
 
 	/**
 	 * @brief The global ParameterBuilder
@@ -75,20 +100,20 @@ class Mosquitto:
 	/**
 	 * @brief The network addres of the mqtt broker
 	 */
-	std::string mHostname;
+	const std::string& mHostname;
 
 	/**
 	 * @brief The network port of the mqtt broker
 	 */
-	std::string mPort;
+	const int& mPort;
 
 	/**
 	 * @brief The Username of the mqtt broker 
 	 */
-	std::string mUsername;
+	const std::string& mUsername;
 
 	/**
 	 * @brief The Password of the mqtt broker
 	 */
-	std::string mPassword;
+	const std::string& mPassword;
 };

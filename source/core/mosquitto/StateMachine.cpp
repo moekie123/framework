@@ -33,6 +33,12 @@ class MqttStateIdle:
 		if( mShutdown )
 			mRunning = false;
 	}		
+
+	// Doxygen Transit{ MqttStateIdle -> MqttStateIdle [label="MqttEventTerminate"] }
+	void react( MqttEventTerminate const & )
+	{
+		mShutdown = true; 
+	};
 };
 
 

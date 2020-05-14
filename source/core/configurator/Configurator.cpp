@@ -7,6 +7,8 @@
 #include <iostream>
 #include <cstring>
 
+#include <sys/stat.h>
+
 using namespace tinyxml2;
 XMLDocument* document;
 
@@ -17,8 +19,16 @@ Configurator::Configurator()
 {
 	if( !document )
 	{
-		document = new XMLDocument();
-		document->LoadFile( mConfigFileName.c_str() );
+		std::cout << "Load XML-File " << mConfigFileName << "\n";
+		
+		struct stat buffer;   
+  		if ( stat( mConfigFileName.c_str(), &buffer) == 0 )
+		{ 
+			document = new XMLDocument();
+			document->LoadFile( mConfigFileName.c_str() );
+		}
+		else
+        		throw std::runtime_error("Could not open file");
 	}
 }
 
