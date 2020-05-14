@@ -16,6 +16,7 @@ Improve the fundamentals of the framework
 	- Configurator now used a Vistor pattern to search through xml document
 	- Mosquitto client added
 	- Finite State Machine integrated
+	- Singleton extended with initialization check
 
 ## Hardware Features
 	- Initial setup for a Actuator added

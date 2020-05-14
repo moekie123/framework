@@ -16,7 +16,7 @@ public:
 	 */
 	static T& Instance()
     	{
-        	if (Singleton::_instance == 0)
+        	if ( IsConstructed() )
         	{
             		Singleton::_instance = CreateInstance();
         	}
@@ -28,12 +28,20 @@ public:
 	 */
 	static void Register( T& _instance )
     	{
-        	if (Singleton::_instance == 0)
+        	if ( IsConstructed() )
         	{
-			// TODO Make a copy
             		Singleton::_instance = &_instance;
         	}
 	}
+
+	/**
+	 * @brief Check if instance is already created
+	 */
+	static bool IsConstructed()
+    	{
+        	return ( Singleton::_instance == nullptr );
+	}
+
 
 protected:
     	virtual ~Singleton()
@@ -62,5 +70,5 @@ private:
 };
 
 template<typename T>
-T* Singleton<T>::_instance = 0;
+T* Singleton<T>::_instance = nullptr;
 
