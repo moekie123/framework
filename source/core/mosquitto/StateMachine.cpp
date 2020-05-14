@@ -6,19 +6,20 @@ bool StateMachine::mShutdown = false;
 
 MosquittoVisitor* StateMachine::mClient;
 
-// Forward Declaration
+// (Forward) State Declaration
 class sIdle;
-
 class sInitializing;
 class sConfiguring;
 class sConnecting;
-
 class sListening;
-
 class sDisconnecting;
 class sDestroy;
 class sCleanup;
 
+/** 
+ *  @brief The Idle State
+ *  @details From this State the StateMachine can exit
+ */
 class sIdle:
 	public StateMachine
 {
@@ -41,7 +42,10 @@ class sIdle:
 	};
 };
 
-
+/** 
+ *  @brief The Initializing State
+ *  @details From this State the StateMachine will call the Mosquito Client to intialize by visiting 'Mosquitto::visitInitialize'
+ */
 class sInitializing:
 	public StateMachine
 {
@@ -82,6 +86,10 @@ class sInitializing:
 	};
 };
 
+/** 
+ *  @brief The Configuring State
+ *  @details From this State the StateMachine will call the Mosquito Client to configure, by visiting 'Mosquitto::visitConfigure'
+ */
 class sConfiguring:
 	public StateMachine
 {
@@ -123,6 +131,10 @@ class sConfiguring:
 	};
 };
 
+/** 
+ *  @brief The Connecting State
+ *  @details From this State the StateMachine will call the Mosquito Client to connect, by visiting 'Mosquitto::visitConnect'
+ */
 class sConnecting:
 	public StateMachine
 {
@@ -164,6 +176,10 @@ class sConnecting:
 	};
 };
 
+/** 
+ *  @brief The Listening State
+ *  @details From this State the StateMachine will call the Mosquito Client to listen for new messages, by visiting 'Mosquitto::visitLoop'
+ */
 class sListening:
 	public StateMachine
 {
@@ -189,6 +205,10 @@ class sListening:
 	};
 };
 
+/** 
+ *  @brief The Disconnecting State
+ *  @details From this State the StateMachine will call the Mosquito Client to disconnect, by visiting 'Mosquitto::visitDisconnect'
+ */
 class sDisconnecting:
 	public StateMachine
 {
@@ -229,6 +249,10 @@ class sDisconnecting:
 	};
 };
 
+/** 
+ *  @brief The Destroy State
+ *  @details From this State the StateMachine will call the Mosquito Client to destroy, by visiting 'Mosquitto::visitDestroy'
+ */
 class sDestroy:
 	public StateMachine
 {
@@ -270,6 +294,10 @@ class sDestroy:
 	};
 };
 
+/** 
+ *  @brief The Cleanup State
+ *  @details From this State the StateMachine will call the Mosquito Client to clean up, by visiting 'Mosquitto::visitCleanup'
+ */
 class sCleanup:
 	public StateMachine
 {

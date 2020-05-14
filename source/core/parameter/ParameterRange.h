@@ -28,6 +28,10 @@ class ParameterRange:
 		public Builder
 	{
 		public:
+		
+		/**
+		 * @brief The build method that configures and constructs a new ParameterRange
+	 	 */
 		Generic* Build( std::string _name ) override
 		{
 			Configurator& config = Singleton< Configurator >::Instance();
@@ -52,7 +56,7 @@ class ParameterRange:
          */
         ParameterRange( Configurator& _config, std::string _name );
        
-	/* Generic methods **/
+	/** Generic methods */
 	bool SetProperty( std::string _property, const int& _value ) override;
 
 };

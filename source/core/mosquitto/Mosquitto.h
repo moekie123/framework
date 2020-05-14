@@ -14,6 +14,10 @@
 
 #include "StateMachine.h"
 
+/**
+ * @brief (Wrapper Design Pattern) The Mosquitto Class
+ * @details This class wraps around the libmosquitto library and functions can be called through the MosquittoVisitor
+ */
 class Mosquitto:
 	public IMosquitto,
 	public MosquittoVisitor

@@ -19,7 +19,10 @@ struct eTerminate : tinyfsm::Event { };
 // Forward Declaration
 class MosquittoVisitor;
 
-// Base StateMachine
+/**
+ * @brief The (Base) Statemachine Class
+ * @details This class holds the basics for a state in the StateMachine
+ */
 class StateMachine
 	:public tinyfsm::Fsm< StateMachine >
 {

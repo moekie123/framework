@@ -44,6 +44,9 @@ class Subject
 	    return true;
         }
 
-   private:
-      std::vector< Observer<T> *> mObservers;
+   protected:
+	/**
+	 * @brief The attached observers that want to get notified when the parent class changes
+         */
+     	 std::vector< Observer<T> *> mObservers;
 };

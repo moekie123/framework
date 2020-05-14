@@ -26,6 +26,10 @@ public:
 		public Builder
 	{
 		public:
+			
+			/**
+			 * @brief The build method that configures and constructs a new Parameter
+	 		 */
 			Generic& Build( const std::string& _name ) override
 			{
 				Factory& factory = Singleton< Factory >::Instance();

@@ -82,7 +82,9 @@ bool Parameter::Update( const IParameter* subject )
 	// Composite
 	for( auto* component : mComponents )
 	{
-		component->Update( subject );
+		// Extract the IParameter Observer 
+		Observer< IParameter >* param = dynamic_cast< IParameter* >( component );	
+		param->Update( subject );
 	}
 
 	return true;

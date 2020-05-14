@@ -6,7 +6,12 @@
 #include "Subject.h"
 #include "Observer.h"
 
+#include "IMosquitto.h"
+
 #include <stdexcept>
+
+// Forward Declaration
+class IMosquitto;
 
 /**
  * @brief The generic interface class for a Poramater
@@ -17,6 +22,8 @@ class IParameter:
     public Composite< IParameter >,
 
     public Observer< IParameter >,
+    public Observer< IMosquitto >,
+
     public Subject< IParameter >
 {
     public:
