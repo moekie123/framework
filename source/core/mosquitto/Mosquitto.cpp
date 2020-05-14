@@ -22,62 +22,54 @@ Mosquitto::Mosquitto( const IConfigurator& _config )
 	_config.GetProperty( "mosquitto", "password", mPassword );
 
 	std::cout << "Mosquitto Client Configured [" << mHostname << ":" << mPort << "][" << mUsername << ":" <<  mPassword << "]\n";
-
 	
 	std::cout << "Initialize Mosquitto Library";
-/*
-	mosquitto_lib_init();
-
-	{
-		int x,y,z;
-		mosquitto_lib_version( &x, &y, &z );
-		std::cout << "mosquito version " << x << y << z << "\n";
-	}
-*/
-}
-
-bool Mosquitto::Connect( const std::string& _hostname, const std::string& _port)
-{
-/*
-	int ret;
-	std::cout << "Mosquitto::Client\n";
-
-	std::cout << "Create new client\n";
-	mClient = mosquitto_new( NULL, true, nullptr );
-	if( !mClient )
-	{
-		std::cerr << "Failed to create client [" << mosquitto_strerror( errno ) << "]\n";
-		return false;
-	}
-
-	std::cout << "Configure new client\n";
-	ret = mosquitto_username_pw_set( mClient, mUsername.c_str(), mPassword.c_str() );
-	if( ret != MOSQ_ERR_SUCCESS )
-	{
-		std::cerr << "Failed to set username and password [" << mosquitto_strerror( errno ) << "]\n";
-		return false;
-	}
-
-	std::cout << "Connect new client\n";
-	ret = mosquitto_connect( mClient, _hostname.c_str(), 1886, 60 );
-	if( ret != MOSQ_ERR_SUCCESS )
-	{
-		std::cerr << "Failed to connect [" << mosquitto_strerror( errno ) << "]\n";
-		return false;
-	}
-*/
-	return true;
-}
-
-bool Mosquitto::Disconnect()
-{
-	return false;
 }
 
 Mosquitto::~Mosquitto()
 {
 	std::cout << "Cleanup Mosquitto Library\n";
-/*
-	mosquitto_lib_cleanup();
-*/
 }
+
+bool Mosquitto::visitInitialize( const MqttStateMachine& )
+{
+	std::cout << "[Visit] Initialized\n";
+	return true;
+}
+
+bool Mosquitto::visitConfigure( const MqttStateMachine& )
+{
+	std::cout << "[Visit] Configure\n";
+	return true;
+}
+
+bool Mosquitto::visitConnect( const MqttStateMachine& )
+{
+	std::cout << "[Visit] Connect\n";
+	return true;
+}
+
+bool Mosquitto::visitReconnect( const MqttStateMachine& )
+{
+	std::cout << "[Visit] Reconnect\n";
+	return true;
+}
+
+bool Mosquitto::visitDisconnect( const MqttStateMachine& )
+{
+	std::cout << "[Visit] Disconnect\n";
+	return true;
+}
+
+bool Mosquitto::visitDestroy( const MqttStateMachine& )
+{
+	std::cout << "[Visit] Destroy\n";
+	return true;
+}
+
+bool Mosquitto::visitCleanup( const MqttStateMachine& )
+{
+	std::cout << "[Visit] Cleanup\n";
+	return true;
+}
+

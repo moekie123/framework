@@ -10,17 +10,24 @@ class MockConfigurator:
     public IConfigurator
 {
         public:
-
+		
 		MOCK_CONST_METHOD3( GetInteger, bool( const std::string&, const std::string&, int& ));
 		bool Get( const std::string& _name, const std::string& _attribute, int& _value ) const override
 		{
 			return GetInteger( _name, _attribute, _value );
 		}
 
+		std::map< std::string, std::string > stringResults;
 		MOCK_CONST_METHOD3( GetString, bool( const std::string&, const std::string&, std::string& ));
 		bool Get( const std::string& _name, const std::string& _attribute, std::string& _value ) const override
 		{
-			return GetString( _name, _attribute, _value );
+			bool result =  GetString( _name, _attribute, _value );
+
+			auto it = stringResults.find( _attribute );
+  			if ( it != stringResults.end() )
+				_value = it->second;
+
+			return result;
 		}
 
 };

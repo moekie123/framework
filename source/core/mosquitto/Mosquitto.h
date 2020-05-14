@@ -1,15 +1,21 @@
 #pragma once
 
+#include "Visitor.h"
+#include "StateMachine.h"
+
+
 #include "IMosquitto.h"
+#include "IConfigurator.h"
 
 #include "Singleton.h"
 #include "Generic.h"
 #include "Builder.h"
 
-#include "IConfigurator.h"
+#include "StateMachine.h"
 
 class Mosquitto:
-	public IMosquitto
+	public IMosquitto,
+	public MosquittoVisitor
 {
 	public:
 	/**
@@ -48,20 +54,16 @@ class Mosquitto:
 	 */
 	static MosquittoBuilder builder;
 
-	protected:
-	
-	/**
-	 * @brief Connect to the broker 
-	 * @param _hostname The server address
-	 * @param _port The server port
-	 * @details The connection credentials are loaded in the constructor
-	 */
-	bool Connect( const std::string& _hostname, const std::string& _port );
-
-	/**
-	 * @brief Disonnect from the broker
-	 */
-	bool Disconnect();
+	/** 
+	 * Visitor Pattern Methods
+	 */	
+	bool visitInitialize( const MqttStateMachine& );
+	bool visitConfigure( const MqttStateMachine& );
+	bool visitConnect( const MqttStateMachine& );
+	bool visitReconnect( const MqttStateMachine& );
+	bool visitDisconnect( const MqttStateMachine& );
+	bool visitDestroy( const MqttStateMachine& );
+	bool visitCleanup( const MqttStateMachine& );
 
 	private:
 

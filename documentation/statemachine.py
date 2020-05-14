@@ -21,6 +21,9 @@ for dirpath, dirnames, filenames in os.walk( args.root ):
 for key, fsmfile in files.items():
 	transits = []
 
+	print( "Evaluate " + key )
+	print( fsmfile )
+
 	with open( fsmfile ) as f:
 		for line in f:
 			line = line.rstrip()

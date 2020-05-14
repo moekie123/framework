@@ -1,5 +1,4 @@
-//#include "../../Mosquitto.h"
-#include "IMosquitto.h"
+#include "../../Mosquitto.h"
 
 #include "mocks/MockParameter.h"
 #include "mocks/MockConfigurator.h"
@@ -15,19 +14,20 @@ using ::testing::NiceMock;
  */
 TEST( Default, Construct)
 {
-	int value = 0;
 	NiceMock< MockConfigurator > config;
-		
-	/* See MockConfigurator fot GetInteger
-	 * This is a workaround for the ambgious Get 
-	 **/
-	EXPECT_CALL( config, GetString( "Mosquitto", "hostname"  , testing::_ )).WillRepeatedly( testing::Return( true ));
-	EXPECT_CALL( config, GetString( "Mosquitto", "port", testing::_ )).WillRepeatedly( testing::Return( true ));
-	EXPECT_CALL( config, GetString( "Mosquitto", "username"  , testing::_ )).WillRepeatedly( testing::Return( true));
-	EXPECT_CALL( config, GetString( "Mosquitto", "password"  , testing::_ )).WillRepeatedly( testing::Return( true));
+	
+	config.stringResults["hostname"] = "localhost";
+	config.stringResults["port"]     = "1833";
+	config.stringResults["username"] = "rsalm";
+	config.stringResults["password"] = "rsalm";
 
-//	Mosquitto* mosquitto = new Mosquitto( &config );
-//	ASSERT_NE( mosquitto, nullptr);
+	EXPECT_CALL( config, GetString( "mosquitto", "hostname", testing::_ )).WillRepeatedly( testing::Return( true ));
+	EXPECT_CALL( config, GetString( "mosquitto", "port", testing::_ )).WillRepeatedly( testing::Return( true ));
+	EXPECT_CALL( config, GetString( "mosquitto", "username"  , testing::_ )).WillRepeatedly( testing::Return( true ));
+	EXPECT_CALL( config, GetString( "mosquitto", "password"  , testing::_ )).WillRepeatedly( testing::Return( true ));
+
+	Mosquitto* mosquitto = new Mosquitto( config );
+	ASSERT_NE( mosquitto, nullptr);
 }
 
 int main(int argc, char **argv) 

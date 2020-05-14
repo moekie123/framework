@@ -1,46 +1,25 @@
 #include <iostream>
+#include <signal.h>
 
 #include "Mosquitto.h"
-#include "MqttStateMachine.h"
+#include "StateMachine.h"
 
-#include <unistd.h>
+void abort(int s)
+{
+	std::cout << "Terminate\n";
+	MqttStateMachine::dispatch( MqttEventTerminate() );
+}
 
 
 int main(int argc, char* argv[])
 {
 	std::cout << "Booting Application\n";
-	
-	MqttStateMachine::start();
 
-	for( int index = 0; index < 20; index++ )
-	{
-		auto current_state = MqttStateMachine::current_state_ptr;
-		current_state->cycle();
-		
-		std::cout << "Cycle " << index << "\n";
+	signal(SIGINT, abort);
+	signal(SIGTERM, abort);
 
-		if( index == 10 )
-			MqttStateMachine::dispatch( MqttEventDisconnect() );
-
-/*		
-		switch( index )
-		{
-			case 0:
-				MqttStateMachine::dispatch( MqttEventInitialize() );
-				break;
-			case 1:		
-				MqttStateMachine::dispatch( MqttEventInitialized() );
-				break;
-			case 2:
-				MqttStateMachine::dispatch( MqttEventTerminate() );
-				break;
-			case 3:		
-				MqttStateMachine::dispatch( MqttEventTerminated() );
-				break;
-		}
-*/
-		sleep(1);
-	}
+	Mosquitto mosquitto;
+	MqttStateMachine::Accept( mosquitto );
 
 	std::cout << "Shutdown Application\n";
 
