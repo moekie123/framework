@@ -5,13 +5,19 @@ This page provides information regarding
 - Code changes
 - New Features
 
+# Version 0.3.0
+Implement the first building block that combines fundamental design patterns
+	
+## Core Features
+	- Mosquitto client implemented
+
 # Version 0.2.0
 Improve the fundamentals of the framework
 
 	- Huge Refactoring on all classes
 		- Arguments are now given are const refrence
 
-## Core Feature
+## Core Features
 	- Implemented an argument parser to the Framework
 	- Configurator now used a Vistor pattern to search through xml document
 	- Mosquitto client added
