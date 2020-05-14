@@ -13,7 +13,7 @@
 void abort(int s)
 {
 	std::cout << "Terminate\n";
-	MqttStateMachine::dispatch( MqttEventTerminate() );
+	MqttStateMachine::dispatch( eTerminate() );
 }
 
 class Dummy: public IParameter

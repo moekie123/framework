@@ -36,7 +36,7 @@ void connect_callback(struct mosquitto *mosq, void *obj, int result)
 		case 3:
 		default:
 			std::cout << "Terminate\n";
-			MqttStateMachine::dispatch( MqttEventTerminate() );
+			MqttStateMachine::dispatch( eTerminate() );
 	}
 }
 

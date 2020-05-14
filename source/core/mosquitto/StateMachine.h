@@ -9,12 +9,12 @@
 #include <unistd.h>
 
 // StateMachine Events
-struct MqttEventCycle : tinyfsm::Event { };
+struct eCycle : tinyfsm::Event { };
 
-struct MqttEventSucces : tinyfsm::Event { };
-struct MqttEventFailed : tinyfsm::Event { };
+struct eSucces : tinyfsm::Event { };
+struct eFailed : tinyfsm::Event { };
 
-struct MqttEventTerminate : tinyfsm::Event { };
+struct eTerminate : tinyfsm::Event { };
 
 // Forward Declaration
 class MosquittoVisitor;
@@ -53,12 +53,12 @@ public:
 	static void reset( void );
 
 	/* Events */
-	virtual void react( MqttEventCycle const & ){};
+	virtual void react( eCycle const & ){};
 
-	virtual void react( MqttEventSucces const & ){};
-	virtual void react( MqttEventFailed const & ){};
+	virtual void react( eSucces const & ){};
+	virtual void react( eFailed const & ){};
 
-	virtual void react( MqttEventTerminate const & ){};
+	virtual void react( eTerminate const & ){};
 
 	const std::string& GetStateName()
 	{
@@ -79,7 +79,7 @@ public:
 			auto current_state = MqttStateMachine::current_state_ptr;
 			//std::cout << "Current State:" << current_state->GetStateName() << "\n";
 
-			MqttStateMachine::dispatch( MqttEventCycle() );
+			MqttStateMachine::dispatch( eCycle() );
 
 			usleep( 50000 );
 		}
