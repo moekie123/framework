@@ -3,6 +3,7 @@
 
 #include "Observer.h"
 
+#include "IMosquitto.h"
 #include "Mosquitto.h"
 #include "StateMachine.h"
 
@@ -24,7 +25,7 @@ class Dummy: public IParameter
 	}
 
         /* Observer methods **/
-        bool Update( const IParameter* subject )
+        bool Update( const IMosquitto* subject )
 	{
 		std::cout << "Dummy Update\n";
 		return true;

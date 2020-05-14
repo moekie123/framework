@@ -82,13 +82,14 @@ class Mosquitto:
 	/** 
 	 * Visitor Pattern Methods
 	 */	
-	bool visitInitialize( const MqttStateMachine& );
-	bool visitConfigure( const MqttStateMachine& );
-	bool visitConnect( const MqttStateMachine& );
-	bool visitReconnect( const MqttStateMachine& );
-	bool visitDisconnect( const MqttStateMachine& );
-	bool visitDestroy( const MqttStateMachine& );
-	bool visitCleanup( const MqttStateMachine& );
+	bool visitInitialize( const MqttStateMachine& ) override;
+	bool visitConfigure( const MqttStateMachine& ) override;
+	bool visitConnect( const MqttStateMachine& ) override;
+	bool visitLoop( const MqttStateMachine& ) override;
+	bool visitReconnect( const MqttStateMachine& ) override;
+	bool visitDisconnect( const MqttStateMachine& ) override;
+	bool visitDestroy( const MqttStateMachine& ) override;
+	bool visitCleanup( const MqttStateMachine& ) override;
 
 	private:
 

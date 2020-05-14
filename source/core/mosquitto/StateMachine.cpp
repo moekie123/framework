@@ -175,7 +175,10 @@ class MqttStateListening:
 	// Doxygen Transit{ MqttStateListening -> MqttStateListening [label="MqttEventCycle"] }
 	void react( MqttEventCycle const & )
 	{
-		std::cout << "Listening\n";
+		if( mClient->visitLoop( *this ) )
+		{
+
+		}
 	}
 
 	// Doxygen Transit{ MqttStateListening -> MqttStateDisconnecting [label="MqttEventTerminate"] }

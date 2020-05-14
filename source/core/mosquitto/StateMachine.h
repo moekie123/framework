@@ -81,7 +81,7 @@ public:
 
 			MqttStateMachine::dispatch( MqttEventCycle() );
 
-			sleep(1);
+			usleep( 50000 );
 		}
 	}
 

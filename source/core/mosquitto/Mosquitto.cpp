@@ -1,43 +1,57 @@
 #include "Mosquitto.h"
 
 #include <iostream>
+#include <cstring>
+#include <queue>
+#include <utility>  
+
 #include <mosquitto.h>
 
 #include "Factory.h"
 #include "IConfigurator.h"
 
-#include <cstring>
-
 Mosquitto::MosquittoBuilder Mosquitto::builder;
 
-const std::string topic = "#";
+std::queue< std::pair< std::string, std::string >> payloads;
 
 /* Callback */
+/*
+	0 - success
+	1 - connection refused (unacceptable protocol version)
+	2 - connection refused (identifier rejected)
+	3 - connection refused (broker unavailable)
+	4-255 - reserved for future use
+*/
 void connect_callback(struct mosquitto *mosq, void *obj, int result)
 {
-	std::cout << "connect callback [" << result << "]"; 
+	std::cout << "connect callback [" << result << "]\n";
+	
+	switch( result )
+	{
+		case 0:
+			std::cout << "Succes\n";
+			break;
+		case 1: 
+		case 2:
+		case 3:
+		default:
+			std::cout << "Terminate\n";
+			MqttStateMachine::dispatch( MqttEventTerminate() );
+	}
 }
 
 /* Callback */
 void message_callback(struct mosquitto *mosq, void *obj, const struct mosquitto_message *message)
 {
-	int ret;
-	bool match = 0;
+	// Process the message under controll of the statemachine
+	char* buffer = new char[ message->payloadlen + 1];
+	sprintf (buffer, (char *) message->payload );
+	
+	std::cout << " Received Message \n";
+	
+	payloads.push( std::make_pair( std::string( message->topic ), std::string( buffer )));
 
-	ret = mosquitto_topic_matches_sub( topic.c_str(), message->topic, &match );
-	if( ret != MOSQ_ERR_SUCCESS )
-	{
-		std::cerr << "Failed match topic [" << mosquitto_strerror( errno ) << "]\n";
-	}
-	else if ( match ) 
-	{
-		char* buffer = new char[ message->payloadlen + 1];
-
-		sprintf (buffer, (char *) message->payload );
-		std::cout << "[" << message->topic << "] " << buffer << "\n";
-
-		delete[] buffer;
-	}
+	delete[] buffer;
 }
 
 
@@ -129,6 +143,79 @@ bool Mosquitto::visitConnect( const MqttStateMachine& )
 		return false;
 	}
 
+	for ( auto it = mObservers.begin(); it != mObservers.end(); it++ ) 
+	{
+		/* All should pass, return false immedially when one fails */
+	   	auto param = dynamic_cast< IParameter* >( *it );
+		std::string name = param->GetName();
+
+		std::cout << "Subscribe [" << name << "]\n";	
+	
+		ret = mosquitto_subscribe( mClient, NULL, name.c_str(), 0);
+		if( ret != MOSQ_ERR_SUCCESS )
+		{
+			std::cerr << "Failed to subscribe [" << mosquitto_strerror( errno ) << "]\n";
+			// TODO, This results in immedially destroy, but first a gental disconnect needs to be done actually
+			return false;
+		}
+	}
+
+	return true;
+}
+
+bool Mosquitto::visitLoop( const MqttStateMachine& )
+{
+	int ret;
+	bool match = false;
+
+	// Execute Loop
+	ret = mosquitto_loop( mClient , -1, 1 );
+	if( ret != MOSQ_ERR_SUCCESS )
+	{
+		std::cerr << "General failure in loop [" << mosquitto_strerror( errno ) << "]\n";
+		return false;
+	}
+
+
+	if( !payloads.empty() )
+	{
+		// Get the first element from the queue
+		auto message = payloads.front();
+
+		for ( auto it = mObservers.begin(); it != mObservers.end(); it++ ) 
+		{
+			/* 
+  			 * Convert the iterator, which is stored in a vector a Observer*, back to a parameter
+			 */
+			auto parameter = dynamic_cast< IParameter* >(( *it ));
+
+			ret = mosquitto_topic_matches_sub( parameter->GetName().c_str(), message.first.c_str(), &match );
+	
+			if( ret != MOSQ_ERR_SUCCESS )
+			{
+				std::cerr << "Failed match topic [" << mosquitto_strerror( errno ) << "]\n";
+			}
+			else if ( match ) 
+			{
+				std::cout << "[" << message.first << "] " << message.second << "\n";
+				
+				/* 
+				 * Extract the (parent) Mosquitto Observer from the IParameter
+				 *    Take the Observer ( defined as IParamater ) on the right side
+        			 *    Cast this up to extract only the IMosquitto Observer ( left )	
+				 *    TODO, Find out what will happen when multiple observer types are allowed....
+				 */
+				Observer< IMosquitto >* param = dynamic_cast< IParameter* >( parameter );
+
+				// This will avoid ambgious Update calls since there are multiple observers in IParameter.
+				param->Update( this );
+			}
+		}
+
+		// Remove the message from the queue when all observers have been notified
+		payloads.pop();
+
+	}
 	return true;
 }
 
