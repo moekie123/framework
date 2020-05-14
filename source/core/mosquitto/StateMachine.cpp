@@ -1,40 +1,40 @@
 #include "StateMachine.h"
 
 // Declaring static variables
-bool MqttStateMachine::mRunning = false;
-bool MqttStateMachine::mShutdown = false;
+bool StateMachine::mRunning = false;
+bool StateMachine::mShutdown = false;
 
-MosquittoVisitor* MqttStateMachine::mClient;
+MosquittoVisitor* StateMachine::mClient;
 
 // Forward Declaration
-class MqttStateIdle;
+class sIdle;
 
-class MqttStateInitializing;
-class MqttStateConfiguring;
-class MqttStateConnecting;
+class sInitializing;
+class sConfiguring;
+class sConnecting;
 
-class MqttStateListening;
+class sListening;
 
-class MqttStateDisconnecting;
-class MqttStateDestroy;
-class MqttStateCleanup;
+class sDisconnecting;
+class sDestroy;
+class sCleanup;
 
-class MqttStateIdle:
-	public MqttStateMachine
+class sIdle:
+	public StateMachine
 {
 	public:
-	MqttStateIdle():MqttStateMachine("Idle"){ }
+	sIdle():StateMachine("Idle"){ }
 
 	private:
 
-	// Doxygen Transit{ MqttStateIdle -> MqttStateIdle [label="eCycle"] }
+	// Doxygen Transit{ sIdle -> sIdle [label="eCycle"] }
 	void react( eCycle const & )
 	{
 		if( mShutdown )
 			mRunning = false;
 	}		
 
-	// Doxygen Transit{ MqttStateIdle -> MqttStateIdle [label="eTerminate"] }
+	// Doxygen Transit{ sIdle -> sIdle [label="eTerminate"] }
 	void react( eTerminate const & )
 	{
 		mShutdown = true; 
@@ -42,137 +42,137 @@ class MqttStateIdle:
 };
 
 
-class MqttStateInitializing:
-	public MqttStateMachine
+class sInitializing:
+	public StateMachine
 {
 	public:
-	MqttStateInitializing():MqttStateMachine("Initializing"){ }
+	sInitializing():StateMachine("Initializing"){ }
 
 	private:
-	// Doxygen Transit{ MqttStateInitializing -> MqttStateInitializing [label="eCycle"] }
+	// Doxygen Transit{ sInitializing -> sInitializing [label="eCycle"] }
 	void react( eCycle const & )
 	{
 		if( mClient->visitInitialize( *this ) )
 		{
-			MqttStateMachine::dispatch( eSucces() );
+			StateMachine::dispatch( eSucces() );
 		}
 		else
 		{
-			MqttStateMachine::dispatch( eFailed() );
+			StateMachine::dispatch( eFailed() );
 		}
 	}
 
-	// Doxygen Transit{ MqttStateInitializing -> MqttStateConfiguring [label="eSucces"] }
+	// Doxygen Transit{ sInitializing -> sConfiguring [label="eSucces"] }
 	void react( eSucces const & )
 	{ 
-		transit< MqttStateConfiguring >(); 
+		transit< sConfiguring >(); 
 	};
 
-	// Doxygen Transit{ MqttStateInitializing -> MqttStateCleanup [label="eFailed"] }
+	// Doxygen Transit{ sInitializing -> sCleanup [label="eFailed"] }
 	void react( eFailed const & )
 	{ 
-		transit< MqttStateCleanup >(); 
+		transit< sCleanup >(); 
 	};
 
-	// Doxygen Transit{ MqttStateInitializing -> MqttStateCleanup [label="eTerminate"] }
+	// Doxygen Transit{ sInitializing -> sCleanup [label="eTerminate"] }
 	void react( eTerminate const & )
 	{
 		mShutdown = true; 
-		transit< MqttStateCleanup >();
+		transit< sCleanup >();
 	};
 };
 
-class MqttStateConfiguring:
-	public MqttStateMachine
+class sConfiguring:
+	public StateMachine
 {
 	public:
-	MqttStateConfiguring():MqttStateMachine("Configuring"){ }
+	sConfiguring():StateMachine("Configuring"){ }
 
 	private:
 
-	// Doxygen Transit{ MqttStateConfiguring -> MqttStateConfiguring [label="eCycle"] }
+	// Doxygen Transit{ sConfiguring -> sConfiguring [label="eCycle"] }
 	void react( eCycle const & )
 	{
 		if( mClient->visitConfigure( *this ) )
 		{
-			MqttStateMachine::dispatch( eSucces() );
+			StateMachine::dispatch( eSucces() );
 		}
 		else
 		{
-			MqttStateMachine::dispatch( eFailed() );
+			StateMachine::dispatch( eFailed() );
 		}
 	}
 
-	// Doxygen Transit{ MqttStateConfiguring -> MqttStateConnecting [label="eSucces"] }
+	// Doxygen Transit{ sConfiguring -> sConnecting [label="eSucces"] }
 	void react( eSucces const & )
 	{ 
-		transit< MqttStateConnecting >(); 
+		transit< sConnecting >(); 
 	};
 
-	// Doxygen Transit{ MqttStateConfiguring -> MqttStateDestroy [label="eDestroy"] }
+	// Doxygen Transit{ sConfiguring -> sDestroy [label="eDestroy"] }
 	void react( eFailed const & )
 	{ 
-		transit< MqttStateDestroy >(); 
+		transit< sDestroy >(); 
 	};
 
-	// Doxygen Transit{ MqttStateConfiguring -> MqttStateDestroy [label="eTerminate"] }
+	// Doxygen Transit{ sConfiguring -> sDestroy [label="eTerminate"] }
 	void react( eTerminate const & )
 	{
 		mShutdown = true; 
-		transit< MqttStateDestroy >();
+		transit< sDestroy >();
 	};
 };
 
-class MqttStateConnecting:
-	public MqttStateMachine
+class sConnecting:
+	public StateMachine
 {
 	public:
-	MqttStateConnecting():MqttStateMachine("Connecting"){ }
+	sConnecting():StateMachine("Connecting"){ }
 
 	private:
 
-	// Doxygen Transit{ MqttStateConnecting -> MqttStateConnecting [label="eCycle"] }
+	// Doxygen Transit{ sConnecting -> sConnecting [label="eCycle"] }
 	void react( eCycle const & )
 	{
 		if( mClient->visitConnect( *this ) )
 		{
-			MqttStateMachine::dispatch( eSucces() );
+			StateMachine::dispatch( eSucces() );
 		}
 		else
 		{
-			MqttStateMachine::dispatch( eFailed() );
+			StateMachine::dispatch( eFailed() );
 		}
 	}
 
-	// Doxygen Transit{ MqttStateConnecting -> MqttStateListening [label="eSucces"] }
+	// Doxygen Transit{ sConnecting -> sListening [label="eSucces"] }
 	void react( eSucces const & )
 	{ 
-		transit< MqttStateListening >(); 
+		transit< sListening >(); 
 	};
 
-	// Doxygen Transit{ MqttStateConnecting -> MqttStateDestroy [label="eDestroy"] }
+	// Doxygen Transit{ sConnecting -> sDestroy [label="eDestroy"] }
 	void react( eFailed const & )
 	{ 
-		transit< MqttStateDestroy >(); 
+		transit< sDestroy >(); 
 	};
 
-	// Doxygen Transit{ MqttStateConnecting -> MqttStateDestroy [label="eTerminate"] }
+	// Doxygen Transit{ sConnecting -> sDestroy [label="eTerminate"] }
 	void react( eTerminate const & )
 	{
 		mShutdown = true; 
-		transit< MqttStateDestroy >();
+		transit< sDestroy >();
 	};
 };
 
-class MqttStateListening:
-	public MqttStateMachine
+class sListening:
+	public StateMachine
 {
 	public:
-	MqttStateListening():MqttStateMachine("Listening"){ }
+	sListening():StateMachine("Listening"){ }
 
 	private:
 
-	// Doxygen Transit{ MqttStateListening -> MqttStateListening [label="eCycle"] }
+	// Doxygen Transit{ sListening -> sListening [label="eCycle"] }
 	void react( eCycle const & )
 	{
 		if( mClient->visitLoop( *this ) )
@@ -181,132 +181,132 @@ class MqttStateListening:
 		}
 	}
 
-	// Doxygen Transit{ MqttStateListening -> MqttStateDisconnecting [label="eTerminate"] }
+	// Doxygen Transit{ sListening -> sDisconnecting [label="eTerminate"] }
 	void react( eTerminate const & )
 	{
 		mShutdown = true; 
-		transit< MqttStateDisconnecting >();
+		transit< sDisconnecting >();
 	};
 };
 
-class MqttStateDisconnecting:
-	public MqttStateMachine
+class sDisconnecting:
+	public StateMachine
 {
 	public:
-	MqttStateDisconnecting():MqttStateMachine("Disconnecting"){ }
+	sDisconnecting():StateMachine("Disconnecting"){ }
 
 	private:
-	// Doxygen Transit{ MqttStateDisconnecting -> MqttStateDisconnecting [label="eCycle"] }
+	// Doxygen Transit{ sDisconnecting -> sDisconnecting [label="eCycle"] }
 	void react( eCycle const & )
 	{
 		if( mClient->visitDisconnect( *this ) )
 		{
-			MqttStateMachine::dispatch( eSucces() );
+			StateMachine::dispatch( eSucces() );
 		}
 		else
 		{
-			MqttStateMachine::dispatch( eFailed() );
+			StateMachine::dispatch( eFailed() );
 		}
 	}
 
-	// Doxygen Transit{ MqttStateDisconnecting -> MqttStateDestroy [label="eSucces"] }
+	// Doxygen Transit{ sDisconnecting -> sDestroy [label="eSucces"] }
 	void react( eSucces const & )
 	{ 
-		transit< MqttStateDestroy >(); 
+		transit< sDestroy >(); 
 	};
 
-	// Doxygen Transit{ MqttStateDisconnecting -> MqttStateDisconnecting [label="eFailure"] }
+	// Doxygen Transit{ sDisconnecting -> sDisconnecting [label="eFailure"] }
 	void react( eFailed const & )
 	{ 
-		transit< MqttStateDisconnecting >(); 
+		transit< sDisconnecting >(); 
 	};
 
-	// Doxygen Transit{ MqttStateDisconnecting -> MqttStateDestroy [label="eTerminate"] }
+	// Doxygen Transit{ sDisconnecting -> sDestroy [label="eTerminate"] }
 	void react( eTerminate const & )
 	{
 		mShutdown = true; 
-		transit< MqttStateDestroy >();
+		transit< sDestroy >();
 	};
 };
 
-class MqttStateDestroy:
-	public MqttStateMachine
+class sDestroy:
+	public StateMachine
 {
 	public:
-	MqttStateDestroy():MqttStateMachine("Destroying"){ }
+	sDestroy():StateMachine("Destroying"){ }
 
 	private:
-	// Doxygen Transit{ MqttStateDestroy -> MqttStateDestroy [label="eCycle"] }
+	// Doxygen Transit{ sDestroy -> sDestroy [label="eCycle"] }
 	void react( eCycle const & )
 	{
 
 		if( mClient->visitDestroy( *this ) )
 		{
-			MqttStateMachine::dispatch( eSucces() );
+			StateMachine::dispatch( eSucces() );
 		}
 		else
 		{
-			MqttStateMachine::dispatch( eFailed() );
+			StateMachine::dispatch( eFailed() );
 		}
 	}
 
-	// Doxygen Transit{ MqttStateDestroy -> MqttStateCleanup [label="eSucces"] }
+	// Doxygen Transit{ sDestroy -> sCleanup [label="eSucces"] }
 	void react( eSucces const & )
 	{ 
-		transit< MqttStateCleanup >(); 
+		transit< sCleanup >(); 
 	};
 
-	// Doxygen Transit{ MqttStateDestroy -> MqttStateDestroy [label="eFailed"] }
+	// Doxygen Transit{ sDestroy -> sDestroy [label="eFailed"] }
 	void react( eFailed const & )
 	{ 
-		transit< MqttStateDestroy >(); 
+		transit< sDestroy >(); 
 	};
 
-	// Doxygen Transit{ MqttStateDestroy -> MqttStateCleanup [label="eTerminate"] }
+	// Doxygen Transit{ sDestroy -> sCleanup [label="eTerminate"] }
 	void react( eTerminate const & )
 	{
 		mShutdown = true;
-		transit< MqttStateCleanup >();
+		transit< sCleanup >();
 	};
 };
 
-class MqttStateCleanup:
-	public MqttStateMachine
+class sCleanup:
+	public StateMachine
 {
 	public:
-	MqttStateCleanup():MqttStateMachine("CleaningUp"){ }
+	sCleanup():StateMachine("CleaningUp"){ }
 
 	private:
-	// Doxygen Transit{ MqttStateCleanup -> MqttStateCleanup [label="eCycle"] }
+	// Doxygen Transit{ sCleanup -> sCleanup [label="eCycle"] }
 	void react( eCycle const & )
 	{
 		if( mClient->visitCleanup( *this ) )
 		{
-			MqttStateMachine::dispatch( eSucces() );
+			StateMachine::dispatch( eSucces() );
 		}
 		else
 		{
-			MqttStateMachine::dispatch( eFailed() );
+			StateMachine::dispatch( eFailed() );
 		}
 	}
 
-	// Doxygen Transit{ MqttStateCleanup -> MqttStateIdle [label="eSucces"] }
+	// Doxygen Transit{ sCleanup -> sIdle [label="eSucces"] }
 	void react( eSucces const & )
 	{ 
-		transit< MqttStateIdle >(); 
+		transit< sIdle >(); 
 	};
 
-	// Doxygen Transit{ MqttStateCleanup -> MqttStateIdle [label="eFailed"] }
+	// Doxygen Transit{ sCleanup -> sIdle [label="eFailed"] }
 	void react( eFailed const & )
 	{ 
-		transit< MqttStateCleanup >(); 
+		transit< sCleanup >(); 
 	};
 
-	// Doxygen Transit{ MqttStateCleanup -> MqttStateIdle [label="eTerminate"] }
+	// Doxygen Transit{ sCleanup -> sIdle [label="eTerminate"] }
 	void react( eTerminate const & )
 	{
 		mShutdown = true; 
-		transit< MqttStateIdle >();
+		transit< sIdle >();
 	};
 };
 
@@ -314,6 +314,6 @@ class MqttStateCleanup:
  * Use Idle as intial state when dispatch from outside is possible 
  * For now (development phase) immedially start with initializing
  */
-//FSM_INITIAL_STATE( MqttStateMachine, MqttStateIdle )
-FSM_INITIAL_STATE( MqttStateMachine, MqttStateInitializing )
+//FSM_INITIAL_STATE( StateMachine, sIdle )
+FSM_INITIAL_STATE( StateMachine, sInitializing )
 

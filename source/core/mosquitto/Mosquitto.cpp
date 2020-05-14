@@ -36,7 +36,7 @@ void connect_callback(struct mosquitto *mosq, void *obj, int result)
 		case 3:
 		default:
 			std::cout << "Terminate\n";
-			MqttStateMachine::dispatch( eTerminate() );
+			StateMachine::dispatch( eTerminate() );
 	}
 }
 
@@ -80,7 +80,7 @@ Mosquitto::~Mosquitto()
 	std::cout << "Cleanup Mosquitto Library\n";
 }
 
-bool Mosquitto::visitInitialize( const MqttStateMachine& )
+bool Mosquitto::visitInitialize( const StateMachine& )
 {
 	std::cout << "[Visit] Initialized\n";
 
@@ -111,7 +111,7 @@ bool Mosquitto::visitInitialize( const MqttStateMachine& )
 	return true;
 }
 
-bool Mosquitto::visitConfigure( const MqttStateMachine& )
+bool Mosquitto::visitConfigure( const StateMachine& )
 {
 	int ret;
 	std::cout << "[Visit] Configure username [" << mUsername << "] password [" << mPassword << "]\n";
@@ -130,7 +130,7 @@ bool Mosquitto::visitConfigure( const MqttStateMachine& )
 	return true;
 }
 
-bool Mosquitto::visitConnect( const MqttStateMachine& )
+bool Mosquitto::visitConnect( const StateMachine& )
 {
 	int ret;
 	std::cout << "[Visit] Connect to [" << mHostname.c_str() << "][" << mPort << "]\n";
@@ -163,7 +163,7 @@ bool Mosquitto::visitConnect( const MqttStateMachine& )
 	return true;
 }
 
-bool Mosquitto::visitLoop( const MqttStateMachine& )
+bool Mosquitto::visitLoop( const StateMachine& )
 {
 	int ret;
 	bool match = false;
@@ -219,7 +219,7 @@ bool Mosquitto::visitLoop( const MqttStateMachine& )
 	return true;
 }
 
-bool Mosquitto::visitReconnect( const MqttStateMachine& )
+bool Mosquitto::visitReconnect( const StateMachine& )
 {
 	std::cout << "[Visit] Reconnect\n";
 /*
@@ -236,7 +236,7 @@ bool Mosquitto::visitReconnect( const MqttStateMachine& )
 	return true;
 }
 
-bool Mosquitto::visitDisconnect( const MqttStateMachine& )
+bool Mosquitto::visitDisconnect( const StateMachine& )
 {
 	int ret;
 	std::cout << "[Visit] Disconnect from [" << mHostname << "][" << mPort << "]\n";
@@ -256,7 +256,7 @@ bool Mosquitto::visitDisconnect( const MqttStateMachine& )
 	return true;
 }
 
-bool Mosquitto::visitDestroy( const MqttStateMachine& )
+bool Mosquitto::visitDestroy( const StateMachine& )
 {
 	std::cout << "[Visit] Destroy\n";
 	
@@ -278,7 +278,7 @@ bool Mosquitto::visitDestroy( const MqttStateMachine& )
 	return true;
 }
 
-bool Mosquitto::visitCleanup( const MqttStateMachine& )
+bool Mosquitto::visitCleanup( const StateMachine& )
 {
 	std::cout << "[Visit] Cleanup\n";
 

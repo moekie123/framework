@@ -20,34 +20,34 @@ struct eTerminate : tinyfsm::Event { };
 class MosquittoVisitor;
 
 // Base StateMachine
-class MqttStateMachine
-	:public tinyfsm::Fsm< MqttStateMachine >
+class StateMachine
+	:public tinyfsm::Fsm< StateMachine >
 {
 public:
 
-	MqttStateMachine()
+	StateMachine()
 	{
 
 	}
 
-	MqttStateMachine( std::string _name ):mName( _name )
+	StateMachine( std::string _name ):mName( _name )
 	{
 
 	}
 	
-	MqttStateMachine& operator=( const MqttStateMachine & other ) 
+	StateMachine& operator=( const StateMachine & other ) 
 	{
 		return *this;
 	}
 
 	virtual void entry( void )
 	{
-		std::cout << "MqttStateMachine: S[" << mName << "] E[OnEntry]\n";
+		std::cout << "StateMachine: S[" << mName << "] E[OnEntry]\n";
 	}
 
 	virtual void exit( void )
 	{
-		std::cout << "MqttStateMachine: S[" << mName << "] E[OnExit]\n";
+		std::cout << "StateMachine: S[" << mName << "] E[OnExit]\n";
 	}
 
 	static void reset( void );
@@ -71,15 +71,15 @@ public:
 		
 		mClient	= &_visitor;
 		
-		MqttStateMachine::start();
+		StateMachine::start();
 
 		mRunning = true;
 		while( mRunning )
 		{
-			auto current_state = MqttStateMachine::current_state_ptr;
+			auto current_state = StateMachine::current_state_ptr;
 			//std::cout << "Current State:" << current_state->GetStateName() << "\n";
 
-			MqttStateMachine::dispatch( eCycle() );
+			StateMachine::dispatch( eCycle() );
 
 			usleep( 50000 );
 		}

@@ -13,7 +13,7 @@
 void abort(int s)
 {
 	std::cout << "Terminate\n";
-	MqttStateMachine::dispatch( eTerminate() );
+	StateMachine::dispatch( eTerminate() );
 }
 
 class Dummy: public IParameter
@@ -64,7 +64,7 @@ int main(int argc, char* argv[])
 
 	// Start State Machine
 	mosquitto.Attach( *param );
-	MqttStateMachine::Accept( mosquitto );
+	StateMachine::Accept( mosquitto );
 
 	std::cout << "Shutdown Application\n";
 
