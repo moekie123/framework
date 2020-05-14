@@ -11,6 +11,9 @@ class Observer
 {
     public:
 
+	/**
+	 * @brief The Constructor
+	 */
         Observer() {}
         virtual ~Observer() {}
 
