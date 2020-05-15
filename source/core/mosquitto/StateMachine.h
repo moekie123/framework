@@ -6,7 +6,6 @@
 #include <iostream>
 #include <string>
 
-#include <unistd.h>
 
 // Forward Declaration
 class MosquittoVisitor;
@@ -113,6 +112,15 @@ public:
 	}
 
 	/**
+	 * @brief Active State
+	 * @return Whether the Statemachine is still running
+ 	 */
+	static bool IsRunning()
+	{
+		return mRunning;
+	}
+
+	/**
 	 * @brief (Visitor Pattern) This accept(or) part of visitor pattern.
 	 * @details This method will start the StateMachine and will stay here untill the StateMachine is cancelled
  	 */
@@ -125,15 +133,6 @@ public:
 		StateMachine::start();
 
 		mRunning = true;
-		while( mRunning )
-		{
-			auto current_state = StateMachine::current_state_ptr;
-			//std::cout << "Current State:" << current_state->GetStateName() << "\n";
-
-			StateMachine::dispatch( eCycle() );
-
-			usleep( 50000 );
-		}
 	}
 
 protected:

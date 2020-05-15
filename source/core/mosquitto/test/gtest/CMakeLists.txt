@@ -1,8 +1,8 @@
 # Mosquitto Unit Tests
 gsetup( mosquitto )
 target_link_libraries( 	gtest-mosquitto 
-			core  
-#			tinyxml2
+			core
+			tinyxml2
 			mosquitto			
 			)
 

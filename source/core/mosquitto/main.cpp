@@ -1,6 +1,8 @@
 #include <iostream>
 #include <signal.h>
 
+#include <unistd.h>
+
 #include "Observer.h"
 
 #include "IMosquitto.h"
@@ -66,6 +68,12 @@ int main(int argc, char* argv[])
 	mosquitto.Attach( *param );
 	StateMachine::Accept( mosquitto );
 	
+	while( StateMachine::IsRunning() )
+	{
+		StateMachine::dispatch( eCycle() );
+		usleep( 50000 );
+	}
+
 	std::cout << "Shutdown Application\n";
 
    	return 0;

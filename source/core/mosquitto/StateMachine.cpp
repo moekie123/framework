@@ -191,13 +191,19 @@ class sListening:
 	// Doxygen Transit{ sListening -> sListening [label="eCycle"] }
 	void react( eCycle const & )
 	{
-		if( mClient->visitLoop( *this ) )
+		if( mClient->visitLoop( *this ) == false )
 		{
-
+			StateMachine::dispatch( eFailed() );
 		}
 	}
 
 	// Doxygen Transit{ sListening -> sDisconnecting [label="eTerminate"] }
+	void react( eFailed const & )
+	{
+		mShutdown = true; 
+		transit< sDisconnecting >();
+	};
+
 	void react( eTerminate const & )
 	{
 		mShutdown = true; 
