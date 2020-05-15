@@ -8,6 +8,9 @@ This page provides information regarding
 # Version 0.3.0
 Implement the first building block that combines fundamental design patterns
 	
+## Development Enviroment
+	- Extended most of the gtests
+
 ## Core Features
 	- Mosquitto client implemented
 
