@@ -104,6 +104,24 @@ TEST_F( ParameterFeature, GetProperty )
 {
 	int _value;
 
+	EXPECT_EQ( mParameter->GetProperty( "const", _value ), true );
+	EXPECT_EQ( _value, 0 );
+
+    	EXPECT_EQ( mParameter->GetProperty( "value", _value ), true );
+	EXPECT_EQ( _value, 0 );
+
+	EXPECT_EQ( mParameter->GetProperty( "default" , _value ), true );
+	EXPECT_EQ( _value, 0 );
+}
+
+
+/**
+ * GTest: get default properties
+ */
+TEST_F( ParameterFeature, GetPropertyWithName )
+{
+	int _value;
+
 	EXPECT_EQ( mParameter->GetProperty( "Parameter.const", _value ), true );
 	EXPECT_EQ( _value, 0 );
 
@@ -138,6 +156,27 @@ TEST_F( ParameterFeature, NestedGetPropertyParameters )
  * GTest: set default properties
  */
 TEST_F( ParameterFeature, SetProperty )
+{
+	int _value;
+
+	EXPECT_EQ( mParameter->SetProperty( "value", 1 ), true );
+	mParameter->GetProperty( "value", _value );
+	EXPECT_EQ( _value, 1 );
+
+	EXPECT_EQ( mParameter->SetProperty( "default", 1 ), true );
+	mParameter->GetProperty( "default", _value );
+	EXPECT_EQ( _value, 1 );
+
+	EXPECT_EQ( mParameter->SetProperty( "const", 1 ), true );
+	mParameter->GetProperty( "const", _value );
+	EXPECT_EQ( _value, 1 );
+}
+
+
+/**
+ * GTest: set default properties
+ */
+TEST_F( ParameterFeature, SetPropertyWithName )
 {
 	int _value;
 
