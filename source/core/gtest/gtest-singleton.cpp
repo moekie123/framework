@@ -4,7 +4,7 @@
 
 #include <gtest/gtest.h>
 
-class   Beta
+class Beta
 {
     public:
         std::string mName = "Beta";
@@ -13,15 +13,58 @@ class   Beta
 
 TEST( Construct, Default )
 {
-    Beta &b1 = Singleton< Beta >::Instance();
+	Beta &b1 = Singleton< Beta >::Instance();
+    	Beta &b2 = Singleton< Beta >::Instance();
     
-    ASSERT_EQ( b1.mName, "Beta" );
-    
-    b1.mName = "Alpha";
-    ASSERT_EQ( b1.mName, "Alpha" );
+	ASSERT_EQ( &b1, &b2 );
+}
 
-    Beta &b2 = Singleton< Beta >::Instance();
-    ASSERT_EQ( b2.mName, "Alpha" );
+TEST( Register, NewInstance  )
+{
+	Beta &b1 = Singleton< Beta >::Instance();
+	
+	Beta b2;
+    	Singleton< Beta >::Register( b2 );
+
+	Beta &b3 = Singleton< Beta >::Instance();
+
+	ASSERT_EQ( &b1, &b3 );
+}
+
+TEST( Register, ExistingInstance  )
+{
+// GTest does not clear out a Singleton
+/*
+	Beta b1;
+	Beta b2;
+
+	Singleton< Beta >::Register( b1 );
+    	Beta &b3 = Singleton< Beta >::Instance();
+	ASSERT_EQ( &b1, &b2 );
+
+	Singleton< Beta >::Register( b2 );
+	b3 = Singleton< Beta >::Instance();
+	ASSERT_NE( &b1, &b3 );
+*/
+}
+
+TEST( Constructed, NewInstance )
+{
+// GTest does not clear out a Singleton
+/*
+	ASSERT_EQ( Singleton< Beta >::IsConstructed(), false );
+*/
+}
+
+TEST( Constructed, ExistingInstance )
+{
+// GTest does not clear out a Singleton
+/*
+	Beta b1;
+	Singleton< Beta >::Register( b1 );
+
+	ASSERT_EQ( Singleton< Beta >::IsConstructed(), true );
+*/
 }
 
 int main(int argc, char **argv) 
