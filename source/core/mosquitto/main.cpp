@@ -65,7 +65,7 @@ int main(int argc, char* argv[])
 	// Start State Machine
 	mosquitto.Attach( *param );
 	StateMachine::Accept( mosquitto );
-
+	
 	std::cout << "Shutdown Application\n";
 
    	return 0;

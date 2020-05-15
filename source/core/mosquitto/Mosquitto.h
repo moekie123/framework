@@ -33,6 +33,7 @@ class Mosquitto:
 		public:
 			Generic& Build( const std::string& _name ) override
 			{
+				std::cout << "Run Builder\n";
 				if( !Singleton< Mosquitto >::IsConstructed() )
 				{
 					std::cout << "Construct Mosquitto Client on-the-fly\n";

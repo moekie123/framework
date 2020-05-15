@@ -22,7 +22,6 @@ class Factory
          */
         Factory()
 	{
-		
 	}
 
     	/** 
@@ -31,7 +30,6 @@ class Factory
          */
         Factory( const IConfigurator& _config )
 	{
-		
 	}
 
 	/**

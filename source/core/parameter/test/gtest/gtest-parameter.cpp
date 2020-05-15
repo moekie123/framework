@@ -7,29 +7,37 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
+#include "Singleton.h"
+#include "Factory.h"
+
 // Ignore Nagy Mocks for the Configurator Get(ters)
 using ::testing::NiceMock;
 
-// Constructor Tests
-TEST( Default, Construct)
+class ConstructFeature: 
+	public ::testing::Test 
 {
-	int value = 0;
-	NiceMock< MockConfigurator > config;
-		
-	/* See MockConfigurator fot GetInteger
-	 * This is a workaround for the ambgious Get 
-	 **/
-	EXPECT_CALL( config, GetInteger( "Parameter", "const"  , testing::_ )).WillRepeatedly( testing::Return( true ));
-	EXPECT_CALL( config, GetInteger( "Parameter", "default", testing::_ )).WillRepeatedly( testing::Return( true ));
-	EXPECT_CALL( config, GetInteger( "Parameter", "value"  , testing::_ )).WillRepeatedly( testing::Return( true));
-	
-	IParameter *p = new Parameter( config, "Parameter" );
-    	ASSERT_NE( p , nullptr );
-}
+	private:
 
+	protected:
+		NiceMock< MockConfigurator > mConfig;
+
+    	virtual ~ConstructFeature() {}
+
+    	virtual void SetUp() 
+	{
+		EXPECT_CALL( mConfig, GetInteger( "Parameter", "const"  , testing::_ )).WillRepeatedly( testing::Return( true ));
+		EXPECT_CALL( mConfig, GetInteger( "Parameter", "default", testing::_ )).WillRepeatedly( testing::Return( true ));
+		EXPECT_CALL( mConfig, GetInteger( "Parameter", "value"  , testing::_ )).WillRepeatedly( testing::Return( true));
+	
+		Singleton< MockConfigurator >::Register( mConfig );
+
+		Factory& factory = Singleton< Factory >::Instance();
+		factory.Register< MockConfigurator >( "Configurator" );
+	}
+};
 
 // Other Test that we already trust a working Constructor
-class ParameterTest: 
+class ParameterFeature: 
 	public ::testing::Test 
 {
 	private:
@@ -39,12 +47,7 @@ class ParameterTest:
 		MockConfigurator mConfig;
 		IParameter* mParameter;
 
-    	ParameterTest() 
-	{
-    	
-	}
-
-    	virtual ~ParameterTest() {}
+    	virtual ~ParameterFeature() {}
 
     	virtual void SetUp() 
 	{
@@ -61,13 +64,35 @@ class ParameterTest:
 		delete mParameter;
 		delete mReturn;
     	}
-
 };
+
+
+// Constructor Tests
+TEST_F( ConstructFeature, Default)
+{
+	/* Configurator Mock is defined in the feature */	
+	Parameter *p = new Parameter( mConfig, "Parameter" );
+    	ASSERT_NE( p , nullptr );
+}
+
+TEST_F( ConstructFeature, Interface )
+{
+	/* Configurator Mock is defined in the feature */	
+	IParameter *p = new Parameter( mConfig, "Parameter" );
+    	ASSERT_NE( p , nullptr );
+}
+
+TEST_F( ConstructFeature, Builder )
+{
+	auto parameter = Parameter::builder.Build( "Parameter" );
+	ASSERT_EQ( typeid( Generic ), typeid( parameter ) );
+}
+
 
 /**
  * GTest: get the name op the parameter 
  */
-TEST_F( ParameterTest, GetName )
+TEST_F( ParameterFeature, GetName )
 {
     	ASSERT_EQ( mParameter->GetName(), "Parameter" );
 }
@@ -75,7 +100,7 @@ TEST_F( ParameterTest, GetName )
 /**
  * GTest: get default properties
  */
-TEST_F( ParameterTest, GetProperty )
+TEST_F( ParameterFeature, GetProperty )
 {
 	int _value;
 
@@ -92,7 +117,7 @@ TEST_F( ParameterTest, GetProperty )
 /**
  * GTest: (Composite Pattern) Added nested parameter
  */
-TEST_F( ParameterTest, NestedGetPropertyParameters )
+TEST_F( ParameterFeature, NestedGetPropertyParameters )
 {
 	int _value;
 
@@ -112,7 +137,7 @@ TEST_F( ParameterTest, NestedGetPropertyParameters )
 /**
  * GTest: set default properties
  */
-TEST_F( ParameterTest, SetProperty )
+TEST_F( ParameterFeature, SetProperty )
 {
 	int _value;
 
@@ -132,7 +157,7 @@ TEST_F( ParameterTest, SetProperty )
 /**
  * GTest: (Composite Pattern) set default properties
  */
-TEST_F( ParameterTest, NestedSetPropertyParameters )
+TEST_F( ParameterFeature, NestedSetPropertyParameters )
 {
 	int _value;
 
@@ -155,7 +180,7 @@ TEST_F( ParameterTest, NestedSetPropertyParameters )
 /**
  * GTest: Value is Default value at creation
  */
-TEST_F( ParameterTest, DefaultIsValue )
+TEST_F( ParameterFeature, DefaultIsValue )
 {
 	int _value, _default;
 
@@ -167,7 +192,7 @@ TEST_F( ParameterTest, DefaultIsValue )
 /*
  * GTest: Verify behaviour of the const property
  */
-TEST_F( ParameterTest, SetConstValue )
+TEST_F( ParameterFeature, SetConstValue )
 {
 	int _const, _value;
 
@@ -194,7 +219,7 @@ TEST_F( ParameterTest, SetConstValue )
 /*
  * GTest: (Composited Pattern) Verify behaviour of the const property
  */
-TEST_F( ParameterTest, NestedSetConstValue )
+TEST_F( ParameterFeature, NestedSetConstValue )
 {
 	int _const, _value;
 
@@ -223,7 +248,7 @@ TEST_F( ParameterTest, NestedSetConstValue )
 /**
  * GTest: Verify the Reset functionallity
  */
-TEST_F( ParameterTest, Reset )
+TEST_F( ParameterFeature, Reset )
 {
 	int _value, _default;
 
@@ -243,7 +268,7 @@ TEST_F( ParameterTest, Reset )
 /**
  * GTest: Verify the Reset functionallity
  */
-TEST_F( ParameterTest, NestedReset )
+TEST_F( ParameterFeature, NestedReset )
 {
 	int _value, _default;
 
@@ -267,7 +292,7 @@ TEST_F( ParameterTest, NestedReset )
 /**
  * GTest: (Observer Pattern) Attach and Notify
  */
-TEST_F( ParameterTest, AttachAndNotify )
+TEST_F( ParameterFeature, AttachAndNotify )
 {
 	MockParameter mock;
  	

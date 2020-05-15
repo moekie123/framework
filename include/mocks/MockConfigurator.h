@@ -1,6 +1,9 @@
 #pragma once
 
 #include "Generic.h"
+#include "Builder.h"
+#include "Singleton.h"
+
 #include "IConfigurator.h"
 
 #include <gmock/gmock.h>
@@ -10,7 +13,23 @@ class MockConfigurator:
     public IConfigurator
 {
         public:
-		
+	
+		/*
+		 * GMock Builder, To test base class builder
+		 * It is common to load a configurator in the builder
+		 */
+		class MockBuilder:
+			public Builder
+		{
+			public:
+				Generic& Build( const std::string& _name ) override
+				{
+					MockConfigurator& mock = Singleton< MockConfigurator >::Instance();
+					return mock;
+				}
+		};
+		static MockBuilder builder;
+			
 		MOCK_CONST_METHOD3( GetInteger, bool( const std::string&, const std::string&, int& ));
 		bool Get( const std::string& _name, const std::string& _attribute, int& _value ) const override
 		{
@@ -29,5 +48,6 @@ class MockConfigurator:
 
 			return result;
 		}
-
 };
+
+MockConfigurator::MockBuilder MockConfigurator::builder;

@@ -16,7 +16,7 @@ public:
 	 */
 	static T& Instance()
     	{
-        	if ( IsConstructed() )
+        	if ( !IsConstructed() )
         	{
             		Singleton::_instance = CreateInstance();
         	}
@@ -28,7 +28,7 @@ public:
 	 */
 	static void Register( T& _instance )
     	{
-        	if ( IsConstructed() )
+        	if ( !IsConstructed() )
         	{
             		Singleton::_instance = &_instance;
         	}
@@ -39,7 +39,7 @@ public:
 	 */
 	static bool IsConstructed()
     	{
-        	return ( Singleton::_instance == nullptr );
+        	return !( Singleton::_instance == nullptr );
 	}
 
 

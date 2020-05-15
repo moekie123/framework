@@ -4,8 +4,11 @@
 #include "IConfigurator.h"
 #include "../../Configurator.h"
 
+#include "Generic.h"
+
 #include <string>
 #include <typeinfo>  
+#include <type_traits>
 
 #include <unistd.h>
 #include <iostream>
@@ -23,9 +26,19 @@ TYPED_TEST_CASE( TypedTest, Types);
 
 TEST( Default, Construct )
 {
-	Configurator *cf1 = new Configurator();
+	Configurator *cf = new Configurator();
 }
 
+TEST( Default, ConstructInterface )
+{
+	IConfigurator *icf = new Configurator();
+}
+
+TEST( Default, ConstructBuilder )
+{
+	auto configurator = Configurator::builder.Build("");
+	ASSERT_EQ( typeid( Generic ), typeid( configurator ) );
+}
 
 TEST( Specalization, Integer )
 {

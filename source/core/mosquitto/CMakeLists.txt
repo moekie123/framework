@@ -1,5 +1,7 @@
 add_library( mqtt OBJECT
 		Mosquitto.cpp
+		StateMachine.cpp
+		Visitor.cpp
 		)
 
 add_executable( fsm-mqtt
@@ -9,4 +11,4 @@ add_executable( fsm-mqtt
 
 target_link_libraries( fsm-mqtt core mosquitto tinyxml2 )
 
-#add_subdirectory( test )
+add_subdirectory( test )
