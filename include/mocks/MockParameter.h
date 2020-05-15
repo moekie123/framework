@@ -6,8 +6,11 @@
 #include <gmock/gmock.h>
 #include <string>
 
+#include "Builder.h"
+#include "Singleton.h"
+
 class MockParameter: 
-    public IParameter
+	public IParameter
 {
         public:
 		/*

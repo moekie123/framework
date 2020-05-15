@@ -80,8 +80,10 @@ exit:
 bool Parameter::Update( const IParameter* subject )
 {
 	// Composite
+	std::cout << "test\n";
 	for( auto* component : mComponents )
 	{
+		std::cout << "Checkpoint\n";
 		// Extract the IParameter Observer 
 		Observer< IParameter >* param = dynamic_cast< IParameter* >( component );	
 		param->Update( subject );

@@ -6,7 +6,6 @@ add_subdirectory( mosquitto )
 add_subdirectory( gtest )
 
 # Collect Framework sources
-
 set( CORE_SOURCES
 
 	# Include Core Fundamentals	

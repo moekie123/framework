@@ -288,17 +288,33 @@ TEST_F( ParameterFeature, NestedReset )
 	ASSERT_EQ( _value, _default );
 }
 
-
 /**
  * GTest: (Observer Pattern) Attach and Notify
  */
-TEST_F( ParameterFeature, AttachAndNotify )
+TEST_F( ParameterFeature, SingleAttachAndNotify )
 {
 	MockParameter mock;
  	
 	mParameter->Attach( mock );
     	EXPECT_CALL( mock, Update( mParameter ));
     	
+	mParameter->Notify();
+}
+
+/**
+ * GTest: (Observer Pattern) Attach and Notify
+ */
+TEST_F( ParameterFeature, MultipleAttachAndNotify )
+{
+	MockParameter mock1;
+ 	MockParameter mock2;
+
+	mParameter->Attach( mock1 );
+ 	mParameter->Attach( mock2 );
+   
+	EXPECT_CALL( mock1, Update( mParameter ));
+    	EXPECT_CALL( mock2, Update( mParameter ));
+
 	mParameter->Notify();
 }
 

@@ -1,4 +1,8 @@
 # Factory Unit Tests
+gsetup( generic )
+target_link_libraries( gtest-generic core)
+
+# Factory Unit Tests
 gsetup( factory )
 target_link_libraries( gtest-factory core)
 

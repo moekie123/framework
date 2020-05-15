@@ -34,6 +34,13 @@ bool Generic::GetProperty( const std::string& _property, int& _value ) const
 {
 	auto property = std::find_if( mProperties.begin(), mProperties.end(), [ this, _property ]( auto const& property )
 	{
+		// Check for match (without name)
+		if( _property.compare( property.first ) == 0 )
+		{
+			return true;
+		}
+
+		// Check for match when name attached
 		if( _property.compare( mName + "." + property.first ) == 0 )
 		{
 			return true;
@@ -58,6 +65,13 @@ bool Generic::SetProperty( const std::string& _property, const int& _value )
 
 	auto property = std::find_if( mProperties.begin(), mProperties.end(), [ this, _property ]( auto const& property )
 	{
+		// Check for match (without name)
+		if( _property.compare( property.first ) == 0 )
+		{
+			return true;
+		}
+		
+		// Check for match when name attached
 		if( _property.compare( mName + "." + property.first ) == 0 )
 		{
 			return true;
