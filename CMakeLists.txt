@@ -2,6 +2,8 @@ cmake_minimum_required( VERSION 3.13.0 )
 
 Project( Framework )
 
+message( FATAL_ERROR "Factory has a huge ass bug... It does not makes sense to continue with this branch untill it is fixed")
+
 # Framework Version
 set(VERSION_MAJOR   0)
 set(VERSION_MINOR   3)

@@ -63,6 +63,12 @@ class Factory
 		/* Check if _id already excists as key in map */
 		if ( mBuilderMap.find( _id ) != mBuilderMap.end() ) 
 		{
+			/* ###### ERROR ###### */
+			/*
+				The downcast to a generalized base class (generic) will back updated by the dynamic_cast
+				However, the downcast lost all parent vtable properties....
+				There for the upcast, by dynamice, will not have the properties as before the downcast....
+			*/
         		return dynamic_cast< T& >( mBuilderMap[ _id ]->Build( _name ));
         	}
 		throw std::invalid_argument( "received negative value" );
