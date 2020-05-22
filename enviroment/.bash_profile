@@ -1,4 +1,6 @@
-echo "Framework Profile Loaded"
+#echo "Framework Profile Loaded"
+
+shopt -s expand_aliases  
 
 alias ls='ls $LS_OPTIONS'
 alias ll='ls $LS_OPTIONS -l'
@@ -10,16 +12,33 @@ alias mv='mv -i'
 
 alias cdl='cd /usr/src/linux/'
 
+
 FRAMEWORK='/root/framework'
 FRAMEWORK_BUILD=${FRAMEWORK}'/build/'
 
+# Default the main build
+FRAMEWORK_MODULE='Framework'
+
 if [ -d "${FRAMEWORK}" ]; then
+
 	function Rebuild 
 	{
        		echo "Rebuild the complete project"
 		rm -rf ${FRAMEWORK_BUILD}
 		cmake -S${FRAMEWORK} -B${FRAMEWORK_BUILD}
        		make --no-print-directory -C ${FRAMEWORK_BUILD}
+	}
+
+	function module()
+	{
+		if [ ! -z "$1" ]; then
+			FRAMEWORK_MODULE=$1	
+		else
+			FRAMEWORK_MODULE="Framework"
+		fi
+		
+		echo "Module [$FRAMEWORK_MODULE]"
+		export FRAMEWORK_MODULE=$FRAMEWORK_MODULE
 	}
 
 	alias  cdf='cd '$FRAMEWORK
@@ -51,8 +70,8 @@ if [ -d "${FRAMEWORK}" ]; then
 
 	export FRAMEWORK=$FRAMEWORK
 	export FRAMEWORK_TAGS=$FRAMEWORK/tags
-
-	export PATH=$PATH:$FRAMEWORK/binairy/
+	export FRAMEWORK_MODULE=$FRAMEWORK_MODULE
+	export PATH=$PATH:$FRAMEWORK/binary/
 fi
 
 DRIVER_I2C=false
