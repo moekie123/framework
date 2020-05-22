@@ -63,6 +63,9 @@ do
 	fi
 done
 
+echo "Link Vim-plugings"
+ln -s $(pwd)/vim-plugin/pack ~/.vim/pack 
+
 echo "MQTT-broker"
 	# install mosquitto broker, sub & pub
 	apt-get install mosquitto mosquitto-clients $FORCE

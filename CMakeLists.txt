@@ -2,8 +2,6 @@ cmake_minimum_required( VERSION 3.13.0 )
 
 Project( Framework )
 
-message( FATAL_ERROR "Factory has a huge ass bug... It does not makes sense to continue with this branch untill it is fixed")
-
 # Framework Version
 set(VERSION_MAJOR   0)
 set(VERSION_MINOR   3)
@@ -32,7 +30,7 @@ endif()
 message( "Configure CTags" )
 set_source_files_properties( tags PROPERTIES GENERATED true)
 add_custom_command ( OUTPUT tags ALL
-	COMMAND ctags -R --c++-kinds=+p --fields=+iaS --extras=+q .    
+	COMMAND ctags -R --c++-kinds=+p --fields=+iaS --extras=+q ${CMAKE_CURRENT_SOURCE_DIR} 
     	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR} )
 
 # Build Test Enviroment
@@ -72,12 +70,12 @@ add_custom_command( TARGET Framework
 	COMMAND echo "Build Framework [${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}${VERSION_META}]"
 	PRE_BUILD)
 	
-target_link_libraries( Framework PUBLIC
-				framework
-				tinyxml2
-			      	mosquitto )
-
-add_dependencies( Framework version )
+#target_link_libraries( Framework PUBLIC
+#				framework
+#				tinyxml2
+#			      	mosquitto )
+#
+#add_dependencies( Framework version )
 
 install( TARGETS Framework DESTINATION ${CMAKE_INSTALL_OUTPUT_DIRECTORY} )
 

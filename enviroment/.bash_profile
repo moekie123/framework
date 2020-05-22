@@ -14,7 +14,6 @@ FRAMEWORK='/root/framework'
 FRAMEWORK_BUILD=${FRAMEWORK}'/build/'
 
 if [ -d "${FRAMEWORK}" ]; then
-
 	function Rebuild 
 	{
        		echo "Rebuild the complete project"
@@ -43,10 +42,15 @@ if [ -d "${FRAMEWORK}" ]; then
 
 	alias  cdh='cd '$FRAMEWORK/source/hardware
 
+	alias  cdenv='cd '$FRAMEWORK/enviroment
+
 	alias makef='make --no-print-directory -C '${FRAMEWORK_BUILD}
 	alias maker='make --no-print-directory -C  ${FRAMEWORK_BUILD} -j4'
 
 	alias documention='make --no-print-directory -C  ${FRAMEWORK_BUILD} -j4 doc_install'
+
+	export FRAMEWORK=$FRAMEWORK
+	export FRAMEWORK_TAGS=$FRAMEWORK/tags
 
 	export PATH=$PATH:$FRAMEWORK/binairy/
 fi
