@@ -49,7 +49,7 @@ echo "Install Boost"
 
 echo "Configure Enviroment"
 
-files=( ".bash_profile" ".vimrc" )
+files=( ".bash_profile" ".vimrc" ".gdbinit" )
 
 for FILE in "${files[@]}"
 do
