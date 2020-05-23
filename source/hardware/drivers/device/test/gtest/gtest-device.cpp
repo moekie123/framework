@@ -27,15 +27,17 @@ class ConstructFeature:
 
     	virtual void SetUp() 
 	{
-		Factory& factory = Singleton< Factory >::Instance();
+		auto factory = Singleton< AbstractFactory<
+					Factory< IConfigurator >, 
+					Factory< IParameter >>>::Instance();
 
 //		EXPECT_CALL( mConfig, GetInteger( "Parameter", "value"  , testing::_ )).WillRepeatedly( testing::Return( true));
 		Singleton< MockConfigurator >::Register( mConfig );
-		factory.Register< MockConfigurator >( "Configurator" );
+		factory.Register< IConfigurator >( "Configurator", &MockConfigurator::builder );
 
 //		EXPECT_CALL( mConfig, GetInteger( "Parameter", "value"  , testing::_ )).WillRepeatedly( testing::Return( true));
 		Singleton< MockParameter >::Register( mParameter );
-		factory.Register< MockParameter >( "Parameter" );
+		factory.Register< IParameter >( "Parameter", &MockParameter::builder );
 	}
 };
 
@@ -60,7 +62,7 @@ TEST_F( ConstructFeature, Interface )
 
 TEST_F( ConstructFeature, Builder )
 {
-	auto device = Device::builder.Build( "device" );
+	auto device = Device::builder.Build( "Device" );
 	ASSERT_EQ( typeid( Generic ), typeid( device ) );
 }
 

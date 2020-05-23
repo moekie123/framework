@@ -5,6 +5,8 @@
 
 #include "Builder.h"
 #include "Singleton.h"
+
+#include "AbstractFactory.h"
 #include "Factory.h"
 
 #include <string>
@@ -23,13 +25,12 @@ class Actuator:
 	 * @brief The Actutor Builder Class to create new (base) Actuators
 	 */
 	class ActuatorBuilder:
-		public Builder
+		public Builder< IActuator >
 	{
 		public:
-		Generic& Build( const std::string& _name ) override
+		static IActuator* BuildActuator( const std::string _name )
 		{
-			Factory& factory = Singleton< Factory >::Instance();
-			//auto config = factory.Create< IConfigurator >( "Configurator", _name );
+			Factories& factory = Singleton< Factories >::Instance();
 
 			Actuator* actuator = new Actuator( _name );
 
@@ -45,11 +46,17 @@ class Actuator:
 
 			for( const std::string& parameter: parameters )
 			{
-				IParameter& p = factory.Create< IParameter >( "Parameter", _name + parameter );
-				actuator->Add( p );
+				IParameter* p = factory.Construct< IParameter >( "Parameter" );
+//				IParameter& p = factory.Construct< IParameter >( "Parameter", _name + parameter );
+				actuator->Add( *p );
 			}
 			
-			return *actuator;
+			return actuator;
+		}
+
+		ActuatorBuilder(): Builder( BuildActuator )
+		{
+
 		}
 	};
 

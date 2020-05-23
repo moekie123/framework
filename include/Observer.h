@@ -1,29 +1,23 @@
 #pragma once
 
-#include <stdexcept>
+#include "Subject.h"
 
-/**
- * @brief The generic behavarioal design pattern Observer
- * @details Should be used in combination with a Subject
- */
-template <class T>
-class Observer
+class Subject;
+
+class Observer:
+	virtual public Object
 {
-    public:
+public:
 
-	/**
-	 * @brief The Constructor
-	 */
-        Observer() {}
-        virtual ~Observer() {}
+	Observer();
 
-	/**
-	 * @brief The callback when the Subject notifies all subscribtions
-	 * @details (On purpose) This method is not abstract because otherwise it could be generarated by the Factory
-	 */
-        virtual bool Update( const T* subject )
-	{	
-		throw std::logic_error("Not Implemented");
-	}
+	virtual bool Update( const Subject& );
+
+private:
+	/* Required to suppress the "no-virtual-move-assign"-Compiler Warning */
+	Observer& operator=( Observer&& other) 
+	{
+        	return *this;
+    	}
 
 };

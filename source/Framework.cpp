@@ -1,6 +1,7 @@
 #include "Framework.h"
 
 #include "Singleton.h"
+#include "AbstractFactory.h"
 #include "Factory.h"
 
 #include "core/configurator/Configurator.h"
@@ -53,12 +54,29 @@ Framework::Framework( int argc, char *argv[] ):
 	Mosquitto* mosquitto = new Mosquitto( *configurator, *hostname, *port, *username, *password );
 	Singleton< Mosquitto >::Register( *mosquitto );
 
+	// Creat Abstract Factory
+	auto factory = Singleton< Factories >::Instance();
+
+	/** Current registered builders: */
+	
+	///	- Configurator
+
+	///	- Parameter 
+	factory.Register< IParameter >( "Parameter" , &Parameter::builder );
+
+	///	- Mosquitto
+
+	///	- Chipset
+
+	///	- Device
+
+	///	- Actuator
+
+/* ##### DEPRECATED #######
 	// Construct Factory
 	Factory* factory = new Factory( *configurator );
 	Singleton< Factory >::Register( *factory );
 	
-	/** Current registered builders: */
-
 	///	- Configurator
 	factory->Register< Configurator> ( "Configurator" );
 
@@ -76,8 +94,8 @@ Framework::Framework( int argc, char *argv[] ):
 
 	///	- Actuator
 	factory->Register< Actuator >( "Actuator" );
+*/
 };
-
 
 int Framework::parseArguments( int argc, char* argv[] )
 {

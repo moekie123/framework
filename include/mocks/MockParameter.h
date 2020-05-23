@@ -18,31 +18,31 @@ class MockParameter:
 		 * It is common to load a configurator in the builder
 		 */
 		class MockBuilder:
-			public Builder
+			public Builder< IParameter >
 		{
 			public:
-				Generic& Build( const std::string& _name ) override
+				static IParameter* Build ( const std::string _name )
 				{
 					MockParameter& mock = Singleton< MockParameter >::Instance();
-					return mock;
+					return &mock;
+				}
+				
+				MockBuilder(): Builder( MockBuilder::Build )
+				{
+					
 				}
 		};
 		static MockBuilder builder;
 
 		/* IParameter */
-    		MOCK_METHOD0( Reset, void() );
+    		MOCK_METHOD0( Reset, bool() );
 
 		/* IGeneric */
-	   	MOCK_CONST_METHOD2( GetProperty, bool( const std::string&, int& ));
-	    	MOCK_METHOD2( GetProperty, bool( const std::string&, const int& ));
+	   	MOCK_METHOD2( SetProperty, bool( const std::string&, const int& ));
+	    	MOCK_METHOD2( GetProperty, bool( const std::string&, int& ));
 
 		/* IObserver */
-    		MOCK_METHOD1( Update, bool( const IParameter* ));
-          
-          	/* ??
-		 * TODO - Is This Still necssary 
-		 **/
-	    	MOCK_METHOD1( Build, Generic*( const std::string& ));
+    		MOCK_METHOD1( Update, bool( const Subject& ));
 };
 
 MockParameter::MockBuilder MockParameter::builder;

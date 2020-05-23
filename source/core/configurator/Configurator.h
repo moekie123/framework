@@ -20,16 +20,22 @@ class Configurator:
 		/**
 		 * @brief The Configurator Builder class to create new (base) Configurator
 		 */
-		class ConfiguratorBuilder:
-			public Builder
+		class ConfiguratorBuilder: 
+			public Builder< IConfigurator >
 		{
-			public:
-				Generic& Build( const std::string& _name ) override
-				{
-					Configurator& configurator = Singleton< Configurator >::Instance();
-					return configurator;
-				}
+		public:
+			static IConfigurator* Build( std::string _name )
+			{
+				IConfigurator& obj = Singleton< Configurator >::Instance();
+				return &obj;
+			}
+
+			ConfiguratorBuilder(): Builder( ConfiguratorBuilder::Build )
+			{
+				std::cout << "ConfiguratorBuilder : Construct\n";
+			}
 		};
+
 		/**
 		 * @brief The global ParameterBuilder
 		 */

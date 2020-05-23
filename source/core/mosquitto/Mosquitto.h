@@ -10,6 +10,7 @@
 #include "Singleton.h"
 #include "Generic.h"
 #include "Builder.h"
+#include "AbstractFactory.h"
 #include "Factory.h"
 
 #include "StateMachine.h"
@@ -28,39 +29,45 @@ class Mosquitto:
 	 * @details It acctually retuns a Singleton
 	 */
 	class MosquittoBuilder:
-		public Builder
+		public Builder< IMosquitto >
 	{
 		public:
-			Generic& Build( const std::string& _name ) override
+			static IMosquitto* Build( std::string _name )
 			{
 				std::cout << "Run Builder\n";
 				if( !Singleton< Mosquitto >::IsConstructed() )
 				{
 					std::cout << "Construct Mosquitto Client on-the-fly\n";
 
-					// Build Instance if not already done
-					Factory& factory = Singleton< Factory >::Instance();
-					IConfigurator& config = factory.Create< IConfigurator >( "Configurator", "configuration.xml" );
-					
+					const std::string label = "Configurator";
+
+					Factories& factory = Singleton< Factories >::Instance();
+					IConfigurator* config = factory.Construct< IConfigurator >( label );
+
 					std::string* hostname = new std::string();
-					config.GetProperty( "mosquitto", "hostname", (std::string&) *hostname );
+					config->GetProperty( "mosquitto", "hostname", (std::string&) *hostname );
 			
 					std::string* username = new std::string();
-					config.GetProperty( "mosquitto", "username", (std::string&) *username );
+					config->GetProperty( "mosquitto", "username", (std::string&) *username );
 
 					std::string* password = new std::string();
-					config.GetProperty( "mosquitto", "password", (std::string&) *password );
+					config->GetProperty( "mosquitto", "password", (std::string&) *password );
 
 					int* port = new int();
-					config.GetProperty( "mosquitto", "port", (int&) *port );
+					config->GetProperty( "mosquitto", "port", (int&) *port );
 
-					Mosquitto* mosquitto = new Mosquitto( config, *hostname, *port, *username, *password );
+					Mosquitto* mosquitto = new Mosquitto( *config, *hostname, *port, *username, *password );
 					Singleton< Mosquitto >::Register( *mosquitto );
 				}
 
 				// Retrieve the client
 				Mosquitto& mosquitto = Singleton< Mosquitto >::Instance();
-				return mosquitto;
+				return &mosquitto;
+			}
+	
+			MosquittoBuilder(): Builder( MosquittoBuilder::Build )
+			{
+
 			}
 	};
 

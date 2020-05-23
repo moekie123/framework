@@ -20,7 +20,7 @@ set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/binary )
 set( CMAKE_INSTALL_OUTPUT_DIRECTORY /opt/framework/ )
 
 # Add addional build flags
-SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -g3")
+SET( CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -g3")
 
 # Include external dependencies
 set( ALL_EXTERNALS_BUILD OFF )
@@ -32,9 +32,9 @@ endif()
 # Setup CTags
 message( "Configure CTags" )
 set_source_files_properties( tags PROPERTIES GENERATED true)
-add_custom_command ( OUTPUT tags ALL
-	COMMAND ctags -R --c++-kinds=+p --fields=+iaS --extras=+q ${CMAKE_CURRENT_SOURCE_DIR} 
-    	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR} )
+add_custom_target ( tags ALL
+	COMMAND ctags -f tags -R --c++-kinds=+p --fields=+iaS --extras=+q ${CMAKE_CURRENT_SOURCE_DIR} 
+    	WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} )
 
 # Build Test Enviroment
 message( "Configure Test Enviroment" )
@@ -73,12 +73,12 @@ add_custom_command( TARGET Framework
 	COMMAND echo "Build Framework [${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}${VERSION_META}]"
 	PRE_BUILD)
 	
-#target_link_libraries( Framework PUBLIC
-#				framework
-#				tinyxml2
-#			      	mosquitto )
-#
-#add_dependencies( Framework version )
+target_link_libraries( Framework PUBLIC
+				framework
+				tinyxml2
+			      	mosquitto )
+
+add_dependencies( Framework version )
 
 install( TARGETS Framework DESTINATION ${CMAKE_INSTALL_OUTPUT_DIRECTORY} )
 

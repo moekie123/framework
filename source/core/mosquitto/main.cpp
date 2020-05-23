@@ -39,6 +39,7 @@ int main(int argc, char* argv[])
 {
 	std::cout << "Booting Application\n";
 
+
 	// Link Callbacks
 	signal(SIGINT, abort);
 	signal(SIGTERM, abort);

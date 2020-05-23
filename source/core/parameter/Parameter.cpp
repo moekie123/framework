@@ -38,7 +38,7 @@ Parameter::Parameter( const IConfigurator& _config, const std::string& _name )
 	}
 }
  
-void Parameter::Reset()
+bool Parameter::Reset()
 {
 	if ( mProperties.find( "const" )->second == 0 )
 	{
@@ -50,6 +50,32 @@ void Parameter::Reset()
 			component->Reset();
 		}
 	}
+	return true;
+}
+
+bool Parameter::GetProperty( const std::string& _property, int& _value )
+{
+	bool result = false;
+
+	if ( mProperties.find( "const" )->second == 1 )
+		goto exit;
+
+	result = Generic::GetProperty( _property, _value );
+	if ( result ) 
+	{
+		goto exit;
+	}
+	// Composite
+	for( auto* component : mComponents )
+	{
+		result = component->GetProperty( _property, _value );
+		if( result ) 
+			break;
+	}
+
+exit:
+	return result;
+
 
 }
 
@@ -77,18 +103,13 @@ exit:
 	return result;
 }
 
-bool Parameter::Update( const IParameter* subject )
+bool Parameter::Update( const Subject& subject )
 {
-	// Composite
-	std::cout << "test\n";
 	for( auto* component : mComponents )
 	{
-		std::cout << "Checkpoint\n";
-		// Extract the IParameter Observer 
-		Observer< IParameter >* param = dynamic_cast< IParameter* >( component );	
-		param->Update( subject );
+// TODO
+//		component->Update( subject );
 	}
-
 	return true;
 }
 

@@ -9,8 +9,7 @@
  * @brief The generic interface for Actuators
  */
 class IActuator:
-//        public Generic,
-        public Composite< IParameter >
+        public Generic
 {
 
 };

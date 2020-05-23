@@ -1,6 +1,12 @@
 #include "Observer.h"
 
-/** 
- * The Observer is a "Template Based Class"
- * Templates are typical defined in the header file
- */
+Observer::Observer()
+{
+	std::cout << "Observer: Construct\n";
+}
+
+bool Observer::Update( const Subject& )
+{
+	std::cout << "Observer: Update\n";
+	return false;
+}

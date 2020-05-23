@@ -36,7 +36,7 @@ TEST( Default, ConstructInterface )
 
 TEST( Default, ConstructBuilder )
 {
-	auto configurator = Configurator::builder.Build("");
+	auto configurator = Configurator::builder.Build("Configurator");
 	ASSERT_EQ( typeid( Generic ), typeid( configurator ) );
 }
 

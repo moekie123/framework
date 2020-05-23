@@ -26,15 +26,17 @@ class ConstructFeature:
 
     	virtual void SetUp() 
 	{
-		Factory& factory = Singleton< Factory >::Instance();
+		auto factory = Singleton< AbstractFactory<
+					Factory< IConfigurator >, 
+					Factory< IParameter >>>::Instance();
 
 //		EXPECT_CALL( mConfig, GetInteger( "Parameter", "value"  , testing::_ )).WillRepeatedly( testing::Return( true));
 		Singleton< MockConfigurator >::Register( mConfig );
-		factory.Register< MockConfigurator >( "Configurator" );
+		factory.Register< IConfigurator >( "Configurator", &MockConfigurator::builder );
 
 //		EXPECT_CALL( mConfig, GetInteger( "Parameter", "value"  , testing::_ )).WillRepeatedly( testing::Return( true));
 		Singleton< MockParameter >::Register( mParameter );
-		factory.Register< MockParameter >( "Parameter" );
+		factory.Register< IParameter >( "Parameter", &MockParameter::builder );
 	}
 };
 

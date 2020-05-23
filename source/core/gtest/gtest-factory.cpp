@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include "AbstractFactory.h"
 #include "Factory.h"
 #include "Builder.h"
 
@@ -22,13 +23,18 @@ class ConcreteBeta:
 	 * Builder
 	 */
 	class ConcreteBetaBuilder:
-		public Builder
+		public Builder< InterfaceBeta >
 	{
 		public:
-		Generic& Build( const std::string& _name ) override
+		static InterfaceBeta* Build( const std::string& _name ) 
 		{
 			InterfaceBeta* iBeta = new ConcreteBeta();
-			return *iBeta;
+			return iBeta;
+		}
+
+		ConcreteBetaBuilder(): Builder( ConcreteBetaBuilder::Build )
+		{
+
 		}
 	};
 	static ConcreteBetaBuilder builder;
@@ -43,36 +49,38 @@ ConcreteBeta::ConcreteBetaBuilder ConcreteBeta::builder;
 
 TEST( Construct, Default )
 {
-    Factory *f = new Factory;
+	AbstractFactory< Factory< ConcreteBeta >> factory;
 }
 
 TEST( Register,  Default )
 {
-    Factory *f = new Factory;
-    ASSERT_EQ( f->Register< ConcreteBeta >( "CB" ), true );
+	AbstractFactory< Factory< InterfaceBeta >> factory;
+	ASSERT_EQ( factory.Register< InterfaceBeta >( "CB", &ConcreteBeta::builder ), true );
 }
 
 TEST( Register,  AlreadyRegistered )
 {
-    Factory *f = new Factory;
-    f->Register< ConcreteBeta >( "CB" );
+	AbstractFactory< Factory< InterfaceBeta >> factory;
+	factory.Register< InterfaceBeta >( "CB", &ConcreteBeta::builder );
 
-    ASSERT_EQ( f->Register< ConcreteBeta >( "CB" ), false );
+	ASSERT_EQ( factory.Register< InterfaceBeta >( "CB", &ConcreteBeta::builder ), true );
 }
 
 TEST( Create, Default )
 {
-    Factory *f = new Factory;
-    ASSERT_EQ( f->Register< ConcreteBeta >( "CB" ), true );
-    
-    auto ab = f->Create< InterfaceBeta >( "CB", "Name" );
-    ab.execute();
+	AbstractFactory< Factory< InterfaceBeta >> factory;
+	factory.Register< InterfaceBeta >( "CB", &ConcreteBeta::builder );
+
+   	auto ab = factory.Construct< InterfaceBeta >( "CB" );
+    	ab->execute();
 }
 
 TEST( Create, UnknownBuilder )
 {
-    	Factory *f = new Factory;
-	ASSERT_ANY_THROW( f->Create< InterfaceBeta >( "BC", "Name" ) );
+ 	AbstractFactory< Factory< InterfaceBeta >> factory;
+	factory.Register< InterfaceBeta >( "CB", &ConcreteBeta::builder );
+
+	ASSERT_ANY_THROW( factory.Construct< InterfaceBeta >( "BC" ) );
 }
 
 int main(int argc, char **argv) 

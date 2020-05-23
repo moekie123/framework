@@ -19,13 +19,18 @@ class MockConfigurator:
 		 * It is common to load a configurator in the builder
 		 */
 		class MockBuilder:
-			public Builder
+			public Builder< IConfigurator >
 		{
 			public:
-				Generic& Build( const std::string& _name ) override
+				static IConfigurator* Build( const std::string& _name )
 				{
 					MockConfigurator& mock = Singleton< MockConfigurator >::Instance();
-					return mock;
+					return &mock;
+				}
+				
+				MockBuilder(): Builder( MockBuilder::Build )
+				{
+				
 				}
 		};
 		static MockBuilder builder;

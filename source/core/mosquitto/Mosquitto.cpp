@@ -40,6 +40,7 @@ void connect_callback(struct mosquitto *mosq, void *obj, int result)
 	}
 }
 
+
 /* Callback */
 void message_callback(struct mosquitto *mosq, void *obj, const struct mosquitto_message *message)
 {
@@ -187,6 +188,7 @@ bool Mosquitto::visitLoop( const StateMachine& )
 			/* 
   			 * Convert the iterator, which is stored in a vector a Observer*, back to a parameter
 			 */
+			// TODO
 			auto parameter = dynamic_cast< IParameter* >(( *it ));
 
 			ret = mosquitto_topic_matches_sub( parameter->GetName().c_str(), message.first.c_str(), &match );
@@ -205,10 +207,10 @@ bool Mosquitto::visitLoop( const StateMachine& )
         			 *    Cast this up to extract only the IMosquitto Observer ( left )	
 				 *    TODO, Find out what will happen when multiple observer types are allowed....
 				 */
-				Observer< IMosquitto >* param = dynamic_cast< IParameter* >( parameter );
+				// Observer< IMosquitto >* param = dynamic_cast< IParameter* >( parameter );
 
 				// This will avoid ambgious Update calls since there are multiple observers in IParameter.
-				param->Update( this );
+				//param->Update( this );
 			}
 		}
 

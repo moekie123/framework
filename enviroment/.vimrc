@@ -14,7 +14,7 @@ if !empty( glob( $FRAMEWORK ))
 	" Enable TermDebug shortcut
 	packadd termdebug
 
-	let BINARY=$FRAMEWORK."/binary/".$FRAMEWORK_MODULE
+	let BINARY=$FRAMEWORK."/binary/".$SESSION
 	nmap <F6> :Termdebug <c-r>=BINARY<cr><CR>
 
 	let g:termdebug_popup = 0
@@ -25,7 +25,7 @@ if !empty( glob( $FRAMEWORK ))
 
 	" Enable Tagbar shortcut
 	if !empty( glob( $FRAMEWORK_TAGS ))
-		set tags=tags;,$FRAMEWORK_TAGS
+		set tags=tags;,$TAGS
 		nmap <F8> :TagbarToggle<CR>
 	endif
 

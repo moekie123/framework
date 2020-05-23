@@ -2,6 +2,7 @@
 
 #include "IChipset.h"
 
+#include "AbstractFactory.h"
 #include "Factory.h"
 #include "Builder.h"
 #include "Singleton.h"
@@ -20,16 +21,23 @@ class Chipset:
 	 * @brief The Chipset Builder to create new (base) Chipsets
 	 */
 	class ChipsetBuilder:
-		public Builder
+		public Builder< IChipset >
 	{
 		public:
-		Generic& Build( const std::string& _name ) override
+		static IChipset* Build( const std::string& _name )
 		{
-			Factory& factory = Singleton< Factory >::Instance();
+			const std::string label = "Configurator";
+			
+			Factories& factory = Singleton< Factories >::Instance();
+			IConfigurator* config = factory.Construct< IConfigurator >( label );
+			
+			IChipset* chipset = new Chipset( *config, _name );
+			return chipset;
+		}
+
+		ChipsetBuilder(): Builder( ChipsetBuilder::Build )
+		{
 		
-			IConfigurator& config = factory.Create< IConfigurator >( "Configurator", "configuration.xml" );
-			IChipset* chipset = new Chipset( config, _name );
-			return *chipset;
 		}
 	};
 
@@ -46,7 +54,8 @@ class Chipset:
 	 */
    	Chipset( const IConfigurator& _config, std::string _name );
 
-        bool Update( const IChipset* subject) override;
+	/** Observer Methods */
+        bool Update( const Subject& ) override;
 };
 
 

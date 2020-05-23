@@ -4,14 +4,15 @@
 #include <gmock/gmock.h>
 
 class Beta:
-    public Composite< Beta >
+    public Composite
 {
     public:
 	virtual void Trigger()
 	{
 		for ( auto c : mComponents )
 		{
-			c->Trigger();
+			// mComppnents holds a Object-Base class
+//			c->Trigger();
 		}
 	}
 

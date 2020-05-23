@@ -4,6 +4,7 @@
 
 #include "Generic.h"
 
+#include "AbstractFactory.h"
 #include "Factory.h"
 #include "Builder.h"
 #include "Singleton.h"
@@ -24,22 +25,31 @@ class Device:
 		 * @brief The Device Builder to create new (base) Devices
 		 */
 		class DeviceBuilder:
-			public Builder
-		{
+			public Builder< IDevice >
+			{
 			public:
-				Generic& Build( const std::string& _name ) override
+				static IDevice* BuildDevice( const std::string& _name )
 				{
-					Factory& factory = Singleton< Factory >::Instance();
+	
+					const std::string label = "Configurator";
+				
+					Factories& factory = Singleton< Factories >::Instance();
+					IConfigurator* config = factory.Construct< IConfigurator >( label );
+			
+					Signal* period = new Signal( *config, _name + "/period" );
+					Signal* dutycycle = new Signal( *config, _name + "/dutycycle" );
+					
+					Device* device = new Device( *config, _name, *period, *dutycycle );
 
-					IConfigurator& config = factory.Create< IConfigurator >( "Configurator", "configuration.xml" );
-
-					Signal* period = new Signal( config, _name + "/period" );
-					Signal* dutycycle = new Signal( config, _name + "/dutycycle" );
-					Device* device = new Device( config, _name, *period, *dutycycle );
-
-					return *device;
+					return device;
+				}
+			
+				DeviceBuilder(): Builder( BuildDevice )
+				{
+			
 				}
 		};
+
 		/**
 		 * @brief The global Device builder
 		 */
@@ -54,13 +64,4 @@ class Device:
 		 * @param _dutycycle The Signal to control the DutyCycle
 		 */
 		Device( const IConfigurator& _config, const std::string& _name, const Signal& _period, const Signal& _dutycycle );
-		
-		/**
-		 * @brief Setter
-		 * @details TODO This can be replaced by the default Generic SetProperty
-		 */
-		void Set( const std::string&, const int& )
-		{
-
-		}
 };

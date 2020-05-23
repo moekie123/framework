@@ -9,13 +9,15 @@ add_subdirectory( gtest )
 set( CORE_SOURCES
 
 	# Include Core Fundamentals	
+	${CMAKE_CURRENT_SOURCE_DIR}/Object.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Generic.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Singleton.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Factory.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Builder.cpp 
 	${CMAKE_CURRENT_SOURCE_DIR}/Composite.cpp 
 	${CMAKE_CURRENT_SOURCE_DIR}/Observer.cpp
-	
+	${CMAKE_CURRENT_SOURCE_DIR}/Subject.cpp
+
 	# Include the Configurator
         $<TARGET_OBJECTS:configurator>
         

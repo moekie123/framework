@@ -17,7 +17,7 @@ FRAMEWORK='/root/framework'
 FRAMEWORK_BUILD=${FRAMEWORK}'/build/'
 
 # Default the main build
-FRAMEWORK_MODULE='Framework'
+SESSION='Framework'
 
 if [ -d "${FRAMEWORK}" ]; then
 
@@ -29,16 +29,16 @@ if [ -d "${FRAMEWORK}" ]; then
        		make --no-print-directory -C ${FRAMEWORK_BUILD}
 	}
 
-	function module()
+	function session()
 	{
 		if [ ! -z "$1" ]; then
-			FRAMEWORK_MODULE=$1	
+			SESSION=$1	
 		else
-			FRAMEWORK_MODULE="Framework"
+			SESSION="Framework"
 		fi
 		
-		echo "Module [$FRAMEWORK_MODULE]"
-		export FRAMEWORK_MODULE=$FRAMEWORK_MODULE
+		echo "Session [$SESSIONE]"
+		export SESSION=$SESSION
 	}
 
 	alias  cdf='cd '$FRAMEWORK
@@ -69,8 +69,10 @@ if [ -d "${FRAMEWORK}" ]; then
 	alias documention='make --no-print-directory -C  ${FRAMEWORK_BUILD} -j4 doc_install'
 
 	export FRAMEWORK=$FRAMEWORK
-	export FRAMEWORK_TAGS=$FRAMEWORK/tags
-	export FRAMEWORK_MODULE=$FRAMEWORK_MODULE
+
+	export TAGS=$FRAMEWORK/tags
+	export SESSION=$SESSION
+
 	export PATH=$PATH:$FRAMEWORK/binary/
 fi
 

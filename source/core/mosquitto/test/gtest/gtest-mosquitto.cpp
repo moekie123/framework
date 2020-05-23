@@ -45,9 +45,8 @@ class MosquittoFeature:
 
 		Singleton< MockConfigurator >::Register( mConfig );
 
-		Factory& factory = Singleton< Factory >::Instance();
-
-		factory.Register< MockConfigurator >( "Configurator" );
+		auto factory = Singleton< AbstractFactory< Factory< IConfigurator >>>::Instance();
+		factory.Register< IConfigurator >( "Configurator", &MockConfigurator::builder );
 	}
 };
 
@@ -68,6 +67,7 @@ TEST_F( MosquittoFeature, Interface )
 
 TEST_F( MosquittoFeature, Builder )
 {
+//	auto mosquitto = Mosquitto::builder.Build( "Mosquitto" );
 	auto mosquitto = Mosquitto::builder.Build( "Mosquitto" );
 	ASSERT_EQ( typeid( Generic ), typeid( mosquitto ) );
 }
