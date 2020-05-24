@@ -41,12 +41,9 @@ TEST( Subject, NotifyObserverSuccesfull )
     	MockBeta observer;
 
     	Beta* beta = new Beta();
-	Subject* s = beta;
-
     	beta->Attach( observer );
 
-//	TODO
-//	EXPECT_CALL( observer, Update( *s ) ).WillOnce( testing::Return(true));
+	EXPECT_CALL( observer, Update( testing::_  ) ).WillOnce( testing::Return( true ));
 	ASSERT_EQ( beta->Notify(), true );
 }
 
@@ -55,12 +52,10 @@ TEST( Subject, NotifyObserverFailure )
 	MockBeta observer;
 
 	Beta* beta = new Beta();
-	Subject* s = beta;
 
 	beta->Attach( observer );
 
-//	TODO
-//	EXPECT_CALL( observer, Update( *s ) ).WillOnce( testing::Return( false ));
+	EXPECT_CALL( observer, Update( testing::_  ) ).WillOnce( testing::Return( false ));
 	ASSERT_EQ( beta->Notify(), false );
 }
 

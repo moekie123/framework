@@ -8,5 +8,5 @@ Observer::Observer()
 bool Observer::Update( const Subject& )
 {
 	std::cout << "Observer: Update\n";
-	return false;
+	return true;
 }

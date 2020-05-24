@@ -14,10 +14,17 @@ bool Subject::Attach( Observer& obs )
 
 bool Subject::Notify()
 {
-	for( auto o: mObservers )
-		o->Update( *this );
+	bool res = false;
 
-	return false;
+	for( auto o: mObservers )
+	{
+		res = o->Update( *this );
+		
+		// Observer returned failure
+		if( !res ) break;
+	}
+
+	return res;
 }
 
 
