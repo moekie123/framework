@@ -26,17 +26,13 @@ class ConstructFeature:
 
     	virtual void SetUp() 
 	{
-		auto factory = Singleton< AbstractFactory<
-					Factory< IConfigurator >, 
-					Factory< IParameter >>>::Instance();
+		Singleton< IConfigurator >::Register( mConfig );
 
-//		EXPECT_CALL( mConfig, GetInteger( "Parameter", "value"  , testing::_ )).WillRepeatedly( testing::Return( true));
-		Singleton< MockConfigurator >::Register( mConfig );
-		factory.Register< IConfigurator >( "Configurator", &MockConfigurator::builder );
+		Factories *factory = new Factories();
+		factory->Register< IConfigurator >( "Configurator", &MockConfigurator::builder );
+		factory->Register< IParameter >( "Parameter", &MockParameter::builder );
 
-//		EXPECT_CALL( mConfig, GetInteger( "Parameter", "value"  , testing::_ )).WillRepeatedly( testing::Return( true));
-		Singleton< MockParameter >::Register( mParameter );
-		factory.Register< IParameter >( "Parameter", &MockParameter::builder );
+		Singleton< Factories >::Register( *factory );
 	}
 };
 
@@ -59,7 +55,7 @@ TEST_F( ConstructFeature, Interface )
 TEST_F( ConstructFeature, Builder )
 {
 	auto actuator = Actuator::builder.Build( "Actuator" );
-	ASSERT_EQ( typeid( Generic ), typeid( actuator ) );
+	ASSERT_EQ( typeid( IActuator* ), typeid( actuator ) );
 }
 
 int main(int argc, char **argv) 
