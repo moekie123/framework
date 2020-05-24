@@ -23,7 +23,11 @@ class Chipset:
 	class ChipsetBuilder:
 		public Builder< IChipset >
 	{
-		public:
+	public:
+		
+		/**
+		 * @brief The build method that configures and constructs a new Parameter
+ 		 */
 		static IChipset* Build( const std::string& _name )
 		{
 			const std::string label = "Configurator";
@@ -35,9 +39,11 @@ class Chipset:
 			return chipset;
 		}
 
+		/**
+	 	 * @brief The constructor will map the Build-Method to the (base) Builder class
+		 */
 		ChipsetBuilder(): Builder( ChipsetBuilder::Build )
 		{
-		
 		}
 	};
 

@@ -32,6 +32,10 @@ class Mosquitto:
 		public Builder< IMosquitto >
 	{
 		public:
+
+			/**
+			 * @brief The build method that configures and constructs a new Parameter
+ 			 */
 			static IMosquitto* Build( std::string _name )
 			{
 				std::cout << "Run Builder\n";
@@ -64,10 +68,12 @@ class Mosquitto:
 				Mosquitto& mosquitto = Singleton< Mosquitto >::Instance();
 				return &mosquitto;
 			}
-	
+
+			/**
+		 	 * @brief The constructor will map the Build-Method to the (base) Builder class
+			 */
 			MosquittoBuilder(): Builder( MosquittoBuilder::Build )
 			{
-
 			}
 	};
 

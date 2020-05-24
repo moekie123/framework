@@ -28,6 +28,10 @@ class Device:
 			public Builder< IDevice >
 			{
 			public:
+
+				/**
+				 * @brief The build method that configures and constructs a new Parameter
+		 		 */
 				static IDevice* BuildDevice( const std::string& _name )
 				{
 	
@@ -44,9 +48,11 @@ class Device:
 					return device;
 				}
 			
+				/**
+	 			 * @brief The constructor will map the Build-Method to the (base) Builder class
+				 */
 				DeviceBuilder(): Builder( BuildDevice )
 				{
-			
 				}
 		};
 

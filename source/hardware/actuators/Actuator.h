@@ -22,13 +22,17 @@ class Actuator:
     public:
 
    	/**
-	 * @brief The Actutor Builder Class to create new (base) Actuators
+	 * @brief The Actuator Builder Class to create new (base) Actuators
 	 */
 	class ActuatorBuilder:
 		public Builder< IActuator >
 	{
-		public:
-		static IActuator* BuildActuator( const std::string _name )
+	public:
+
+		/**
+		 * @brief The build method that configures and constructs a new Parameter
+ 		 */
+		static IActuator* Build( const std::string _name )
 		{
 			Factories& factory = Singleton< Factories >::Instance();
 
@@ -47,16 +51,17 @@ class Actuator:
 			for( const std::string& parameter: parameters )
 			{
 				IParameter* p = factory.Construct< IParameter >( "Parameter" );
-//				IParameter& p = factory.Construct< IParameter >( "Parameter", _name + parameter );
 				actuator->Add( *p );
 			}
 			
 			return actuator;
 		}
 
-		ActuatorBuilder(): Builder( BuildActuator )
+		/**
+	 	 * @brief The constructor will map the Build-Method to the (base) Builder class
+		 */
+		ActuatorBuilder(): Builder( Build )
 		{
-
 		}
 	};
 

@@ -63,6 +63,7 @@ if [ -d "${FRAMEWORK}" ]; then
 	alias cdcm='cd '$FRAMEWORK/source/core/mosquitto
 
 	alias  cdh='cd '$FRAMEWORK/source/hardware
+	alias cdha='cd '$FRAMEWORK/source/hardware/actuators
 
 	alias  cdenv='cd '$FRAMEWORK/enviroment
 

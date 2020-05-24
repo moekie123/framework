@@ -5,8 +5,8 @@
 
 /**
  * @brief The (Base) Object class
- * @detail This class holds the most basic functionalliy that every component in the Framework should be able to work with. 
- *         The Generic class will inherent this together with the fundamentals design pattern class
+ * @details This class holds the most basic functionalliy that every component in the Framework should be able to work with. 
+ *          The Generic class will inherent this together with the fundamentals design pattern class
  */
 class Object
 {
@@ -40,7 +40,7 @@ public:
 	*  @param _value The storage location of the value
 	*  @return True, when the value has been succesfully 'Get'
       	*/
-	virtual bool GetProperty( const std::string& property, int& _value );
+	virtual bool GetProperty( const std::string& _property, int& _value );
 
 	/**
 	*  @brief Reset the object

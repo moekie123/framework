@@ -24,12 +24,19 @@ class Configurator:
 			public Builder< IConfigurator >
 		{
 		public:
+
+			/**
+			 * @brief The build method that configures and constructs a new Parameter
+ 			 */
 			static IConfigurator* Build( std::string _name )
 			{
 				IConfigurator& obj = Singleton< Configurator >::Instance();
 				return &obj;
 			}
 
+			/**
+	 		 * @brief The constructor will map the Build-Method to the (base) Builder class
+		 	 */
 			ConfiguratorBuilder(): Builder( ConfiguratorBuilder::Build )
 			{
 				std::cout << "ConfiguratorBuilder : Construct\n";
@@ -50,8 +57,6 @@ class Configurator:
 		 * @brief The name of the configuration file
 		 */
 		static std::string mConfigFileName;
-
-		/* Generic methods **/
 
 	private:
 		/* IConfigurator */

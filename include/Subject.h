@@ -32,7 +32,9 @@ public:
 	 */
 	bool Notify();
 
-	/* Required to suppress the "no-virtual-move-assign"-Compiler Warning */
+	/** 
+	 * @brief Required to suppress the "no-virtual-move-assign"-Compiler Warning 
+	 */
 	Subject& operator=( Subject&& other) 
 	{
         	return *this;
