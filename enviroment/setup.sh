@@ -34,6 +34,14 @@ echo "Update Dependencies"
 echo "Install Development Toolkit"
 	apt-get install gcc g++ cmake git vim python universal-ctags $FORCE
 
+echo "Install Git"
+	apt-get install git $FORCE
+
+	git config --global user.name $USERNAME
+	git config --global core.editor vim
+
+	git config commit.template $(pwd)/git-template
+
 echo "Install Kernel Toolkit"
 	apt-get install git bc bison flex libssl-dev $FORCE
 	apt-get install libncurses5-dev $FORCE
