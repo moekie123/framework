@@ -1,18 +1,23 @@
+// Inhertance
 #include "../../Chipset.h"
-#include "IChipset.h"
 
+// Interfaces
+#include "IChipset.h"
+#include "IConfigurator.h"
+#include "IParameter.h"
+
+// Design Patterns
+#include "Singleton.h"
+#include "Factory.h"
+
+// Testing
 #include "mocks/MockConfigurator.h"
 #include "mocks/MockSignal.h"
 #include "mocks/MockParameter.h"
 
+// Third-Party
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
-
-#include "Singleton.h"
-#include "Factory.h"
-
-#include "IConfigurator.h"
-#include "IParameter.h"
 
 // Ignore Nagy Mocks for the Configurator Get(ters)
 using ::testing::NiceMock;

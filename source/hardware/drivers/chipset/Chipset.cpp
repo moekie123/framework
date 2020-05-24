@@ -1,3 +1,4 @@
+// Inheritance
 #include "Chipset.h"
 
 Chipset::ChipsetBuilder Chipset::builder;

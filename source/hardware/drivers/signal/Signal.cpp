@@ -1,7 +1,10 @@
+// Inheritance
 #include "Signal.h"
 
+// Interfaces
 #include "IConfigurator.h"
 
+// Stl-Headers
 #include <string>
 #include <iostream>
 #include <fstream>

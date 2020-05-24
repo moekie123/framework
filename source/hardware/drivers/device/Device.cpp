@@ -1,7 +1,8 @@
+// Inheritance
 #include "Device.h"
-
 #include "Signal.h"
 
+// Interfaces
 #include "IConfigurator.h"
 
 Device::DeviceBuilder Device::builder;

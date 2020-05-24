@@ -1,17 +1,20 @@
 #pragma once
 
-#include "IDevice.h"
-
+// Inheritance
 #include "Generic.h"
+#include "Signal.h"
 
+// Interface
+#include "IDevice.h"
+#include "IConfigurator.h"
+
+// Design Patterns
 #include "AbstractFactory.h"
 #include "Factory.h"
 #include "Builder.h"
 #include "Singleton.h"
 
-#include "Signal.h"
-#include "IConfigurator.h"
-
+// Stl-Headers
 #include <string>
 
 /**

@@ -1,16 +1,17 @@
 #pragma once
 
+// Interfaces
 #include "IActuator.h"
 #include "IParameter.h"
 
+// Design Patterns
 #include "Builder.h"
 #include "Singleton.h"
-
 #include "AbstractFactory.h"
 #include "Factory.h"
 
+// Stl-Headers
 #include <string>
-
 #include <iostream>
 
 /**

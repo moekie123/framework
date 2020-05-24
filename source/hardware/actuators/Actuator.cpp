@@ -1,11 +1,15 @@
+// Inheritance
 #include "Actuator.h"
 
-#include "Singleton.h"
-#include "Factory.h"
-
+// Interfaces
 #include "IConfigurator.h"
 #include "IParameter.h"
 
+// Design Patterns
+#include "Singleton.h"
+#include "Factory.h"
+
+// Stl-Headers
 #include <string>
 #include <iostream>
 

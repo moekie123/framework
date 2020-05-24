@@ -1,13 +1,14 @@
 #pragma once
 
+// Interfaces
 #include "IChipset.h"
+#include "IConfigurator.h"
 
+// Design Patterns
 #include "AbstractFactory.h"
 #include "Factory.h"
 #include "Builder.h"
 #include "Singleton.h"
-
-#include "IConfigurator.h"
 
 /**
  * @brief The (base) Chipset class

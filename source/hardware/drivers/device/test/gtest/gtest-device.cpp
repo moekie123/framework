@@ -1,15 +1,21 @@
+// Inheritance
 #include "../../Device.h"
+
+// Interface
 #include "IDevice.h"
 
+// Design Patterns
+#include "Singleton.h"
+#include "Factory.h"
+
+// Testing
 #include "mocks/MockConfigurator.h"
 #include "mocks/MockSignal.h"
 #include "mocks/MockParameter.h"
 
+// Third-Party
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
-
-#include "Singleton.h"
-#include "Factory.h"
 
 // Ignore Nagy Mocks for the Configurator Get(ters)
 using ::testing::NiceMock;
