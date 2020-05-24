@@ -1,9 +1,13 @@
 #pragma once
 
-#include <iostream>
 #include <string>
 #include <map>
 
+/**
+ * @brief The (Base) Object class
+ * @detail This class holds the most basic functionalliy that every component in the Framework should be able to work with. 
+ *         The Generic class will inherent this together with the fundamentals design pattern class
+ */
 class Object
 {
 public:

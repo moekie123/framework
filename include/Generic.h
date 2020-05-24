@@ -5,6 +5,9 @@
 #include "Subject.h"
 #include "Observer.h"
 
+/**
+ * @brief The (Base) Generic class combines all fundamental design patterns as one object
+ */
 class Generic:
 	virtual public Object,
 	public Composite,
@@ -19,7 +22,4 @@ private:
 	{
         	return *this;
     	}
-
 };
-
-

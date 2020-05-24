@@ -3,12 +3,23 @@
 #include "Object.h"
 #include <vector>
 
+/**
+ * @brief The (Base) Composite class
+ */
 class Composite:
 	virtual public Object
 {
 public:
+	/**
+	 * @brief The default constructor 
+	 */
 	Composite();
 
+	/**
+	 * @brief (Composite-) Nodes and Leafs can be add to the instance by this Add-methods
+	 * @param _obs The Object that will observe
+	 * TODO This should be the Generic
+ 	 */
 	bool Add( Object& _obs );
 
 	/** Object Methods */	
@@ -17,6 +28,9 @@ public:
 	bool Reset() override;
 	
 protected:
+	/** 
+	 * @brief The added observers
+	 */
 	std::vector< Object* > mComponents;
 
 private:

@@ -25,6 +25,7 @@ public:
 
 	/**
 	 * @brief Configure the singleton with a predefined instance
+	 * @param _instance The Pre-Configured Object to store as a Singleton
 	 */
 	static void Register( T& _instance )
     	{

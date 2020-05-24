@@ -9,15 +9,25 @@
 #include "Observer.h"
 #include "Subject.h"
 
+/** 
+ *  @brief The (base) Parameter class
+ */
 class Parameter:
 	public IParameter
 {
 public:
 
+	/**
+	 * @brief The Parameter Builder class to create new (base) Parameters
+	 */
 	class ParameterBuilder: 
 		public Builder< IParameter >
 	{
 	public:
+		
+		/**
+		 * @brief The build method that configures and constructs a new Parameter
+ 		 */
 		static IParameter* Build( std::string _name )
 		{
 			std::cout << "ParameterBuilder : Build Type\n";
@@ -32,11 +42,17 @@ public:
 			return obj;
 		}
 
+		/**
+	 	 * @brief The constructor will map the Build-Method to the (base) Builder class
+		 */
 		ParameterBuilder(): Builder( ParameterBuilder::Build )
 		{
 		}
 	};
 
+	/**
+	 * @brief The global ParameterBuilder
+	 */
 	static ParameterBuilder builder;
 
         /** 
