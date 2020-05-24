@@ -1,16 +1,16 @@
 // Framework
 #include "Framework.h"
 
-// Stl-Headers
-#include <iostream>
+// Third-Party
+#include <spdlog/spdlog.h>
 
 int main( int argc, char* argv[] )
 {
-        std::cout << "Booting Application\n";
+        spdlog::info( "Booting Application" );
 
         Framework* f = new Framework( argc, argv );
 
-        std::cout << "Shutdown Application\n";
+        spdlog::info( "Terminate Application" );
 
         return 0;
 }

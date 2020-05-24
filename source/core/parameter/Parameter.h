@@ -30,8 +30,6 @@ class Parameter : public IParameter
  		 */
                 static IParameter* Build( const IConfigurator* _config, const std::string& _name )
                 {
-                        std::cout << "ParameterBuilder : Build Type\n";
-
                         Factories& factory = Singleton<Factories>::Instance();
 
                         // TODO Removce

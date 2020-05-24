@@ -3,9 +3,11 @@
 
 // Stl-Headers
 #include <algorithm>
-#include <iostream>
 #include <string>
 #include <vector>
+
+// Third-Party
+#include <spdlog/spdlog.h>
 
 const std::map<std::string, int> defaults = {
         { "const", 0 },
@@ -13,6 +15,15 @@ const std::map<std::string, int> defaults = {
 
 Object::Object()
 {
+        //        auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
+        //        console_sink->set_level( spdlog::level::debug );
+        //        console_sink->set_pattern( "[multi_sink_example] [%^%l%$] %v" );
+
+        //        mLogger = spdlog::logger( "Object", { console_sink } );
+        //        mLogger = new spdlog::logger( "Object" );
+        //       mLogger->info( "this should appear in both console and file" );
+        spdlog::debug( "Construct Object" );
+
         for ( auto it = defaults.begin(); it != defaults.end(); ++it )
         {
                 mProperties[it->first] = it->second;
@@ -32,7 +43,6 @@ bool Object::SetName( const std::string& _name )
 
 bool Object::GetProperty( const std::string& _property, int& _value )
 {
-        std::cout << "Checkpoint\n";
         auto property = std::find_if( mProperties.begin(), mProperties.end(), [this, _property]( auto const& property ) {
                 // Check for match (without name)
                 if ( _property.compare( property.first ) == 0 )

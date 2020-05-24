@@ -11,7 +11,6 @@
 #include "Singleton.h"
 
 // Stl-Headers
-#include <iostream>
 #include <string>
 
 /**

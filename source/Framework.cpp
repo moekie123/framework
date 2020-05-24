@@ -16,6 +16,9 @@
 #include "hardware/drivers/chipset/Chipset.h"
 #include "hardware/drivers/device/Device.h"
 
+// Third-Party
+#include <spdlog/spdlog.h>
+
 // Stl-Headers
 #include <getopt.h>
 #include <iostream>
@@ -34,6 +37,10 @@ Framework::Framework( int argc, char* argv[] ) : mConfigurationFilename( "config
 
         // Parse Arguments
         ret = parseArguments( argc, argv );
+
+        // Set Debug Level
+        spdlog::set_level( spdlog::level::debug );
+        spdlog::debug( "Debug Enabled" );
 
         Configurator::mConfigFileName = mConfigurationFilename;
 
@@ -63,41 +70,24 @@ Framework::Framework( int argc, char* argv[] ) : mConfigurationFilename( "config
         /** Current registered builders: */
 
         ///	- Configurator
+        factory.Register<IConfigurator>( "Configurator", &Configurator::builder );
 
         ///	- Parameter
         factory.Register<IParameter>( "Parameter", &Parameter::builder );
 
         ///	- Mosquitto
+        factory.Register<IMosquitto>( "Mosquitto", &Mosquitto::builder );
 
         ///	- Chipset
+        factory.Register<IChipset>( "Chipset", &Chipset::builder );
 
         ///	- Device
+        factory.Register<IDevice>( "Device", &Device::builder );
 
         ///	- Actuator
+        factory.Register<IActuator>( "Actuator", &Actuator::builder );
 
-        /* ##### DEPRECATED #######
-	// Construct Factory
-	Factory* factory = new Factory( *configurator );
-	Singleton< Factory >::Register( *factory );
-	
-	///	- Configurator
-	factory->Register< Configurator> ( "Configurator" );
-
-	///	- Parameter 
-	factory->Register< Parameter >( "Parameter" );
-
-	///	- Mosquitto
-	factory->Register< Mosquitto >( "Mosquitto" );
-
-	///	- Chipset
-    	factory->Register< Chipset >( "Chipset" );
-
-	///	- Device
-	factory->Register< Device >( "Device" );
-
-	///	- Actuator
-	factory->Register< Actuator >( "Actuator" );
-*/
+        delete port;
 };
 
 int Framework::parseArguments( int argc, char* argv[] )

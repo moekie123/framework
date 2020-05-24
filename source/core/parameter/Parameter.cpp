@@ -6,8 +6,10 @@
 #include "IConfigurator.h"
 #include "IParameter.h"
 
+// Third-Party
+#include <spdlog/spdlog.h>
+
 // Stl-Headers
-#include <iostream>
 #include <map>
 
 Parameter::ParameterBuilder Parameter::builder;

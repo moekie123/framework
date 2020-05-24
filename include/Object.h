@@ -55,4 +55,7 @@ class Object
 
         /** @brief the properties of the Parameter */
         std::map<std::string, int> mProperties;
+
+        /** @brief object logger */
+        //        spdlog::logger* mLogger;
 };

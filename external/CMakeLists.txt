@@ -29,7 +29,7 @@ if( NOT GTEST_FOUND )
 		COMMENT "refresh shared library cache" 
 		COMMAND ldconfig )
 
-	add_dependencies( EXTERNAL_GTES  REBUILD )
+	add_dependencies( EXTERNAL_GTEST  REBUILD )
 else()
 	message( STATUS "Google Test [${GTEST_VERSION}] already installed" )
 endif()
@@ -135,6 +135,30 @@ IF( NOT EXISTS ${CMAKE_SOURCE_DIR}/external/tinyfsm )
 	add_dependencies( EXTERNAL_FSM REBUILD )
 else()
 	message( STATUS "TinyFsm already installed" )
+endif()
+
+# Instal Speed Logger
+pkg_search_module( LOGGER spdlog )
+if( NOT LOGGER_FOUND )
+	set( ALL_EXTERNALS_BUILD OFF PARENT_SCOPE )
+
+	#Install speed logger 
+	ExternalProject_Add( EXTERNAL_LOGGER
+		PREFIX ${CMAKE_SOURCE_DIR}/external/logger
+		CMAKE_ARGS "-DSPDLOG_BUILD_SHARED=ON"
+		GIT_REPOSITORY https://github.com/gabime/spdlog.git
+		GIT_TAG "v1.6.0"
+	)
+
+	ExternalProject_Add_Step( EXTERNAL_LOGGER refresh
+		ALWAYS TRUE
+		DEPENDEES "install"
+		COMMENT "refresh shared library cache" 
+		COMMAND ldconfig )
+
+	add_dependencies( EXTERNAL_LOGGER REBUILD )
+else()
+	message( STATUS "Speed Logger [${LOGGER_VERSION}] already installed" )
 endif()
 
 # Instal Version Generator

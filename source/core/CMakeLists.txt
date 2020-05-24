@@ -1,8 +1,6 @@
 add_subdirectory( configurator )
 add_subdirectory( parameter )
-
 add_subdirectory( mosquitto )
-
 add_subdirectory( gtest )
 
 # Collect Framework sources
@@ -28,9 +26,11 @@ set( CORE_SOURCES
         $<TARGET_OBJECTS:mqtt>
 )
 
+# Extend Framework Sources
 set( FRAMEWORK_SOURCES
 	${FRAMEWORK_SOURCES} 
 	${CORE_SOURCES}
 	PARENT_SCOPE )
 
+# Create private core-Library
 add_library( core ${CORE_SOURCES} )

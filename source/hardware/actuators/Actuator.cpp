@@ -10,7 +10,6 @@
 #include "Singleton.h"
 
 // Stl-Headers
-#include <iostream>
 #include <string>
 
 Actuator::ActuatorBuilder Actuator::builder;

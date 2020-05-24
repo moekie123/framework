@@ -1,18 +1,12 @@
 // Design Patterns
 #include "Composite.h"
 
-// Stl-Headers
-#include <iostream>
-
 Composite::Composite()
 {
-        std::cout << "Composite: Construct\n";
 }
 
 bool Composite::Add( Object& _obj )
 {
-        std::cout << "Composite: Add Child\n";
-
         std::string oName = _obj.GetName();
         _obj.SetName( std::string( mName + "/" + oName ) );
 
@@ -24,7 +18,6 @@ bool Composite::Add( Object& _obj )
 bool Composite::SetProperty( const std::string& _property, const int& _value )
 {
         volatile bool res = false;
-        std::cout << "Composite: SetProperty\n";
 
         if ( mProperties.find( "const" )->second == 1 )
                 goto exit;
@@ -46,8 +39,6 @@ bool Composite::GetProperty( const std::string& _property, int& _value )
 {
         volatile bool res = false;
 
-        std::cout << "Composite: GetProperty\n";
-
         res = Object::GetProperty( _property, _value );
         if ( res ) goto exit;
 
@@ -63,6 +54,5 @@ exit:
 
 bool Composite::Reset()
 {
-        std::cout << "Composite: Reset\n";
         return false;
 }

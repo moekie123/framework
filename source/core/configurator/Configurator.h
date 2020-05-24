@@ -8,7 +8,6 @@
 #include "Singleton.h"
 
 // Stl-Headers
-#include <iostream>
 #include <map>
 #include <string>
 
@@ -38,7 +37,6 @@ class Configurator : public IConfigurator
 		 	 */
                 ConfiguratorBuilder() : Builder( ConfiguratorBuilder::Build )
                 {
-                        std::cout << "ConfiguratorBuilder : Construct\n";
                 }
         };
 

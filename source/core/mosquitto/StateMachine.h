@@ -7,7 +7,6 @@
 #include "tinyfsm.hpp"
 
 // Stl-Headers
-#include <iostream>
 #include <string>
 
 // Forward Declaration
@@ -72,7 +71,7 @@ class StateMachine
  	 */
         virtual void entry( void )
         {
-                std::cout << "StateMachine: S[" << mName << "] E[OnEntry]\n";
+                //                std::cout << "StateMachine: S[" << mName << "] E[OnEntry]\n";
         }
 
         /**
@@ -81,7 +80,7 @@ class StateMachine
 	 */
         virtual void exit( void )
         {
-                std::cout << "StateMachine: S[" << mName << "] E[OnExit]\n";
+                //                std::cout << "StateMachine: S[" << mName << "] E[OnExit]\n";
         }
 
         /* Events */
@@ -134,7 +133,7 @@ class StateMachine
  	 */
         static void Accept( MosquittoVisitor &_visitor )
         {
-                std::cout << "Visitor Accepted\n";
+                //                std::cout << "Visitor Accepted\n";
 
                 mClient = &_visitor;
 

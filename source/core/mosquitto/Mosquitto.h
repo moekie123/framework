@@ -38,11 +38,8 @@ class Mosquitto : public IMosquitto,
  			 */
                 static IMosquitto* Build( const IConfigurator* _config, const std::string& _name )
                 {
-                        std::cout << "Run Builder\n";
                         if ( !Singleton<Mosquitto>::IsConstructed() )
                         {
-                                std::cout << "Construct Mosquitto Client on-the-fly\n";
-
                                 const std::string label = "Configurator";
 
                                 Factories& factory = Singleton<Factories>::Instance();

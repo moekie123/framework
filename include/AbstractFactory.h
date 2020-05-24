@@ -1,9 +1,11 @@
 #pragma once
 
 // Interfaces
+#include "IActuator.h"
 #include "IChipset.h"
 #include "IConfigurator.h"
 #include "IDevice.h"
+#include "IMosquitto.h"
 #include "IParameter.h"
 
 // Design Patterns
@@ -12,7 +14,6 @@
 
 // Stl-Headers
 #include <cstring>
-#include <iostream>
 #include <stdexcept>
 
 /**
@@ -28,7 +29,6 @@ class AbstractFactory : public Mixin...
          */
         AbstractFactory() : Mixin()...
         {
-                std::cout << "AbstractFactory: Construct\n";
         }
 
         /**
@@ -40,8 +40,6 @@ class AbstractFactory : public Mixin...
         template <class T>
         T* Construct( const std::string& _name )
         {
-                std::cout << "AbstractFactory: Construct\n";
-
                 auto search = Factory<T>::mBuilders.find( _name );
                 if ( search != Factory<T>::mBuilders.end() )
                 {
@@ -65,8 +63,6 @@ class AbstractFactory : public Mixin...
         template <class T>
         bool Register( const std::string& _name, Builder<T>* _builder )
         {
-                std::cout << "AbstractFactory: Register\n";
-
                 // Check whether the name already excists
                 auto search = Factory<T>::mBuilders.find( _name );
                 if ( search == Factory<T>::mBuilders.end() )
@@ -82,4 +78,6 @@ class AbstractFactory : public Mixin...
 using Factories = AbstractFactory<Factory<IParameter>,
                                   Factory<IConfigurator>,
                                   Factory<IChipset>,
-                                  Factory<IDevice> >;
+                                  Factory<IDevice>,
+                                  Factory<IMosquitto>,
+                                  Factory<IActuator> >;

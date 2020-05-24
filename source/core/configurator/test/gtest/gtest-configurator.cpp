@@ -11,7 +11,6 @@
 
 // Stl-Headers
 #include <unistd.h>
-#include <iostream>
 #include <string>
 #include <type_traits>
 #include <typeinfo>
@@ -105,8 +104,5 @@ int main( int argc, char **argv )
                 ::testing::InitGoogleTest( &argc, argv );
                 return RUN_ALL_TESTS();
         }
-        else
-                std::cout << "Couldn't find [" << filename << "]\n";
-
         return 0;
 }

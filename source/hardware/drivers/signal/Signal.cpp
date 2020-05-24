@@ -6,7 +6,6 @@
 
 // Stl-Headers
 #include <string>
-#include <iostream>
 #include <fstream>
 
 Signal::Signal( const IConfigurator& _config, const std::string& _name ):

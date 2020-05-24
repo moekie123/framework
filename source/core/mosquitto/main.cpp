@@ -1,20 +1,22 @@
-#include <signal.h>
-#include <iostream>
-
-#include <unistd.h>
-
-#include "Observer.h"
-
-#include "IMosquitto.h"
+// Inheritance
 #include "Mosquitto.h"
+#include "../configurator/Configurator.h"
+
+// Interfaces
+#include "IMosquitto.h"
+#include "IParameter.h"
+
+// Design Patterns
+#include "Observer.h"
 #include "StateMachine.h"
 
-#include "../configurator/Configurator.h"
-#include "IParameter.h"
+// Stl-Headers
+#include <signal.h>
+#include <unistd.h>
 
 void abort( int s )
 {
-        std::cout << "Terminate\n";
+        //        std::cout << "Terminate\n";
         StateMachine::dispatch( eTerminate() );
 }
 
@@ -29,14 +31,13 @@ class Dummy : public IParameter
         /* Observer methods **/
         bool Update( const IMosquitto* subject )
         {
-                std::cout << "Dummy Update\n";
                 return true;
         }
 };
 
 int main( int argc, char* argv[] )
 {
-        std::cout << "Booting Application\n";
+        //        std::cout << "Booting Application\n";
 
         // Link Callbacks
         signal( SIGINT, abort );
@@ -73,7 +74,7 @@ int main( int argc, char* argv[] )
                 usleep( 50000 );
         }
 
-        std::cout << "Shutdown Application\n";
+//        std::cout << "Shutdown Application\n";
 
         return 0;
 }

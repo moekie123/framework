@@ -3,11 +3,7 @@
 #include "Generic.h"
 
 // Stl-Headers
-#include <iostream>
 #include <stdexcept>
-
-//#include <typeinfo>
-//#include <type_traits>
 
 /**
  * @brief The generic interface for the configurator 
@@ -25,7 +21,6 @@ class IConfigurator : public Generic
         template <class T>
         bool GetProperty( const std::string& _name, const std::string& _attribute, T& _value ) const
         {
-                std::cout << "checkpoint\n";
                 return Get( _name, _attribute, _value );
         }
 

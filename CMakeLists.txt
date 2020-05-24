@@ -1,10 +1,10 @@
-cmake_minimum_required( VERSION 3.13.0 )
+cmake_minimum_required( VERSION 3.17.0 )
 
 Project( Framework )
 
 # Framework Version
 set(VERSION_MAJOR   0)
-set(VERSION_MINOR   3)
+set(VERSION_MINOR   4)
 set(VERSION_PATCH   0)
 set(VERSION_META "-alpha")
 mark_as_advanced(VERSION_MAJOR VERSION_MINOR VERSION_PATCH)
@@ -20,7 +20,8 @@ set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/binary )
 set( CMAKE_INSTALL_OUTPUT_DIRECTORY /opt/framework/ )
 
 # Add addional build flags
-SET( CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -g3")
+SET( CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -g3 -Wno-psabi" )
+set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CMAKE_COMMAND} -E time")
 
 # Include external dependencies
 set( ALL_EXTERNALS_BUILD OFF )
@@ -64,23 +65,22 @@ message( "Configure Cucumber Enviroment" )
 add_subdirectory( features )
 
 # Build Project
-message( "Building Framework" )
+message( "Building Application" )
 
 # Collect Framework sources
+add_executable( Application main.cpp )
 
-add_executable( Framework main.cpp )
-add_custom_command( TARGET Framework 
-	COMMAND echo "Build Framework [${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}${VERSION_META}]"
-	PRE_BUILD)
+add_custom_command( TARGET Application
+			COMMAND echo "Build Framework [${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}${VERSION_META}]"
+			PRE_BUILD)
 	
-target_link_libraries( Framework PUBLIC
-				framework
-				tinyxml2
-			      	mosquitto )
+target_link_libraries( Application PUBLIC Framework
+					  tinyxml2
+				      	  mosquitto )
 
-add_dependencies( Framework version )
+add_dependencies( Application version )
 
-install( TARGETS Framework DESTINATION ${CMAKE_INSTALL_OUTPUT_DIRECTORY} )
+install( TARGETS Application DESTINATION ${CMAKE_INSTALL_OUTPUT_DIRECTORY} )
 
 # Documentation
 message( "Configure Documentation" )

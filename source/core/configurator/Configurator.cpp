@@ -4,11 +4,12 @@
 // Third-Party
 #include <tinyxml2.h>
 
+// Third-Party
+#include <spdlog/spdlog.h>
+
 // Stl-Headers
-//#include <cstring>
 #include <sys/stat.h>
 #include <fstream>
-#include <iostream>
 #include <string>
 
 using namespace tinyxml2;
@@ -21,7 +22,7 @@ Configurator::Configurator()
 {
         if ( !document )
         {
-                std::cout << "Load XML-File " << mConfigFileName << "\n";
+                //                spdlog::info( "Loading XML-File", mConfigFileName );
 
                 struct stat buffer;
                 if ( stat( mConfigFileName.c_str(), &buffer ) == 0 )
@@ -83,7 +84,6 @@ class XMLParameter : public XMLVisitor
 
 bool Configurator::Get( const std::string& _name, const std::string& _attribute, int& _value ) const
 {
-        std::cout << "Get Integer\n";
         XMLElement* root;
 
         // Find root of the tree

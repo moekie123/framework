@@ -14,6 +14,9 @@ target_link_libraries( proto-xml PUBLIC tinyxml2 )
 # TinyXml2 Sandbox
 add_executable( proto-fsm tinyfsm.cpp )
 
+# Logger Sandbox
+add_executable( proto-log spdlog.cpp )
+
 # Driver Sandbox
 add_executable( proto-pwm pca9685.cpp )
 
