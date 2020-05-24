@@ -1,6 +1,9 @@
 #pragma once
 
+// Inheritance, Design Patterns
 #include "Object.h"
+
+// Stl-Headers
 #include <vector>
 
 /**

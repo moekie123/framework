@@ -2,11 +2,12 @@
 
 #include "Generic.h"
 
-#include <typeinfo>
-#include <type_traits>
+// Stl-Headers
+#include <iostream>
 #include <stdexcept>
 
-#include <iostream>
+//#include <typeinfo>
+//#include <type_traits>
 
 /**
  * @brief The generic interface for the configurator 

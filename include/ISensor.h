@@ -1,5 +1,6 @@
 #pragma once
 
+// Inheritance
 #include "Generic.h"
 
 /**

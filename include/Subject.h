@@ -1,7 +1,10 @@
 #pragma once
 
+// Design Patterns
 #include "Object.h"
 #include "Observer.h"
+
+// Stl-Headers
 #include <vector>
 
 // Forward Declaration

@@ -1,7 +1,9 @@
 #pragma once
 
+// Interfaces
 #include "IConfigurator.h"
 
+// Stl-Headers
 #include <string>
 
 /**

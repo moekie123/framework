@@ -1,9 +1,7 @@
 #pragma once
 
+// Inherentance
 #include "Generic.h"
-#include "IParameter.h"
-
-#include "Composite.h"
 
 /**
  * @brief The generic interface for Actuators

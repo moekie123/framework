@@ -1,16 +1,18 @@
 #pragma once
 
-#include <iostream>
-#include <cstring>
-
-#include "Factory.h"
-#include "Builder.h"
-
-#include "IParameter.h"
+// Interfaces
 #include "IConfigurator.h"
 #include "IChipset.h"
 #include "IDevice.h"
+#include "IParameter.h"
 
+// Design Patterns
+#include "Builder.h"
+#include "Factory.h"
+
+// Stl-Headers
+#include <cstring>
+#include <iostream>
 #include <stdexcept>
 
 /**

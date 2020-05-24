@@ -1,9 +1,7 @@
 #pragma once
 
+// Inheritance
 #include "Generic.h"
-#include "IParameter.h"
-#include "Composite.h"
-#include <stdexcept>
 
 /**
  * @brief The generic interface class for an Device

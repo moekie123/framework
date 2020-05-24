@@ -1,5 +1,6 @@
 #pragma once
 
+// Inheritance
 #include "Generic.h"
 
 /** 
@@ -9,6 +10,4 @@
 class IMosquitto:
 	public Generic
 {
-
-
 };

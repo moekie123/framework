@@ -1,6 +1,7 @@
 #pragma once
 
-#include <memory>
+// Stl-Headers
+//#include <memory>
 
 /**
  * @brief The generic constructional design pattern Singleton

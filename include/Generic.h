@@ -1,9 +1,10 @@
 #pragma once
 
-#include "Object.h"
+// Design Patterns
 #include "Composite.h"
-#include "Subject.h"
+#include "Object.h"
 #include "Observer.h"
+#include "Subject.h"
 
 /**
  * @brief The (Base) Generic class combines all fundamental design patterns as one object
