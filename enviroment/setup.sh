@@ -43,13 +43,14 @@ echo "Install I2C Toolkit"
 
 echo "Install Documentation Utilities"
 	apt-get install gcc g++ doxygen graphviz apache2 $FORCE
+	apt-get install clang-format $FORCE
 
 echo "Install Boost"
 	apt-get install libboost-all-dev --fix-missing $FORCE
 
 echo "Configure Enviroment"
 
-files=( ".bash_profile" ".vimrc" )
+files=( ".bash_profile" ".vimrc", ".clang-format" )
 
 for FILE in "${files[@]}"
 do
