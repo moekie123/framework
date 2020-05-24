@@ -19,7 +19,7 @@ bool Composite::Add( Object& _obj )
 
 bool Composite::SetProperty( const  std::string& property, const int& value )
 {
-	bool res = false;
+	volatile bool res = false;
 	std::cout << "Composite: SetProperty\n";
 
 	if( mProperties.find( "const" )->second == 1 )
@@ -40,7 +40,7 @@ exit:
 
 bool Composite::GetProperty( const  std::string& property, int& value )
 {
-	bool res = false;
+	volatile bool res = false;
 
 	std::cout << "Composite: GetProperty\n";
 

@@ -32,6 +32,7 @@ bool Object::SetName( const std::string& _name )
 
 bool Object::GetProperty( const std::string& _property, int& _value )
 {
+	std::cout << "Checkpoint\n";
 	auto property = std::find_if( mProperties.begin(), mProperties.end(), [ this, _property ]( auto const& property )
 	{
 		// Check for match (without name)

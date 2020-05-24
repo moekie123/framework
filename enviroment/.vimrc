@@ -21,7 +21,7 @@ if !empty( glob( $FRAMEWORK ))
 	nmap <F6> :Termdebug <c-r>=BINARY<cr><CR>
 
 	let g:termdebug_popup = 0
-	let g:termdebug_wide = 163
+	let g:termdebug_wide = 100
 
 	" Enable NERDTree shortcut
 	nmap <F7> :NERDTreeToggle<CR>

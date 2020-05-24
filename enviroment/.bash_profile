@@ -41,6 +41,7 @@ if [ -d "${FRAMEWORK}" ]; then
 		export SESSION=$SESSION
 	
 		alias makes='make --no-print-directory -C  ${FRAMEWORK_BUILD} -j4 '${SESSION}
+		alias gtest=${SESSION}
 	}
 
 	alias  cdf='cd '$FRAMEWORK
@@ -70,6 +71,8 @@ if [ -d "${FRAMEWORK}" ]; then
 	alias makes='make --no-print-directory -C  ${FRAMEWORK_BUILD} -j4 '${SESSION} 
 
 	alias documention='make --no-print-directory -C  ${FRAMEWORK_BUILD} -j4 doc_install'
+
+	alias gtest=${SESSION}
 
 	export FRAMEWORK=$FRAMEWORK
 
