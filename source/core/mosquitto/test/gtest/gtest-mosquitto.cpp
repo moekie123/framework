@@ -1,18 +1,22 @@
+// Inheritance
 #include "../../Mosquitto.h"
-#include "../../StateMachine.h"
+
+// Interfaces
 #include "IMosquitto.h"
 
-#include "MockMosquitto.h"
-
-#include "mocks/MockParameter.h"
-#include "mocks/MockConfigurator.h"
-
-#include <gtest/gtest.h>
-#include <gmock/gmock.h>
-
+// Design Patterns
+#include "../../StateMachine.h"
 #include "Singleton.h"
 #include "Factory.h"
 
+// Testing
+#include "MockMosquitto.h"
+#include "mocks/MockParameter.h"
+#include "mocks/MockConfigurator.h"
+
+// Third-Party
+#include <gtest/gtest.h>
+#include <gmock/gmock.h>
 #include "tinyfsm.hpp"
 
 // Ignore Nagy Mocks for the Configurator Get(ters)

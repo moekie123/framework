@@ -1,11 +1,14 @@
 #pragma once 
 
+// Design Pattern
 #include "Visitor.h"
 
+// Third-Party
 #include "tinyfsm.hpp"
+
+// Stl-Headers
 #include <iostream>
 #include <string>
-
 
 // Forward Declaration
 class MosquittoVisitor;

@@ -1,4 +1,7 @@
+// Design Pattern
 #include "Observer.h"
+
+// Stl-Headers
 #include <iostream>
 
 Observer::Observer()

@@ -1,6 +1,8 @@
+// Design Pattern
 #include "Observer.h"
 #include "Subject.h"
 
+// Third-Party
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 

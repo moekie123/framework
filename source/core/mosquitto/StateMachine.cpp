@@ -1,3 +1,4 @@
+// Inheritance
 #include "StateMachine.h"
 
 // Declaring static variables

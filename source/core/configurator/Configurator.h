@@ -1,14 +1,16 @@
 #pragma once
 
+// Interfaces
 #include "IConfigurator.h"
 
+// Design Patterns
 #include "Builder.h"
-
-#include <string>
-#include <map>
-#include <iostream>
-
 #include "Singleton.h"
+
+// Stl-Headers
+#include <iostream>
+#include <map>
+#include <string>
 
 /**
  * @brief This generic configuration class can be used to an configuration from an external source

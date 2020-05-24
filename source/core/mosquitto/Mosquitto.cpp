@@ -1,14 +1,20 @@
+// Inheritance
 #include "Mosquitto.h"
 
+// Interfaces
+#include "IConfigurator.h"
+
+// Design Patterns
+#include "Factory.h"
+
+// Third-Party
+#include <mosquitto.h>
+
+// Stl-Headers
 #include <iostream>
 #include <cstring>
 #include <queue>
 #include <utility>  
-
-#include <mosquitto.h>
-
-#include "Factory.h"
-#include "IConfigurator.h"
 
 Mosquitto::MosquittoBuilder Mosquitto::builder;
 

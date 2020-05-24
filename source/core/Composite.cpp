@@ -1,4 +1,7 @@
+// Design Patterns
 #include "Composite.h"
+
+// Stl-Headers
 #include <iostream>
 
 Composite::Composite()

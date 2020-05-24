@@ -1,10 +1,11 @@
+// Inheritance
 #include "Object.h"
 
-#include <string>
-#include <iostream>
-
-#include <vector>
+// Stl-Headers
 #include <algorithm>
+#include <iostream>
+#include <string>
+#include <vector>
 
 const std::map< std::string, int> defaults =
 {

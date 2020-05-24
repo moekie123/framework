@@ -1,12 +1,14 @@
+// Inheritance
 #include "Configurator.h"
 
+// Third-Party
 #include <tinyxml2.h>
 
-#include <string>
+// Stl-Headers
+//#include <cstring>
 #include <fstream>
 #include <iostream>
-#include <cstring>
-
+#include <string>
 #include <sys/stat.h>
 
 using namespace tinyxml2;

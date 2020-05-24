@@ -1,7 +1,11 @@
+// Inheritance
 #include "Generic.h"
 
-#include <cstring>
+// Third-Party
 #include <gtest/gtest.h>
+
+// Stl-Headers
+#include <cstring>
 
 TEST( Construct, Default )
 {

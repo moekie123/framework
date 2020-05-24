@@ -1,20 +1,25 @@
+// Framework
 #include "Framework.h"
 
-#include "Singleton.h"
+// Design Patterns
 #include "AbstractFactory.h"
 #include "Factory.h"
+#include "Singleton.h"
 
+// Concrete Objects
 #include "core/configurator/Configurator.h"
 #include "core/parameter/Parameter.h"
 #include "core/mosquitto/Mosquitto.h"
 
+// Concrete Hardward elements
 #include "hardware/drivers/chipset/Chipset.h"
 #include "hardware/drivers/device/Device.h"
-
 #include "hardware/actuators/Actuator.h"
 
+// Stl-Headers
 #include <getopt.h>
 #include <iostream>
+
 
 #define FRAMEWORK_USAGE                                               	   	\
 "Usage: %s [-h]\n" 	                                                 	\

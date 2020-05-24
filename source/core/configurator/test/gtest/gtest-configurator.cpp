@@ -1,17 +1,20 @@
+// Inheritance
+#include "../../Configurator.h"
+#include "Generic.h"
+
+// Interfaces
+#include "IConfigurator.h"
+
+// Third-Party
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-#include "IConfigurator.h"
-#include "../../Configurator.h"
-
-#include "Generic.h"
-
+// Stl-Headers
+#include <iostream>
 #include <string>
 #include <typeinfo>  
 #include <type_traits>
-
 #include <unistd.h>
-#include <iostream>
 
 static std::string filename = "gtest-configurator.xml";
 

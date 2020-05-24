@@ -1,19 +1,20 @@
 #pragma once
 
-#include "Visitor.h"
-#include "StateMachine.h"
+// Inheritance
+#include "Generic.h"
 
-
+// Interfaces
 #include "IMosquitto.h"
 #include "IConfigurator.h"
 
+// Design Patterns
+#include "Visitor.h"
+#include "StateMachine.h"
+
 #include "Singleton.h"
-#include "Generic.h"
 #include "Builder.h"
 #include "AbstractFactory.h"
 #include "Factory.h"
-
-#include "StateMachine.h"
 
 /**
  * @brief (Wrapper Design Pattern) The Mosquitto Class

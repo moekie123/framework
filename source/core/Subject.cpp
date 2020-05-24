@@ -1,4 +1,7 @@
+// Design Pattern
 #include "Subject.h"
+
+// Stl-Headers
 #include <iostream>
 
 Subject::Subject()
@@ -27,5 +30,3 @@ bool Subject::Notify()
 
 	return res;
 }
-
-

@@ -1,11 +1,15 @@
-#include <gtest/gtest.h>
+// Inheriance
+//#include "Generic.h"
 
+// Design Patterns
 #include "AbstractFactory.h"
 #include "Factory.h"
 #include "Builder.h"
 
-#include "Generic.h"
+// Third-Party
+#include <gtest/gtest.h>
 
+// Stl-Header
 #include <string>
 
 class InterfaceBeta:

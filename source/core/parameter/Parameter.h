@@ -1,8 +1,10 @@
 #pragma once
 
+// Interfaces
 #include "IParameter.h"
 #include "IConfigurator.h"
 
+// Design Patterns
 #include "AbstractFactory.h"
 #include "Builder.h"
 #include "Singleton.h"

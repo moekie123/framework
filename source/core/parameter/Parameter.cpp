@@ -1,12 +1,14 @@
+// Inheritance
 #include "Parameter.h"
-
-#include "IParameter.h"
-
 #include "Generic.h"
+
+// Interfaces
+#include "IParameter.h"
 #include "IConfigurator.h"
 
-#include <map>
+// Stl-Headers
 #include <iostream>
+#include <map>
 
 Parameter::ParameterBuilder Parameter::builder;
 

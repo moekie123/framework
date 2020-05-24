@@ -1,7 +1,10 @@
+// Inheritance
+//#include "Generic.h"
+
+// Design Pattern
 #include "Singleton.h"
 
-#include "Generic.h"
-
+// Third-Party
 #include <gtest/gtest.h>
 
 class Beta
