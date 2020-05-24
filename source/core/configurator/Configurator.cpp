@@ -84,6 +84,7 @@ class XMLParameter: public XMLVisitor
 
 bool Configurator::Get( const std::string& _name, const std::string& _attribute, int& _value ) const
 {
+	std::cout << "Get Integer\n";
 	XMLElement* root;
 
 	// Find root of the tree

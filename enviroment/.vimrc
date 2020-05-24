@@ -1,6 +1,9 @@
 " Only modify vim for a framework enviroment
 if !empty( glob( $FRAMEWORK ))
 
+	" Disable Swap-Files
+	set noswapfile
+
 	" Change the color of the comments
 	syntax on
 	hi Comment  ctermfg=blue

@@ -1,5 +1,6 @@
 #include "../../Parameter.h"
 #include "IParameter.h"
+#include "IConfigurator.h"
 
 #include "mocks/MockParameter.h"
 #include "mocks/MockConfigurator.h"
@@ -31,10 +32,12 @@ class ConstructFeature:
 		EXPECT_CALL( mConfig, GetInteger( "Parameter", "default", testing::_ )).WillRepeatedly( testing::Return( true ));
 		EXPECT_CALL( mConfig, GetInteger( "Parameter", "value"  , testing::_ )).WillRepeatedly( testing::Return( true));
 	
-		Singleton< MockConfigurator >::Register( mConfig );
+		Singleton< IConfigurator >::Register( mConfig );
 
-		auto factory = Singleton< AbstractFactory< Factory< IConfigurator >>>::Instance();
-		factory.Register< IConfigurator >( "Configurator", &MockConfigurator::builder );
+		Factories *factory = new Factories();
+		factory->Register< IConfigurator >( "Configurator", &MockConfigurator::builder );
+		
+		Singleton< Factories >::Register( *factory );
 	}
 };
 
@@ -87,9 +90,8 @@ TEST_F( ConstructFeature, Interface )
 TEST_F( ConstructFeature, Builder )
 {
 	auto parameter = Parameter::builder.Build( "Parameter" );
-	ASSERT_EQ( typeid( Generic ), typeid( parameter ) );
+	ASSERT_EQ( typeid( IParameter* ), typeid( parameter ) );
 }
-
 
 /**
  * GTest: get the name op the parameter 
@@ -279,7 +281,9 @@ TEST_F( ParameterFeature, NestedSetConstValue )
 
 	mParameter->SetProperty( "Parameter.const", 1 ) ;
 
-	ASSERT_EQ( mParameter->SetProperty( "Parameter/Nested.value" , 0 ), false );
+	bool res =  mParameter->SetProperty( "Parameter/Nested.value" , 0 );
+	ASSERT_EQ( res, false );
+
     	mParameter->GetProperty("Parameter/Nested.value", _value );
 	ASSERT_EQ( _value, 42 );
 }

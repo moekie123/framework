@@ -5,35 +5,56 @@ Composite::Composite()
 	std::cout << "Composite: Construct\n";
 }
 
-bool Composite::Add( Object& obs )
+bool Composite::Add( Object& _obj )
 {
 	std::cout << "Composite: Add Child\n";
-	mComponents.push_back( &obs );
+
+	std::string oName = _obj.GetName();
+	_obj.SetName( std::string( mName + "/" + oName ) );
+
+	mComponents.push_back( &_obj );
+
 	return false;
 }
 
 bool Composite::SetProperty( const  std::string& property, const int& value )
 {
+	bool res = false;
 	std::cout << "Composite: SetProperty\n";
 
-	Object::SetProperty( property, value );
+	if( mProperties.find( "const" )->second == 1 )
+		goto exit;
+
+	res = Object::SetProperty( property, value );
+	if( res ) goto exit;
 
 	for( auto c: mComponents )
-		c->SetProperty( property, value );
+	{
+		res = c->SetProperty( property, value );
+		if( res ) break;
+	}
 
-	return false;
+exit:
+	return res;
 }
 
 bool Composite::GetProperty( const  std::string& property, int& value )
 {
+	bool res = false;
+
 	std::cout << "Composite: GetProperty\n";
 
-	Object::GetProperty( property, value );
+	res = Object::GetProperty( property, value );
+	if( res ) goto exit;
 
 	for( auto c: mComponents )
-		c->GetProperty( property, value );
+	{
+		res = c->GetProperty( property, value );
+		if( res ) break;
+	}
 
-	return false;
+exit:
+	return res;
 }
 
 bool Composite::Reset()

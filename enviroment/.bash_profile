@@ -37,8 +37,10 @@ if [ -d "${FRAMEWORK}" ]; then
 			SESSION="Framework"
 		fi
 		
-		echo "Session [$SESSIONE]"
+		echo "Session [$SESSION]"
 		export SESSION=$SESSION
+	
+		alias makes='make --no-print-directory -C  ${FRAMEWORK_BUILD} -j4 '${SESSION}
 	}
 
 	alias  cdf='cd '$FRAMEWORK
@@ -65,6 +67,7 @@ if [ -d "${FRAMEWORK}" ]; then
 
 	alias makef='make --no-print-directory -C '${FRAMEWORK_BUILD}
 	alias maker='make --no-print-directory -C  ${FRAMEWORK_BUILD} -j4'
+	alias makes='make --no-print-directory -C  ${FRAMEWORK_BUILD} -j4 '${SESSION} 
 
 	alias documention='make --no-print-directory -C  ${FRAMEWORK_BUILD} -j4 doc_install'
 

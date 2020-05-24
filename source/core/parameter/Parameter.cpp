@@ -57,49 +57,17 @@ bool Parameter::GetProperty( const std::string& _property, int& _value )
 {
 	bool result = false;
 
-	if ( mProperties.find( "const" )->second == 1 )
-		goto exit;
-
 	result = Generic::GetProperty( _property, _value );
-	if ( result ) 
-	{
-		goto exit;
-	}
-	// Composite
-	for( auto* component : mComponents )
-	{
-		result = component->GetProperty( _property, _value );
-		if( result ) 
-			break;
-	}
 
-exit:
 	return result;
-
-
 }
 
 bool Parameter::SetProperty( const std::string& _property, const int& _value )
 {
 	bool result = false;
 
-	if ( mProperties.find( "const" )->second == 1 )
-		goto exit;
-
 	result = Generic::SetProperty( _property, _value );
-	if ( result ) 
-	{
-		goto exit;
-	}
-	// Composite
-	for( auto* component : mComponents )
-	{
-		result = component->SetProperty( _property, _value );
-		if( result ) 
-			break;
-	}
-
-exit:
+	
 	return result;
 }
 

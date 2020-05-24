@@ -9,11 +9,11 @@ class Composite:
 public:
 	Composite();
 
-	bool Add( Object& obs );
+	bool Add( Object& _obs );
 
 	/** Object Methods */	
-	bool SetProperty( const  std::string& property, const int& value ) override;
-	bool GetProperty( const  std::string& property, int& value ) override;
+	bool SetProperty( const  std::string& _property, const int& _value ) override;
+	bool GetProperty( const  std::string& _property, int& _value ) override;
 	bool Reset() override;
 	
 protected:
@@ -21,7 +21,7 @@ protected:
 
 private:
 	/* Required to suppress the "no-virtual-move-assign"-Compiler Warning */
-	Composite& operator=( Composite&& other) 
+	Composite& operator=( Composite&& _other) 
 	{
         	return *this;
     	}

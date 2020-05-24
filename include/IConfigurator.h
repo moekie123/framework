@@ -6,6 +6,8 @@
 #include <type_traits>
 #include <stdexcept>
 
+#include <iostream>
+
 /**
  * @brief The generic interface for the configurator 
  */
@@ -23,6 +25,7 @@ class IConfigurator:
 		template< class T >
 		bool GetProperty( const std::string& _name, const std::string& _attribute, T& _value ) const
 		{
+			std::cout << "checkpoint\n";
 			return Get( _name, _attribute, _value );	
 		}
 
@@ -35,10 +38,10 @@ class IConfigurator:
 		 * @param _value The storage location when property is found
 		 * @return True when property was found, Throws exception when not implemented
 		 */
-		virtual	bool Get( const std::string& _name, const std::string& _attribute, int& _value ) const 
-		{
-			throw std::logic_error("Not Implemented");
-		};
+		virtual	bool Get( const std::string& _name, const std::string& _attribute, int& _value ) const
+		{	
+			return false;
+		}
 
 		/** 
 		 * @brief The specialized Getter for an string
@@ -48,8 +51,8 @@ class IConfigurator:
 		 * @param _value The storage location when property is found
 		 * @return True when property was found, Throws exception when not implemented
 		 */
-		virtual	bool Get( const std::string& _name, const std::string& _attribute, std::string& _value ) const 
+		virtual	bool Get( const std::string& _name, const std::string& _attribute, std::string& _value ) const
 		{
-			throw std::logic_error("Not Implemented");
+			return false;
 		}
 };

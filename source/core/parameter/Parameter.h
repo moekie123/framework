@@ -20,7 +20,7 @@ public:
 	public:
 		static IParameter* Build( std::string _name )
 		{
-			std::cout << "ParameterBuilder : Build Type A\n";
+			std::cout << "ParameterBuilder : Build Type\n";
 
 			Factories& factory = Singleton< Factories >::Instance();
 	
