@@ -11,6 +11,8 @@
 #include "IChipset.h"
 #include "IDevice.h"
 
+#include <stdexcept>
+
 template< class ... Mixin >
 class AbstractFactory: 
 	public Mixin...
@@ -35,16 +37,23 @@ public:
 			return obj;
     		} 
 
-		std::cout << "Not Found\n";
-		return nullptr;
+		throw std::invalid_argument( "AbstractFactory: Unknown Builder" );
 	}
 
 	template< class T >	
-	bool Register( const std::string& name, Builder<T>* builder )
+	bool Register( const std::string& _name, Builder<T>* _builder )
 	{
 		std::cout << "AbstractFactory: Register\n";
-		Factory<T>::mBuilders.emplace( name, builder );
-		return false;
+
+		// Check whether the name already excists
+		auto search = Factory<T>::mBuilders.find( _name );
+		if ( search == Factory<T>::mBuilders.end() )
+		{
+			Factory<T>::mBuilders.emplace( _name, _builder );
+			return true;
+		}
+	
+		throw std::invalid_argument( "AbstractFactory: Builder already excists" );
 	}
 };
 

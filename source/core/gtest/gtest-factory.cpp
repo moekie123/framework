@@ -63,7 +63,7 @@ TEST( Register,  AlreadyRegistered )
 	AbstractFactory< Factory< InterfaceBeta >> factory;
 	factory.Register< InterfaceBeta >( "CB", &ConcreteBeta::builder );
 
-	ASSERT_EQ( factory.Register< InterfaceBeta >( "CB", &ConcreteBeta::builder ), true );
+	ASSERT_ANY_THROW( factory.Register< InterfaceBeta >( "CB", &ConcreteBeta::builder ) );
 }
 
 TEST( Create, Default )
