@@ -36,8 +36,10 @@ class Mosquitto:
 
 			/**
 			 * @brief The build method that configures and constructs a new Parameter
+			 * @param _config The pre build Configurator
+			 * @param _name The name of the Mosquitto Broker (not used)
  			 */
-			static IMosquitto* Build( std::string _name )
+			static IMosquitto* Build( const IConfigurator* _config, const std::string& _name )
 			{
 				std::cout << "Run Builder\n";
 				if( !Singleton< Mosquitto >::IsConstructed() )

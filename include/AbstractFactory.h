@@ -43,12 +43,15 @@ public:
 	T* Construct( const std::string& _name )
 	{
 		std::cout << "AbstractFactory: Construct\n";
-		
+	
+	
 		auto search = Factory<T>::mBuilders.find( _name );
-    		
 		if ( search != Factory<T>::mBuilders.end() )
 		{
-			T* obj = search->second->Build( _name );
+			// TODO Assumed Configurator is initialized
+			IConfigurator* config = Factory< IConfigurator >::mBuilders["Configurator"]->Build();
+
+			T* obj = search->second->Build( config, _name );
 			return obj;
     		} 
 

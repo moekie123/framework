@@ -1,5 +1,8 @@
 #pragma once
 
+// Interfaces
+#include "IConfigurator.h"
+
 // Stl-headers
 #include <functional>
 #include <string>
@@ -18,24 +21,24 @@ public:
 	 * @details The method, passed as argument will be used in the Factory to create new instances
 	 * @param _func The actual method that will build a new instance
  	 */
-	Builder( std::function< T*( std::string ) > _func ): builder( _func )
+	Builder( std::function< T*( const IConfigurator*, const std::string& ) > _func ): builder( _func )
 	{
 
 	}
 
 	/**
 	 * @brief The Build method will use the builder-function (passed as argument in the constructor) to create a new instance
+	 # @param _config The pre build Configurator
 	 * @param _name The name of the new instance
  	 */
-	T* Build( const std::string& _name )
+	T* Build( const IConfigurator* _config = nullptr, const std::string& _name = "" )
 	{
-		return builder( _name );
+		return builder( _config, _name );
 	}
 
 protected:
 	/**
 	 * @brief The builder method, that creates a new instance
 	 */
-	std::function< T*( std::string )> builder;
+	std::function< T*( const IConfigurator*, const std::string& )> builder;
 };
-

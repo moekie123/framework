@@ -60,7 +60,7 @@ TEST_F( ConstructFeature, Interface )
 
 TEST_F( ConstructFeature, Builder )
 {
-	auto actuator = Actuator::builder.Build( "Actuator" );
+	auto actuator = Actuator::builder.Build( &mConfig, "Actuator" );
 	ASSERT_EQ( typeid( IActuator* ), typeid( actuator ) );
 }
 

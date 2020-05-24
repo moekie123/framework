@@ -1,5 +1,10 @@
 // Inheriance
-//#include "Generic.h"
+
+// Interfaces
+#include "IConfigurator.h"
+
+// Testing 
+#include "mocks/MockConfigurator.h"
 
 // Design Patterns
 #include "AbstractFactory.h"
@@ -8,9 +13,13 @@
 
 // Third-Party
 #include <gtest/gtest.h>
+#include <gmock/gmock.h>
 
 // Stl-Header
 #include <string>
+
+// Ignore Nagy Mocks for the Configurator Get(ters)
+using ::testing::NiceMock;
 
 class InterfaceBeta:
 	public Generic
@@ -29,8 +38,8 @@ class ConcreteBeta:
 	class ConcreteBetaBuilder:
 		public Builder< InterfaceBeta >
 	{
-		public:
-		static InterfaceBeta* Build( const std::string& _name ) 
+	public:
+		static InterfaceBeta* Build( const IConfigurator*, const std::string& _name ) 
 		{
 			InterfaceBeta* iBeta = new ConcreteBeta();
 			return iBeta;
@@ -50,21 +59,23 @@ class ConcreteBeta:
 };
 
 ConcreteBeta::ConcreteBetaBuilder ConcreteBeta::builder;
+using TestFactories = AbstractFactory< 	Factory< InterfaceBeta >,
+					Factory<  IConfigurator >>;
 
 TEST( Construct, Default )
 {
-	AbstractFactory< Factory< ConcreteBeta >> factory;
+	TestFactories factory;
 }
 
 TEST( Register,  Default )
 {
-	AbstractFactory< Factory< InterfaceBeta >> factory;
+	TestFactories factory;
 	ASSERT_EQ( factory.Register< InterfaceBeta >( "CB", &ConcreteBeta::builder ), true );
 }
 
 TEST( Register,  AlreadyRegistered )
 {
-	AbstractFactory< Factory< InterfaceBeta >> factory;
+	TestFactories factory;
 	factory.Register< InterfaceBeta >( "CB", &ConcreteBeta::builder );
 
 	ASSERT_ANY_THROW( factory.Register< InterfaceBeta >( "CB", &ConcreteBeta::builder ) );
@@ -72,7 +83,15 @@ TEST( Register,  AlreadyRegistered )
 
 TEST( Create, Default )
 {
-	AbstractFactory< Factory< InterfaceBeta >> factory;
+	// Construct Factory
+	TestFactories factory;
+
+	// Construct and register configurator
+	NiceMock< MockConfigurator > mConfig;
+	Singleton< IConfigurator >::Register( mConfig );
+	factory.Register< IConfigurator >( "Configurator", &MockConfigurator::builder );
+
+	// Register builder
 	factory.Register< InterfaceBeta >( "CB", &ConcreteBeta::builder );
 
    	auto ab = factory.Construct< InterfaceBeta >( "CB" );
@@ -81,7 +100,8 @@ TEST( Create, Default )
 
 TEST( Create, UnknownBuilder )
 {
- 	AbstractFactory< Factory< InterfaceBeta >> factory;
+	TestFactories factory;
+
 	factory.Register< InterfaceBeta >( "CB", &ConcreteBeta::builder );
 
 	ASSERT_ANY_THROW( factory.Construct< InterfaceBeta >( "BC" ) );

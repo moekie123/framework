@@ -30,7 +30,7 @@ class Configurator:
 			/**
 			 * @brief The build method that configures and constructs a new Parameter
  			 */
-			static IConfigurator* Build( std::string _name )
+			static IConfigurator* Build( const IConfigurator*, const std::string& )
 			{
 				IConfigurator& obj = Singleton< Configurator >::Instance();
 				return &obj;

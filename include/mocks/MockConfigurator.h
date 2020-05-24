@@ -1,14 +1,20 @@
 #pragma once
 
+// Inheritance
 #include "Generic.h"
+
+// Design Patterns
 #include "Builder.h"
 #include "Singleton.h"
 
+// Interfaces
 #include "IConfigurator.h"
 
+// Third-Party
 #include <gmock/gmock.h>
-#include <string>
 
+// Stl-Headers
+#include <string>
 #include <iostream>
 
 class MockConfigurator: 
@@ -24,7 +30,7 @@ class MockConfigurator:
 			public Builder< IConfigurator >
 		{
 			public:
-				static IConfigurator* Build( const std::string& _name )
+				static IConfigurator* Build( const IConfigurator*, const std::string& _name )
 				{
 					MockConfigurator& mock = Singleton< MockConfigurator >::Instance();
 					return &mock;

@@ -60,7 +60,7 @@ TEST_F( ConstructFeature, Interface )
 
 TEST_F( ConstructFeature, Builder )
 {
-	auto chipset = Chipset::builder.Build( "Chipset" );
+	auto chipset = Chipset::builder.Build( &mConfig, "Chipset" );
 	ASSERT_EQ( typeid( IChipset* ), typeid( chipset ) );
 }
 

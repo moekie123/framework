@@ -29,13 +29,16 @@ public:
 		
 		/**
 		 * @brief The build method that configures and constructs a new Parameter
+		 * @param _config Pre build Configurator
+		 * @param _name The name of the new Parameter
  		 */
-		static IParameter* Build( std::string _name )
+		static IParameter* Build( const IConfigurator* _config, const std::string& _name )
 		{
 			std::cout << "ParameterBuilder : Build Type\n";
 
 			Factories& factory = Singleton< Factories >::Instance();
-	
+			
+			// TODO Removce
 			const std::string label = "Configurator";
 			IConfigurator* config = factory.Construct< IConfigurator >( label );
 	

@@ -14,7 +14,7 @@
 template< class T >
 class Factory
 {
-protected:
+public:
 	/**
 	 * @brief The vector of specialized builders
 	 */

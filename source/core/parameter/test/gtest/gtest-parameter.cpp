@@ -94,7 +94,7 @@ TEST_F( ConstructFeature, Interface )
 
 TEST_F( ConstructFeature, Builder )
 {
-	auto parameter = Parameter::builder.Build( "Parameter" );
+	auto parameter = Parameter::builder.Build( &mConfig, "Parameter" );
 	ASSERT_EQ( typeid( IParameter* ), typeid( parameter ) );
 }
 

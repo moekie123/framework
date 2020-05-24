@@ -32,8 +32,10 @@ class Actuator:
 
 		/**
 		 * @brief The build method that configures and constructs a new Parameter
+		 * @param _config The pre build Configurator
+		 * @param _name The name of the new Actuator
  		 */
-		static IActuator* Build( const std::string _name )
+		static IActuator* Build( const IConfigurator* _config, const std::string& _name )
 		{
 			Factories& factory = Singleton< Factories >::Instance();
 

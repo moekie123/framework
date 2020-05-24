@@ -64,7 +64,7 @@ TEST_F( ConstructFeature, Interface )
 
 TEST_F( ConstructFeature, Builder )
 {
-	auto device = Device::builder.Build( "Device" );
+	auto device = Device::builder.Build( &mConfig, "Device" );
 	ASSERT_EQ( typeid( IDevice* ), typeid( device ) );
 }
 

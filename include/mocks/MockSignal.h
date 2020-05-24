@@ -1,14 +1,21 @@
 #pragma once
 
+// Inheritance
 #include "Signal.h"
 #include "Generic.h"
 
+// Interfaces
 #include "IConfigurator.h"
 
+// Testing
+#include "MockConfigurator.h"
+
+// Third-Party
 #include <gmock/gmock.h>
+
+// Stl-Headers
 #include <string>
 
-#include "MockConfigurator.h"
 
 class MockSignal: 
     public Signal

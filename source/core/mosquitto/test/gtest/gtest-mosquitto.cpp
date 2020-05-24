@@ -73,7 +73,7 @@ TEST_F( MosquittoFeature, Interface )
 
 TEST_F( MosquittoFeature, Builder )
 {
-	auto mosquitto = Mosquitto::builder.Build( "Mosquitto" );
+	auto mosquitto = Mosquitto::builder.Build( &mConfig, "Mosquitto" );
 	ASSERT_EQ( typeid( IMosquitto* ), typeid( mosquitto ) );
 }
 
