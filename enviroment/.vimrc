@@ -14,9 +14,14 @@ if !empty( glob( $FRAMEWORK ))
 	" Load framework enviroment
 	let $BASH_ENV = "~/.bash_profile"
 
+	" Enable Clang Format
+	let g:clang_format#detect_style_file = 1
+	let g:clang_format#auto_format_on_insert_leave = 1
+	nmap <F5> :ClangFormat<CR>
+
 	" Enable TermDebug shortcut
 	packadd termdebug
-
+	
 	let BINARY=$FRAMEWORK."/binary/".$SESSION
 	nmap <F6> :Termdebug <c-r>=BINARY<cr><CR>
 
@@ -31,7 +36,4 @@ if !empty( glob( $FRAMEWORK ))
 		set tags=tags;,$TAGS
 		nmap <F8> :TagbarToggle<CR>
 	endif
-
 endif
-
-
