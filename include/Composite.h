@@ -37,7 +37,9 @@ protected:
 	std::vector< Object* > mComponents;
 
 private:
-	/* Required to suppress the "no-virtual-move-assign"-Compiler Warning */
+	/** 
+	 * @brief Required to suppress the "no-virtual-move-assign"-Compiler Warning 
+	 */
 	Composite& operator=( Composite&& _other) 
 	{
         	return *this;

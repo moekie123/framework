@@ -18,8 +18,10 @@ class Generic:
 public:
 
 private:
-	/* Required to suppress the "no-virtual-move-assign"-Compiler Warning */
-	Generic& operator=( Generic&& other) 
+	/** 
+	 * @brief Required to suppress the "no-virtual-move-assign"-Compiler Warning 
+	 */
+	Generic& operator=( Generic&& _other) 
 	{
         	return *this;
     	}

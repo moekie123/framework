@@ -26,8 +26,9 @@ public:
 	/** 
 	 * @brief The observer registrator
 	 * @details With this method Observers can be added to an object.
+	 * @param _obs The observer that should be notified
 	 */
-	bool Attach( Observer& obs );
+	bool Attach( Observer& _obs );
 
 	/**
 	 * @brief The notifier, for all observers
@@ -35,17 +36,19 @@ public:
 	 */
 	bool Notify();
 
-	/** 
-	 * @brief Required to suppress the "no-virtual-move-assign"-Compiler Warning 
-	 */
-	Subject& operator=( Subject&& other) 
-	{
-        	return *this;
-    	}
-
 protected:
 	/**
 	 * @brief The vector of registerd Observers 
 	 */
 	std::vector< Observer* > mObservers;
+
+private:
+	/** 
+	 * @brief Required to suppress the "no-virtual-move-assign"-Compiler Warning 
+	 */
+	Subject& operator=( Subject&& _other) 
+	{
+        	return *this;
+    	}
+
 };
