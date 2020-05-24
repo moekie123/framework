@@ -4,8 +4,8 @@
 #include "Generic.h"
 
 // Interfaces
-#include "IParameter.h"
 #include "IConfigurator.h"
+#include "IParameter.h"
 
 // Design Patterns
 #include "Builder.h"
@@ -17,40 +17,37 @@
 // Stl-Headers
 #include <string>
 
-class MockParameter: 
-	public IParameter
+class MockParameter : public IParameter
 {
-        public:
-		/*
+       public:
+        /*
 		 * GMock Builder, To test base class builder
 		 * It is common to load a configurator in the builder
 		 */
-		class MockBuilder:
-			public Builder< IParameter >
-		{
-			public:
-				static IParameter* Build ( const IConfigurator*, const std::string& _name )
-				{
-					MockParameter& mock = Singleton< MockParameter >::Instance();
-					return &mock;
-				}
-				
-				MockBuilder(): Builder( MockBuilder::Build )
-				{
-					
-				}
-		};
-		static MockBuilder builder;
+        class MockBuilder : public Builder<IParameter>
+        {
+               public:
+                static IParameter* Build( const IConfigurator*, const std::string& _name )
+                {
+                        MockParameter& mock = Singleton<MockParameter>::Instance();
+                        return &mock;
+                }
 
-		/* IParameter */
-    		MOCK_METHOD0( Reset, bool() );
+                MockBuilder() : Builder( MockBuilder::Build )
+                {
+                }
+        };
+        static MockBuilder builder;
 
-		/* IGeneric */
-	   	MOCK_METHOD2( SetProperty, bool( const std::string&, const int& ));
-	    	MOCK_METHOD2( GetProperty, bool( const std::string&, int& ));
+        /* IParameter */
+        MOCK_METHOD0( Reset, bool() );
 
-		/* IObserver */
-    		MOCK_METHOD1( Update, bool( const Subject& ));
+        /* IGeneric */
+        MOCK_METHOD2( SetProperty, bool( const std::string&, const int& ) );
+        MOCK_METHOD2( GetProperty, bool( const std::string&, int& ) );
+
+        /* IObserver */
+        MOCK_METHOD1( Update, bool( const Subject& ) );
 };
 
 MockParameter::MockBuilder MockParameter::builder;

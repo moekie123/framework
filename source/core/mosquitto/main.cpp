@@ -1,5 +1,5 @@
-#include <iostream>
 #include <signal.h>
+#include <iostream>
 
 #include <unistd.h>
 
@@ -12,70 +12,68 @@
 #include "../configurator/Configurator.h"
 #include "IParameter.h"
 
-void abort(int s)
+void abort( int s )
 {
-	std::cout << "Terminate\n";
-	StateMachine::dispatch( eTerminate() );
+        std::cout << "Terminate\n";
+        StateMachine::dispatch( eTerminate() );
 }
 
-class Dummy: public IParameter
+class Dummy : public IParameter
 {
-	public:
-	Dummy()
-	{
-		SetName( "#" );
-	}
+       public:
+        Dummy()
+        {
+                SetName( "#" );
+        }
 
         /* Observer methods **/
         bool Update( const IMosquitto* subject )
-	{
-		std::cout << "Dummy Update\n";
-		return true;
-	}
+        {
+                std::cout << "Dummy Update\n";
+                return true;
+        }
 };
 
-
-int main(int argc, char* argv[])
+int main( int argc, char* argv[] )
 {
-	std::cout << "Booting Application\n";
+        std::cout << "Booting Application\n";
 
+        // Link Callbacks
+        signal( SIGINT, abort );
+        signal( SIGTERM, abort );
 
-	// Link Callbacks
-	signal(SIGINT, abort);
-	signal(SIGTERM, abort);
+        Configurator::mConfigFileName = "mosquitto.xml";
 
-	Configurator::mConfigFileName = "mosquitto.xml";
+        // Open Configuration File
+        Configurator* configurator = new Configurator();
 
-	// Open Configuration File
-	Configurator* configurator = new Configurator();
+        // Build Mosquitto Instance
+        std::string* hostname = new std::string();
+        configurator->GetProperty( "mosquitto", "hostname", (std::string&)*hostname );
 
-	// Build Mosquitto Instance
-	std::string* hostname = new std::string();
-	configurator->GetProperty( "mosquitto", "hostname", (std::string&) *hostname );
+        std::string* username = new std::string();
+        configurator->GetProperty( "mosquitto", "username", (std::string&)*username );
 
-	std::string* username = new std::string();
-	configurator->GetProperty( "mosquitto", "username", (std::string&) *username );
+        std::string* password = new std::string();
+        configurator->GetProperty( "mosquitto", "password", (std::string&)*password );
 
-	std::string* password = new std::string();
-	configurator->GetProperty( "mosquitto", "password", (std::string&) *password );
+        int* port = new int();
+        configurator->GetProperty( "mosquitto", "port", (int&)*port );
 
-	int* port = new int();
-	configurator->GetProperty( "mosquitto", "port", (int&) *port );
+        Mosquitto mosquitto( *configurator, *hostname, *port, *username, *password );
+        IParameter* param = new Dummy();
 
-	Mosquitto mosquitto( *configurator, *hostname, *port, *username, *password );
-	IParameter *param = new Dummy();
+        // Start State Machine
+        mosquitto.Attach( *param );
+        StateMachine::Accept( mosquitto );
 
-	// Start State Machine
-	mosquitto.Attach( *param );
-	StateMachine::Accept( mosquitto );
-	
-	while( StateMachine::IsRunning() )
-	{
-		StateMachine::dispatch( eCycle() );
-		usleep( 50000 );
-	}
+        while ( StateMachine::IsRunning() )
+        {
+                StateMachine::dispatch( eCycle() );
+                usleep( 50000 );
+        }
 
-	std::cout << "Shutdown Application\n";
+        std::cout << "Shutdown Application\n";
 
-   	return 0;
+        return 0;
 }

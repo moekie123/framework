@@ -13,54 +13,52 @@ class StateMachine;
  */
 class MosquittoVisitor
 {
-	public:
-		/**
+       public:
+        /**
   		 * @brief The initializing step
                  * @details The Mosquitto client should start initializing the 'libmosquitto' when called
-                 */  
-		virtual bool visitInitialize( const StateMachine& ) = 0;
+                 */
+        virtual bool visitInitialize( const StateMachine& ) = 0;
 
-		/**
+        /**
   		 * @brief The configure step
                  * @details The Mosquitto client should start configuring when called
-                 */  
-		virtual bool visitConfigure( const StateMachine& ) = 0;
+                 */
+        virtual bool visitConfigure( const StateMachine& ) = 0;
 
-		/**
+        /**
   		 * @brief The connect step
                  * @details The Mosquitto client should start connecting when called
-                 */  
-		virtual bool visitConnect( const StateMachine& ) = 0;
+                 */
+        virtual bool visitConnect( const StateMachine& ) = 0;
 
-		/**
+        /**
   		 * @brief The loop step
                  * @details The Mosquitto client should check for new messages when called
-                 */  
-		virtual bool visitLoop( const StateMachine& ) = 0;
+                 */
+        virtual bool visitLoop( const StateMachine& ) = 0;
 
-		/**
+        /**
   		 * @brief The reconnect step
                  * @details The Mosquitto client should try to reconnect when called
-                 */  
-		virtual bool visitReconnect( const StateMachine& ) = 0;
+                 */
+        virtual bool visitReconnect( const StateMachine& ) = 0;
 
-		/**
+        /**
   		 * @brief The disconnect step
                  * @details The Mosquitto client should try to disconnect when called
-                 */  
-		virtual bool visitDisconnect( const StateMachine& ) = 0;
+                 */
+        virtual bool visitDisconnect( const StateMachine& ) = 0;
 
-		/**
+        /**
   		 * @brief The destroy step
                  * @details The Mosquitto client should try to destroy/clear memory when called
-                 */  
-		virtual bool visitDestroy( const StateMachine& ) = 0;
+                 */
+        virtual bool visitDestroy( const StateMachine& ) = 0;
 
-		/**
+        /**
   		 * @brief The cleanup step
                  * @details The Mosquitto client should try to cleanup the 'libmosquitto' library
-                 */  
-		virtual bool visitCleanup( const StateMachine& ) = 0;
-
+                 */
+        virtual bool visitCleanup( const StateMachine& ) = 0;
 };
-

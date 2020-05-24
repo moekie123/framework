@@ -5,8 +5,6 @@
 /**
  * @brief The generic interface class for a Poramater
  */
-class IParameter:
-	public Generic
+class IParameter : public Generic
 {
-
 };

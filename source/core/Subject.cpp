@@ -6,27 +6,27 @@
 
 Subject::Subject()
 {
-	std::cout << "Subject: Construct\n";
+        std::cout << "Subject: Construct\n";
 }
 
 bool Subject::Attach( Observer& obs )
 {
-	std::cout << "Subject: Attach\n";
-	mObservers.push_back( & obs );
-	return false;
+        std::cout << "Subject: Attach\n";
+        mObservers.push_back( &obs );
+        return false;
 }
 
 bool Subject::Notify()
 {
-	bool res = false;
+        bool res = false;
 
-	for( auto o: mObservers )
-	{
-		res = o->Update( *this );
-		
-		// Observer returned failure
-		if( !res ) break;
-	}
+        for ( auto o : mObservers )
+        {
+                res = o->Update( *this );
 
-	return res;
+                // Observer returned failure
+                if ( !res ) break;
+        }
+
+        return res;
 }

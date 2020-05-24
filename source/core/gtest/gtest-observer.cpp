@@ -3,67 +3,65 @@
 #include "Subject.h"
 
 // Third-Party
-#include <gtest/gtest.h>
 #include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
-class Beta:
-    public Subject,
-    public Observer
+class Beta : public Subject,
+             public Observer
 {
-    public:
+       public:
         bool Update( const Subject& ) override
         {
-	       return false;	
+                return false;
         }
 };
 
-class MockBeta: public Beta
+class MockBeta : public Beta
 {
-    public:
+       public:
         MOCK_METHOD1( Update, bool( const Subject& ) );
 };
 
 TEST( Construct, Default )
 {
-    Beta beta;
-    // Static cast to check whether all classes are intherent
+        Beta beta;
+        // Static cast to check whether all classes are intherent
 }
 
 TEST( Subject, AttachObserver )
 {
-    Beta observer;
-    Beta subject;
+        Beta observer;
+        Beta subject;
 
-    subject.Attach( observer );
-    // Static cast to check whether all classes are intherent
+        subject.Attach( observer );
+        // Static cast to check whether all classes are intherent
 }
 
 TEST( Subject, NotifyObserverSuccesfull )
 {
-    	MockBeta observer;
+        MockBeta observer;
 
-    	Beta* beta = new Beta();
-    	beta->Attach( observer );
+        Beta* beta = new Beta();
+        beta->Attach( observer );
 
-	EXPECT_CALL( observer, Update( testing::_  ) ).WillOnce( testing::Return( true ));
-	ASSERT_EQ( beta->Notify(), true );
+        EXPECT_CALL( observer, Update( testing::_ ) ).WillOnce( testing::Return( true ) );
+        ASSERT_EQ( beta->Notify(), true );
 }
 
 TEST( Subject, NotifyObserverFailure )
 {
-	MockBeta observer;
+        MockBeta observer;
 
-	Beta* beta = new Beta();
+        Beta* beta = new Beta();
 
-	beta->Attach( observer );
+        beta->Attach( observer );
 
-	EXPECT_CALL( observer, Update( testing::_  ) ).WillOnce( testing::Return( false ));
-	ASSERT_EQ( beta->Notify(), false );
+        EXPECT_CALL( observer, Update( testing::_ ) ).WillOnce( testing::Return( false ) );
+        ASSERT_EQ( beta->Notify(), false );
 }
 
-
-int main(int argc, char **argv) 
+int main( int argc, char** argv )
 {
-    ::testing::InitGoogleTest(&argc, argv); 
-    return RUN_ALL_TESTS();
+        ::testing::InitGoogleTest( &argc, argv );
+        return RUN_ALL_TESTS();
 }

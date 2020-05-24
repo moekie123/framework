@@ -14,41 +14,39 @@ class Observer;
  * @brief The (Base) Subject class
  * @details Combined with the Observer class this implements the Observer-Pattern
  */
-class Subject:
-	virtual public Object
+class Subject : virtual public Object
 {
-public:
-	/**
+       public:
+        /**
 	 * @brief The default constructor 
 	 */
-	Subject();
+        Subject();
 
-	/** 
+        /** 
 	 * @brief The observer registrator
 	 * @details With this method Observers can be added to an object.
 	 * @param _obs The observer that should be notified
 	 */
-	bool Attach( Observer& _obs );
+        bool Attach( Observer& _obs );
 
-	/**
+        /**
 	 * @brief The notifier, for all observers
 	 * @details This will run the callback "Update" of each Observer
 	 */
-	bool Notify();
+        bool Notify();
 
-protected:
-	/**
+       protected:
+        /**
 	 * @brief The vector of registerd Observers 
 	 */
-	std::vector< Observer* > mObservers;
+        std::vector<Observer*> mObservers;
 
-private:
-	/** 
+       private:
+        /** 
 	 * @brief Required to suppress the "no-virtual-move-assign"-Compiler Warning 
 	 */
-	Subject& operator=( Subject&& _other) 
-	{
-        	return *this;
-    	}
-
+        Subject& operator=( Subject&& _other )
+        {
+                return *this;
+        }
 };

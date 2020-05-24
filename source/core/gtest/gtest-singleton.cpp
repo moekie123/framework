@@ -9,35 +9,34 @@
 
 class Beta
 {
-    public:
+       public:
         std::string mName = "Beta";
-    
 };
 
 TEST( Construct, Default )
 {
-	Beta &b1 = Singleton< Beta >::Instance();
-    	Beta &b2 = Singleton< Beta >::Instance();
-    
-	ASSERT_EQ( &b1, &b2 );
+        Beta &b1 = Singleton<Beta>::Instance();
+        Beta &b2 = Singleton<Beta>::Instance();
+
+        ASSERT_EQ( &b1, &b2 );
 }
 
-TEST( Register, NewInstance  )
+TEST( Register, NewInstance )
 {
-	Beta &b1 = Singleton< Beta >::Instance();
-	
-	Beta b2;
-    	Singleton< Beta >::Register( b2 );
+        Beta &b1 = Singleton<Beta>::Instance();
 
-	Beta &b3 = Singleton< Beta >::Instance();
+        Beta b2;
+        Singleton<Beta>::Register( b2 );
 
-	ASSERT_EQ( &b1, &b3 );
+        Beta &b3 = Singleton<Beta>::Instance();
+
+        ASSERT_EQ( &b1, &b3 );
 }
 
-TEST( Register, ExistingInstance  )
+TEST( Register, ExistingInstance )
 {
-// GTest does not clear out a Singleton
-/*
+        // GTest does not clear out a Singleton
+        /*
 	Beta b1;
 	Beta b2;
 
@@ -53,16 +52,16 @@ TEST( Register, ExistingInstance  )
 
 TEST( Constructed, NewInstance )
 {
-// GTest does not clear out a Singleton
-/*
+        // GTest does not clear out a Singleton
+        /*
 	ASSERT_EQ( Singleton< Beta >::IsConstructed(), false );
 */
 }
 
 TEST( Constructed, ExistingInstance )
 {
-// GTest does not clear out a Singleton
-/*
+        // GTest does not clear out a Singleton
+        /*
 	Beta b1;
 	Singleton< Beta >::Register( b1 );
 
@@ -70,8 +69,8 @@ TEST( Constructed, ExistingInstance )
 */
 }
 
-int main(int argc, char **argv) 
+int main( int argc, char **argv )
 {
-    ::testing::InitGoogleTest(&argc, argv); 
-    return RUN_ALL_TESTS();
+        ::testing::InitGoogleTest( &argc, argv );
+        return RUN_ALL_TESTS();
 }

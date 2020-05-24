@@ -5,10 +5,6 @@
 /**
  * @brief The (base) Sensor class
  */
-class Sensor:
-    public ISensor
+class Sensor : public ISensor
 {
-
-
-
 };

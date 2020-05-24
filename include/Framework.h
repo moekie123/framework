@@ -9,21 +9,21 @@
  */
 class Framework
 {
-	public:
-		/**
+       public:
+        /**
 		 * @brief This constructor will initialize all utilities and drivers.
 		 */
-		Framework( int argc, char *argv[] );
+        Framework( int argc, char* argv[] );
 
-	private:
-		/**
+       private:
+        /**
 		 * @brief The argument parser
 		 */
-		int parseArguments( int argc, char* argv[] );
+        int parseArguments( int argc, char* argv[] );
 
-		/**
+        /**
 		 * @brief The name of the configuration file
 		 * TODO Renamen such that it corrosponds the (static) configuration or link to it by a refrence
 		 */
-		std::string mConfigurationFilename;
+        std::string mConfigurationFilename;
 };

@@ -1,64 +1,60 @@
 #pragma once
 
 // Interfaces
-#include "IParameter.h"
 #include "IConfigurator.h"
+#include "IParameter.h"
 
 // Design Patterns
 #include "AbstractFactory.h"
 #include "Builder.h"
-#include "Singleton.h"
 #include "Observer.h"
+#include "Singleton.h"
 #include "Subject.h"
 
 /** 
  *  @brief The (base) Parameter class
  */
-class Parameter:
-	public IParameter
+class Parameter : public IParameter
 {
-public:
-
-	/**
+       public:
+        /**
 	 * @brief The Parameter Builder class to create new (base) Parameters
 	 */
-	class ParameterBuilder: 
-		public Builder< IParameter >
-	{
-	public:
-		
-		/**
+        class ParameterBuilder : public Builder<IParameter>
+        {
+               public:
+                /**
 		 * @brief The build method that configures and constructs a new Parameter
 		 * @param _config Pre build Configurator
 		 * @param _name The name of the new Parameter
  		 */
-		static IParameter* Build( const IConfigurator* _config, const std::string& _name )
-		{
-			std::cout << "ParameterBuilder : Build Type\n";
+                static IParameter* Build( const IConfigurator* _config, const std::string& _name )
+                {
+                        std::cout << "ParameterBuilder : Build Type\n";
 
-			Factories& factory = Singleton< Factories >::Instance();
-			
-			// TODO Removce
-			const std::string label = "Configurator";
-			IConfigurator* config = factory.Construct< IConfigurator >( label );
-	
-			IParameter *obj = new Parameter( *config, _name );
+                        Factories& factory = Singleton<Factories>::Instance();
 
-			return obj;
-		}
+                        // TODO Removce
+                        const std::string label = "Configurator";
+                        IConfigurator* config = factory.Construct<IConfigurator>( label );
 
-		/**
+                        IParameter* obj = new Parameter( *config, _name );
+
+                        return obj;
+                }
+
+                /**
 	 	 * @brief The constructor will map the Build-Method to the (base) Builder class
 		 */
-		ParameterBuilder(): Builder( ParameterBuilder::Build )
-		{
-		}
-	};
+                ParameterBuilder() : Builder( ParameterBuilder::Build )
+                {
+                }
+        };
 
-	/**
+        /**
 	 * @brief The global ParameterBuilder
 	 */
-	static ParameterBuilder builder;
+        static ParameterBuilder builder;
 
         /** 
          *  @brief The default constructor
@@ -67,12 +63,11 @@ public:
          */
         Parameter( const IConfigurator& _config, const std::string& _name );
 
-	/** Object Methods */
-	bool Reset() override;
-	bool SetProperty( const  std::string& property, const int& value ) override;
-	bool GetProperty( const  std::string& property, int& value ) override;
+        /** Object Methods */
+        bool Reset() override;
+        bool SetProperty( const std::string& property, const int& value ) override;
+        bool GetProperty( const std::string& property, int& value ) override;
 
-	/** Observer Methods */
-	bool Update( const Subject& ) override;
-	
+        /** Observer Methods */
+        bool Update( const Subject& ) override;
 };

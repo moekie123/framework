@@ -6,8 +6,6 @@
 /**
  * @brief The generic interface for a Chipset
  */
-class IChipset:
-    public Generic
+class IChipset : public Generic
 {
-        
 };

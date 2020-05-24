@@ -6,8 +6,6 @@
 /**
  * @brief The generic interface class for an Device
  */
-class IDevice:
-	public Generic
+class IDevice : public Generic
 {
-
 };

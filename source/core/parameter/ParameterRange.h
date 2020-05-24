@@ -2,63 +2,57 @@
 
 #include "Parameter.h"
 
-#include "Singleton.h"
 #include "Builder.h"
+#include "Singleton.h"
 
 #include "Configurator.h"
 
-#include <string>
 #include <map>
+#include <string>
 #include <vector>
-
 
 /** 
  *  @brief The (derived) Parameter Range
  *  @details The ParameterRange has threshold Parameters that will limit the setpoint of the parameter
  */
-class ParameterRange: 
-    public Parameter
+class ParameterRange : public Parameter
 {
-    public:
- 
-   	/**
+       public:
+        /**
 	 * @brief The ParameterRange Builder to create new ParameterRanges
 	 */
-	class ParameterRangeBuilder:
-		public Builder
-	{
-		public:
-		
-		/**
+        class ParameterRangeBuilder : public Builder
+        {
+               public:
+                /**
 		 * @brief The build method that configures and constructs a new ParameterRange
 	 	 */
-		Generic* Build( std::string _name ) override
-		{
-			Configurator& config = Singleton< Configurator >::Instance();
-			return new ParameterRange( config, _name );
-		}
-	};
-	/**
+                Generic* Build( std::string _name ) override
+                {
+                        Configurator& config = Singleton<Configurator>::Instance();
+                        return new ParameterRange( config, _name );
+                }
+        };
+        /**
 	 * @brief The global ParameterRange Builder
 	 */
-	static ParameterRangeBuilder builder;
+        static ParameterRangeBuilder builder;
 
         /** 
          *  @brief Default Constructor
 	 *  @details TODO Most likely wont be nessacary
          */
-        ParameterRange( );
-           
+        ParameterRange();
+
         /** 
          *  @brief The default constructor
 	 *  @param _config The Configurator to overwrite the default values
 	 *  @param _name the name of the Parameter
          */
         ParameterRange( Configurator& _config, std::string _name );
-       
-	/** Generic methods */
-	bool SetProperty( std::string _property, const int& _value ) override;
 
+        /** Generic methods */
+        bool SetProperty( std::string _property, const int& _value ) override;
 };
 
 ParameterRange::ParameterRangeBuilder ParameterRange::builder;

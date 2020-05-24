@@ -3,144 +3,138 @@
 
 #include "mocks/MockConfigurator.h"
 
-TEST( Default, Construct)
+TEST( Default, Construct )
 {
-	int value = 0;
-	MockConfigurator config;
-		
-	EXPECT_CALL( config, getProperty( "Parameter.const" )).WillRepeatedly( testing::ReturnRef(value));
-	EXPECT_CALL( config, getProperty( "Parameter.default" )).WillRepeatedly( testing::ReturnRef(value));
-	EXPECT_CALL( config, getProperty( "Parameter.value" )).WillRepeatedly( testing::ReturnRef(value));
+        int value = 0;
+        MockConfigurator config;
 
-	IParameter *p = new ParameterRange( config, "Parameter" );
-    	ASSERT_NE( p , nullptr );
+        EXPECT_CALL( config, getProperty( "Parameter.const" ) ).WillRepeatedly( testing::ReturnRef( value ) );
+        EXPECT_CALL( config, getProperty( "Parameter.default" ) ).WillRepeatedly( testing::ReturnRef( value ) );
+        EXPECT_CALL( config, getProperty( "Parameter.value" ) ).WillRepeatedly( testing::ReturnRef( value ) );
+
+        IParameter *p = new ParameterRange( config, "Parameter" );
+        ASSERT_NE( p, nullptr );
 }
 
 // Other Test that we already trust a working Constructor
-class ParameterTest: 
-	public ::testing::Test 
+class ParameterTest : public ::testing::Test
 {
-	private:
-		int * mReturn;
+       private:
+        int *mReturn;
 
-	protected:
-		MockConfigurator mConfig;
-		IParameter* mParameter;
+       protected:
+        MockConfigurator mConfig;
+        IParameter *mParameter;
 
-    	ParameterTest() 
-	{
-    	
-	}
+        ParameterTest()
+        {
+        }
 
-    	virtual ~ParameterTest() {}
+        virtual ~ParameterTest() {}
 
-    	virtual void SetUp() 
-	{
-		mReturn = new int( 0 );
+        virtual void SetUp()
+        {
+                mReturn = new int( 0 );
 
-		EXPECT_CALL( mConfig, getProperty( "Parameter.const" )).WillRepeatedly( testing::ReturnRef( *mReturn ));
-		EXPECT_CALL( mConfig, getProperty( "Parameter.default" )).WillRepeatedly( testing::ReturnRef( *mReturn ));
-		EXPECT_CALL( mConfig, getProperty( "Parameter.value" )).WillRepeatedly( testing::ReturnRef( *mReturn ));
-	
-		mParameter = new Parameter( mConfig, "Parameter" );
-		ASSERT_NE( mParameter , nullptr );
-	}
+                EXPECT_CALL( mConfig, getProperty( "Parameter.const" ) ).WillRepeatedly( testing::ReturnRef( *mReturn ) );
+                EXPECT_CALL( mConfig, getProperty( "Parameter.default" ) ).WillRepeatedly( testing::ReturnRef( *mReturn ) );
+                EXPECT_CALL( mConfig, getProperty( "Parameter.value" ) ).WillRepeatedly( testing::ReturnRef( *mReturn ) );
 
-    	virtual void TearDown() 
-	{
-		delete mParameter;
-		delete mReturn;
-    	}
+                mParameter = new Parameter( mConfig, "Parameter" );
+                ASSERT_NE( mParameter, nullptr );
+        }
 
+        virtual void TearDown()
+        {
+                delete mParameter;
+                delete mReturn;
+        }
 };
 
 TEST_F( ParameterTest, GetDefaultMinimum )
 {
-	ASSERT_EQ( mParameter->getProperty( "minimum" ) , 0);
+        ASSERT_EQ( mParameter->getProperty( "minimum" ), 0 );
 }
 
 TEST_F( ParameterTest, GetDefaultMaximum )
-{	
-	ASSERT_EQ( mParameter->getProperty( "maximum" ) , 0);
+{
+        ASSERT_EQ( mParameter->getProperty( "maximum" ), 0 );
 }
 
 TEST_F( ParameterTest, SetValue )
-{	
-	int min; 
+{
+        int min;
 
-	mParameter->setProperty( "minimum" , -42 );
-	ASSERT_EQ( mParameter->getProperty("minimum"), -42 );
-    
-	mParameter->setProperty( "maximum" , 42 );
-	ASSERT_EQ( mParameter->getProperty("maximum"), 42 );
-    
-	mParameter->setProperty( "value" , 21 );
-	ASSERT_EQ( mParameter->getProperty("value"), 21 );
+        mParameter->setProperty( "minimum", -42 );
+        ASSERT_EQ( mParameter->getProperty( "minimum" ), -42 );
+
+        mParameter->setProperty( "maximum", 42 );
+        ASSERT_EQ( mParameter->getProperty( "maximum" ), 42 );
+
+        mParameter->setProperty( "value", 21 );
+        ASSERT_EQ( mParameter->getProperty( "value" ), 21 );
 }
 
-
 TEST_F( ParameterTest, ExceedMinimum )
-{	
-	int value, min; 
-	mParameter->setProperty( "minimum" , -42 );
-	min = mParameter->getProperty("minimum");
-	
-	mParameter->setProperty("value", 0 );
-	value =  mParameter->getProperty("value");
-	
-	mParameter->setProperty( "value" , min-1 );
-	ASSERT_EQ( mParameter->getProperty("value"), value );
+{
+        int value, min;
+        mParameter->setProperty( "minimum", -42 );
+        min = mParameter->getProperty( "minimum" );
 
-	mParameter->setProperty( "minimum" , -42 );
+        mParameter->setProperty( "value", 0 );
+        value = mParameter->getProperty( "value" );
 
-	min = mParameter->getProperty("minimum");
-	value =  mParameter->getProperty("value");
-	mParameter->setProperty( "value" , min-1 );
-	ASSERT_EQ( mParameter->getProperty("value"), value );
+        mParameter->setProperty( "value", min - 1 );
+        ASSERT_EQ( mParameter->getProperty( "value" ), value );
+
+        mParameter->setProperty( "minimum", -42 );
+
+        min = mParameter->getProperty( "minimum" );
+        value = mParameter->getProperty( "value" );
+        mParameter->setProperty( "value", min - 1 );
+        ASSERT_EQ( mParameter->getProperty( "value" ), value );
 }
 
 TEST_F( ParameterTest, ExceedMaximum )
-{	
-	int value, max; 
-	max = mParameter->getProperty("maximum");
+{
+        int value, max;
+        max = mParameter->getProperty( "maximum" );
 
-	mParameter->setProperty("value", 0 );
-	value =  mParameter->getProperty("value");
-	
-	mParameter->setProperty( "value" , max+1 );
-	ASSERT_EQ( mParameter->getProperty("value"), value );
+        mParameter->setProperty( "value", 0 );
+        value = mParameter->getProperty( "value" );
 
-	mParameter->setProperty( "maximum" , 42 );
+        mParameter->setProperty( "value", max + 1 );
+        ASSERT_EQ( mParameter->getProperty( "value" ), value );
 
-	max = mParameter->getProperty("maximum");
-	value =  mParameter->getProperty("value");
-	mParameter->setProperty( "value" , max+1 );
-	ASSERT_EQ( mParameter->getProperty("value"), value );
+        mParameter->setProperty( "maximum", 42 );
+
+        max = mParameter->getProperty( "maximum" );
+        value = mParameter->getProperty( "value" );
+        mParameter->setProperty( "value", max + 1 );
+        ASSERT_EQ( mParameter->getProperty( "value" ), value );
 }
-
 
 TEST_F( ParameterTest, Reset )
 {
-    	mParameter->setProperty( "minimum" , -42 );
-    	mParameter->setProperty( "maximum" , 42 );
+        mParameter->setProperty( "minimum", -42 );
+        mParameter->setProperty( "maximum", 42 );
 
-    	mParameter->setProperty( "value" , 21 );
-    	ASSERT_NE( mParameter->getProperty("value"), mParameter->getProperty( "default" ));
+        mParameter->setProperty( "value", 21 );
+        ASSERT_NE( mParameter->getProperty( "value" ), mParameter->getProperty( "default" ) );
 
-    	mParameter->reset();
-    	ASSERT_EQ( mParameter->getProperty("value"), mParameter->getProperty( "default" ));
+        mParameter->reset();
+        ASSERT_EQ( mParameter->getProperty( "value" ), mParameter->getProperty( "default" ) );
 
-    	mParameter->setProperty( "default", 10 );
-    	mParameter->setProperty( "value" , 21 );
-    	ASSERT_NE( mParameter->getProperty("value"), mParameter->getProperty( "default" ));
-    
-    	mParameter->reset();
-    	ASSERT_EQ( mParameter->getProperty("value"), mParameter->getProperty( "default" ));
+        mParameter->setProperty( "default", 10 );
+        mParameter->setProperty( "value", 21 );
+        ASSERT_NE( mParameter->getProperty( "value" ), mParameter->getProperty( "default" ) );
+
+        mParameter->reset();
+        ASSERT_EQ( mParameter->getProperty( "value" ), mParameter->getProperty( "default" ) );
 }
 
-
-int main(int argc, char **argv) 
+int main( int argc, char **argv )
 {
-    ::testing::InitGoogleTest(&argc, argv); 
-    return RUN_ALL_TESTS();
+        ::testing::InitGoogleTest( &argc, argv );
+        return RUN_ALL_TESTS();
 }

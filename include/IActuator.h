@@ -6,8 +6,6 @@
 /**
  * @brief The generic interface for Actuators
  */
-class IActuator:
-        public Generic
+class IActuator : public Generic
 {
-
 };

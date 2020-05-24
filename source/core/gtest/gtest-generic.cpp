@@ -9,21 +9,21 @@
 
 TEST( Construct, Default )
 {
-	/* Builder is an interface class, not testing possible */
-	Generic* generic = new Generic();	
+        /* Builder is an interface class, not testing possible */
+        Generic* generic = new Generic();
 }
 
 TEST( Name, SetAndGetName )
 {
-	/* Builder is an interface class, not testing possible */
-	Generic* generic = new Generic();
-	const std::string name = "generic";
+        /* Builder is an interface class, not testing possible */
+        Generic* generic = new Generic();
+        const std::string name = "generic";
 
-	ASSERT_EQ( generic->GetName(), "" );
+        ASSERT_EQ( generic->GetName(), "" );
 
-	ASSERT_EQ( generic->SetName( name ), true );
+        ASSERT_EQ( generic->SetName( name ), true );
 
-	ASSERT_EQ( generic->GetName(), name );
+        ASSERT_EQ( generic->GetName(), name );
 }
 
 /**
@@ -31,11 +31,11 @@ TEST( Name, SetAndGetName )
  */
 TEST( GenericFeature, GetProperty )
 {
-	int _value;
-	Generic* generic = new Generic();
+        int _value;
+        Generic* generic = new Generic();
 
-	EXPECT_EQ( generic->GetProperty( "const", _value ), true );
-	EXPECT_EQ( _value, 0 );
+        EXPECT_EQ( generic->GetProperty( "const", _value ), true );
+        EXPECT_EQ( _value, 0 );
 }
 
 /**
@@ -43,13 +43,13 @@ TEST( GenericFeature, GetProperty )
  */
 TEST( GenericFeature, GetPropertyWithName )
 {
-	int _value;
-	Generic* generic = new Generic();
-	
-	generic->SetName( "Generic" );
+        int _value;
+        Generic* generic = new Generic();
 
-	EXPECT_EQ( generic->GetProperty( "const", _value ), true );
-	EXPECT_EQ( _value, 0 );
+        generic->SetName( "Generic" );
+
+        EXPECT_EQ( generic->GetProperty( "const", _value ), true );
+        EXPECT_EQ( _value, 0 );
 }
 
 /**
@@ -57,25 +57,24 @@ TEST( GenericFeature, GetPropertyWithName )
  */
 TEST( GenericFeature, GetUnknownProperty )
 {
-	int _value = 123456789;
-	Generic* generic = new Generic();
+        int _value = 123456789;
+        Generic* generic = new Generic();
 
-	EXPECT_EQ( generic->GetProperty( "unknown", _value ), false );
-	EXPECT_EQ( _value, 123456789 );
+        EXPECT_EQ( generic->GetProperty( "unknown", _value ), false );
+        EXPECT_EQ( _value, 123456789 );
 }
-
 
 /**
  * GTest: set default properties
  */
 TEST( GenericFeature, SetProperty )
 {
-	int _value = 0;
-	Generic* generic = new Generic();
+        int _value = 0;
+        Generic* generic = new Generic();
 
-	EXPECT_EQ( generic->SetProperty( "const", 1 ), true );
-	generic->GetProperty( "const", _value );
-	EXPECT_EQ( _value, 1 );
+        EXPECT_EQ( generic->SetProperty( "const", 1 ), true );
+        generic->GetProperty( "const", _value );
+        EXPECT_EQ( _value, 1 );
 }
 
 /**
@@ -83,14 +82,14 @@ TEST( GenericFeature, SetProperty )
  */
 TEST( GenericFeature, SetPropertyWithName )
 {
-	int _value;
+        int _value;
 
-	Generic* generic = new Generic();
-	generic->SetName( "Generic" );
+        Generic* generic = new Generic();
+        generic->SetName( "Generic" );
 
-	EXPECT_EQ( generic->SetProperty( "Generic.const", 1 ), true );
-	generic->GetProperty( "Generic.const", _value );
-	EXPECT_EQ( _value, 1 );
+        EXPECT_EQ( generic->SetProperty( "Generic.const", 1 ), true );
+        generic->GetProperty( "Generic.const", _value );
+        EXPECT_EQ( _value, 1 );
 }
 
 /**
@@ -98,12 +97,12 @@ TEST( GenericFeature, SetPropertyWithName )
  */
 TEST( GenericFeature, SetUnknownProperty )
 {
-	Generic* generic = new Generic();
-	EXPECT_EQ( generic->SetProperty( "unknown", 1 ), false );
+        Generic* generic = new Generic();
+        EXPECT_EQ( generic->SetProperty( "unknown", 1 ), false );
 }
 
-int main(int argc, char **argv) 
+int main( int argc, char** argv )
 {
-    ::testing::InitGoogleTest(&argc, argv); 
-    return RUN_ALL_TESTS();
+        ::testing::InitGoogleTest( &argc, argv );
+        return RUN_ALL_TESTS();
 }

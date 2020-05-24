@@ -6,54 +6,52 @@
 
 // Design Patterns
 #include "../../StateMachine.h"
-#include "Singleton.h"
 #include "Factory.h"
+#include "Singleton.h"
 
 // Testing
 #include "MockMosquitto.h"
-#include "mocks/MockParameter.h"
 #include "mocks/MockConfigurator.h"
+#include "mocks/MockParameter.h"
 
 // Third-Party
-#include <gtest/gtest.h>
 #include <gmock/gmock.h>
+#include <gtest/gtest.h>
 #include "tinyfsm.hpp"
 
 // Ignore Nagy Mocks for the Configurator Get(ters)
 using ::testing::NiceMock;
 using ::testing::Return;
 
-class MosquittoFeature: 
-	public ::testing::Test 
+class MosquittoFeature : public ::testing::Test
 {
-	private:
+       private:
+       protected:
+        NiceMock<MockConfigurator> mConfig;
 
-	protected:
-		NiceMock< MockConfigurator > mConfig;
+        virtual ~MosquittoFeature() {}
 
-    	virtual ~MosquittoFeature() {}
+        virtual void SetUp()
+        {
+                mConfig.stringResults["hostname"] = "localhost";
+                EXPECT_CALL( mConfig, GetString( "mosquitto", "hostname", testing::_ ) ).WillRepeatedly( testing::Return( true ) );
 
-    	virtual void SetUp() 
-	{
-		mConfig.stringResults["hostname"] = "localhost";
-		EXPECT_CALL( mConfig, GetString( "mosquitto", "hostname", testing::_ )).WillRepeatedly( testing::Return( true ));
-	
-		mConfig.stringResults["port"]     = "1833";
-		EXPECT_CALL( mConfig, GetString( "mosquitto", "port", testing::_ )).WillRepeatedly( testing::Return( true ));
-	
-		mConfig.stringResults["username"] = "rsalm";
-		EXPECT_CALL( mConfig, GetString( "mosquitto", "username"  , testing::_ )).WillRepeatedly( testing::Return( true ));
-	
-		mConfig.stringResults["password"] = "rsalm";
-		EXPECT_CALL( mConfig, GetString( "mosquitto", "password"  , testing::_ )).WillRepeatedly( testing::Return( true ));
+                mConfig.stringResults["port"] = "1833";
+                EXPECT_CALL( mConfig, GetString( "mosquitto", "port", testing::_ ) ).WillRepeatedly( testing::Return( true ) );
 
-		Singleton< MockConfigurator >::Register( mConfig );
+                mConfig.stringResults["username"] = "rsalm";
+                EXPECT_CALL( mConfig, GetString( "mosquitto", "username", testing::_ ) ).WillRepeatedly( testing::Return( true ) );
 
-		Factories *factory = new Factories();
-		factory->Register< IConfigurator >( "Configurator", &MockConfigurator::builder );
-		
-		Singleton< Factories >::Register( *factory );
-	}
+                mConfig.stringResults["password"] = "rsalm";
+                EXPECT_CALL( mConfig, GetString( "mosquitto", "password", testing::_ ) ).WillRepeatedly( testing::Return( true ) );
+
+                Singleton<MockConfigurator>::Register( mConfig );
+
+                Factories* factory = new Factories();
+                factory->Register<IConfigurator>( "Configurator", &MockConfigurator::builder );
+
+                Singleton<Factories>::Register( *factory );
+        }
 };
 
 /**
@@ -61,116 +59,113 @@ class MosquittoFeature:
  */
 TEST_F( MosquittoFeature, Default )
 {
-	Mosquitto* mosquitto = new Mosquitto( mConfig, "localhost", 1883, "rsalm", "rsalm" );
-	ASSERT_NE( mosquitto, nullptr);
+        Mosquitto* mosquitto = new Mosquitto( mConfig, "localhost", 1883, "rsalm", "rsalm" );
+        ASSERT_NE( mosquitto, nullptr );
 }
 
 TEST_F( MosquittoFeature, Interface )
 {
-	IMosquitto* mosquitto = new Mosquitto( mConfig, "localhost", 1883, "rsalm", "rsalm" );
-	ASSERT_NE( mosquitto, nullptr);
+        IMosquitto* mosquitto = new Mosquitto( mConfig, "localhost", 1883, "rsalm", "rsalm" );
+        ASSERT_NE( mosquitto, nullptr );
 }
 
 TEST_F( MosquittoFeature, Builder )
 {
-	auto mosquitto = Mosquitto::builder.Build( &mConfig, "Mosquitto" );
-	ASSERT_EQ( typeid( IMosquitto* ), typeid( mosquitto ) );
+        auto mosquitto = Mosquitto::builder.Build( &mConfig, "Mosquitto" );
+        ASSERT_EQ( typeid( IMosquitto* ), typeid( mosquitto ) );
 }
-
 
 bool terminate()
 {
-	std::cout << "TEST\n";	
-	StateMachine::dispatch( eTerminate() );
-	return false;
+        std::cout << "TEST\n";
+        StateMachine::dispatch( eTerminate() );
+        return false;
 }
 
 TEST( StateMachine, InitializeFailure )
 {
-	NiceMock< MockMosquittoVisitor > visitor;
-	StateMachine::Accept( visitor );	
+        NiceMock<MockMosquittoVisitor> visitor;
+        StateMachine::Accept( visitor );
 
-	// UpStream
-	EXPECT_CALL( visitor, visitInitialize( testing::_ )).WillOnce( testing::Return( false ));
-	StateMachine::dispatch( eCycle() );
+        // UpStream
+        EXPECT_CALL( visitor, visitInitialize( testing::_ ) ).WillOnce( testing::Return( false ) );
+        StateMachine::dispatch( eCycle() );
 
-	// DownStream
-	EXPECT_CALL( visitor, visitCleanup( testing::_ )).WillOnce( testing::Return( true ));
-	StateMachine::dispatch( eCycle() );
+        // DownStream
+        EXPECT_CALL( visitor, visitCleanup( testing::_ ) ).WillOnce( testing::Return( true ) );
+        StateMachine::dispatch( eCycle() );
 }
 
 TEST( StateMachine, ConfigureFailure )
 {
-	NiceMock< MockMosquittoVisitor > visitor;
-	StateMachine::Accept( visitor );	
+        NiceMock<MockMosquittoVisitor> visitor;
+        StateMachine::Accept( visitor );
 
-	// UpStream
-	EXPECT_CALL( visitor, visitInitialize( testing::_ )).WillOnce( testing::Return( true ));
-	StateMachine::dispatch( eCycle() );
+        // UpStream
+        EXPECT_CALL( visitor, visitInitialize( testing::_ ) ).WillOnce( testing::Return( true ) );
+        StateMachine::dispatch( eCycle() );
 
-	EXPECT_CALL( visitor, visitConfigure( testing::_ )).WillOnce( testing::Return( false ) );
-	StateMachine::dispatch( eCycle() );
+        EXPECT_CALL( visitor, visitConfigure( testing::_ ) ).WillOnce( testing::Return( false ) );
+        StateMachine::dispatch( eCycle() );
 
-	// DownStream
-	EXPECT_CALL( visitor, visitDestroy( testing::_ )).WillOnce( testing::Return( true ) );
-	StateMachine::dispatch( eCycle() );
+        // DownStream
+        EXPECT_CALL( visitor, visitDestroy( testing::_ ) ).WillOnce( testing::Return( true ) );
+        StateMachine::dispatch( eCycle() );
 
-	EXPECT_CALL( visitor, visitCleanup( testing::_ )).WillOnce( testing::Return( true ));
-	StateMachine::dispatch( eCycle() );
+        EXPECT_CALL( visitor, visitCleanup( testing::_ ) ).WillOnce( testing::Return( true ) );
+        StateMachine::dispatch( eCycle() );
 }
 
 TEST( StateMachine, ConnectFailure )
 {
-	NiceMock< MockMosquittoVisitor > visitor;
-	StateMachine::Accept( visitor );
-	
-	// UpStream
-	EXPECT_CALL( visitor, visitInitialize( testing::_ )).WillOnce( testing::Return( true ));
-	StateMachine::dispatch( eCycle() );
+        NiceMock<MockMosquittoVisitor> visitor;
+        StateMachine::Accept( visitor );
 
-	EXPECT_CALL( visitor, visitConfigure( testing::_ )).WillOnce( testing::Return( true ));
-	StateMachine::dispatch( eCycle() );
+        // UpStream
+        EXPECT_CALL( visitor, visitInitialize( testing::_ ) ).WillOnce( testing::Return( true ) );
+        StateMachine::dispatch( eCycle() );
 
-	EXPECT_CALL( visitor, visitConnect( testing::_ )).WillOnce( testing::Return( false ));
-	StateMachine::dispatch( eCycle() );
+        EXPECT_CALL( visitor, visitConfigure( testing::_ ) ).WillOnce( testing::Return( true ) );
+        StateMachine::dispatch( eCycle() );
 
-	// DownStream
-	EXPECT_CALL( visitor, visitDestroy( testing::_ )).WillOnce( testing::Return( true ) );
-	StateMachine::dispatch( eCycle() );
+        EXPECT_CALL( visitor, visitConnect( testing::_ ) ).WillOnce( testing::Return( false ) );
+        StateMachine::dispatch( eCycle() );
 
-	EXPECT_CALL( visitor, visitCleanup( testing::_ )).WillOnce( testing::Return( true ));
-	StateMachine::dispatch( eCycle() );
+        // DownStream
+        EXPECT_CALL( visitor, visitDestroy( testing::_ ) ).WillOnce( testing::Return( true ) );
+        StateMachine::dispatch( eCycle() );
 
+        EXPECT_CALL( visitor, visitCleanup( testing::_ ) ).WillOnce( testing::Return( true ) );
+        StateMachine::dispatch( eCycle() );
 }
 
 TEST( StateMachine, LoopFailure )
 {
-	NiceMock< MockMosquittoVisitor > visitor;
-	StateMachine::Accept( visitor );	
+        NiceMock<MockMosquittoVisitor> visitor;
+        StateMachine::Accept( visitor );
 
-	// UpStream
-	EXPECT_CALL( visitor, visitInitialize( testing::_ )).WillOnce( testing::Return( true ));
-	StateMachine::dispatch( eCycle() );
+        // UpStream
+        EXPECT_CALL( visitor, visitInitialize( testing::_ ) ).WillOnce( testing::Return( true ) );
+        StateMachine::dispatch( eCycle() );
 
-	EXPECT_CALL( visitor, visitConfigure( testing::_ )).WillOnce( testing::Return( true ));
-	StateMachine::dispatch( eCycle() );
+        EXPECT_CALL( visitor, visitConfigure( testing::_ ) ).WillOnce( testing::Return( true ) );
+        StateMachine::dispatch( eCycle() );
 
-	EXPECT_CALL( visitor, visitConnect( testing::_ )).WillOnce( testing::Return( true ));
-	StateMachine::dispatch( eCycle() );
+        EXPECT_CALL( visitor, visitConnect( testing::_ ) ).WillOnce( testing::Return( true ) );
+        StateMachine::dispatch( eCycle() );
 
-	EXPECT_CALL( visitor, visitLoop( testing::_ )).WillOnce( testing::Return( false ) );
-	StateMachine::dispatch( eCycle() );
+        EXPECT_CALL( visitor, visitLoop( testing::_ ) ).WillOnce( testing::Return( false ) );
+        StateMachine::dispatch( eCycle() );
 
-	// DownStream
-	EXPECT_CALL( visitor, visitDisconnect( testing::_ )).WillOnce( testing::Return( true ) );
-	StateMachine::dispatch( eCycle() );
+        // DownStream
+        EXPECT_CALL( visitor, visitDisconnect( testing::_ ) ).WillOnce( testing::Return( true ) );
+        StateMachine::dispatch( eCycle() );
 
-	EXPECT_CALL( visitor, visitDestroy( testing::_ )).WillOnce( testing::Return( true ) );
-	StateMachine::dispatch( eCycle() );
+        EXPECT_CALL( visitor, visitDestroy( testing::_ ) ).WillOnce( testing::Return( true ) );
+        StateMachine::dispatch( eCycle() );
 
-	EXPECT_CALL( visitor, visitCleanup( testing::_ )).WillOnce( testing::Return( true ));
-	StateMachine::dispatch( eCycle() );
-
+        EXPECT_CALL( visitor, visitCleanup( testing::_ ) ).WillOnce( testing::Return( true ) );
+        StateMachine::dispatch( eCycle() );
 }
 
 /* DONT MODIFY, THIS IS A TEMPLATE 
@@ -191,8 +186,8 @@ TEST( StateMachine, InitializeFailure )
 }
 */
 
-int main(int argc, char **argv) 
+int main( int argc, char** argv )
 {
-    ::testing::InitGoogleTest(&argc, argv); 
-    return RUN_ALL_TESTS();
+        ::testing::InitGoogleTest( &argc, argv );
+        return RUN_ALL_TESTS();
 }

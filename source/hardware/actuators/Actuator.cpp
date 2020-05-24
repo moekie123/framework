@@ -6,16 +6,16 @@
 #include "IParameter.h"
 
 // Design Patterns
-#include "Singleton.h"
 #include "Factory.h"
+#include "Singleton.h"
 
 // Stl-Headers
-#include <string>
 #include <iostream>
+#include <string>
 
 Actuator::ActuatorBuilder Actuator::builder;
 
-Actuator::Actuator( std::string _name ) 
+Actuator::Actuator( std::string _name )
 {
-    	mName = _name;
+        mName = _name;
 }

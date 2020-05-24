@@ -11,12 +11,12 @@
  * @brief The (Base) Factory Container 
  * @details The AbstractFactory is doing all the 'magic', this class only holds specialized builders
  */
-template< class T >
+template <class T>
 class Factory
 {
-public:
-	/**
+       public:
+        /**
 	 * @brief The vector of specialized builders
 	 */
-	std::map< std::string, Builder<T>* > mBuilders;
+        std::map<std::string, Builder<T>*> mBuilders;
 };

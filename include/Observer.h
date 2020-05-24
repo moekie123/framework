@@ -10,27 +10,25 @@ class Subject;
  * @brief The (Base) Observer class
  * @details Combined with the Subject class this implements the Observer-Pattern
  */
-class Observer:
-	virtual public Object
+class Observer : virtual public Object
 {
-public:
-	/**
+       public:
+        /**
 	 * @brief The default constructor
  	 */
-	Observer();
+        Observer();
 
-	/**
+        /**
 	 * @brief The callback for a Subject to notify when a Object has been modified
 	 */
-	virtual bool Update( const Subject& );
+        virtual bool Update( const Subject& );
 
-private:
-	/** 
+       private:
+        /** 
 	 * @brief Required to suppress the "no-virtual-move-assign"-Compiler Warning 
          */
-	Observer& operator=( Observer&& other) 
-	{
-        	return *this;
-    	}
-
+        Observer& operator=( Observer&& other )
+        {
+                return *this;
+        }
 };
