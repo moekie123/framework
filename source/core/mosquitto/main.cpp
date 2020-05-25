@@ -1,6 +1,9 @@
+// Framework
+#include "Framework.h"
+
 // Inheritance
-#include "Mosquitto.h"
 #include "../configurator/Configurator.h"
+#include "Mosquitto.h"
 
 // Interfaces
 #include "IMosquitto.h"
@@ -8,7 +11,9 @@
 
 // Design Patterns
 #include "Observer.h"
+#include "AbstractFactory.h"
 #include "StateMachine.h"
+#include "Singleton.h"
 
 // Third-Party
 #include <spdlog/spdlog.h>
@@ -24,21 +29,6 @@ void abort( int s )
         StateMachine::dispatch( eTerminate() );
 }
 
-class Dummy : public IParameter
-{
-       public:
-        Dummy()
-        {
-                SetName( "#" );
-        }
-
-        /* Observer methods **/
-        bool Update( const IMosquitto* subject )
-        {
-                return true;
-        }
-};
-
 int main( int argc, char* argv[] )
 {
         spdlog::cfg::load_env_levels();
@@ -46,33 +36,25 @@ int main( int argc, char* argv[] )
         spdlog::info( "Booting Application" );
 
         // Link Callbacks
+        spdlog::trace( "Link Signals" );
         signal( SIGINT, abort );
         signal( SIGTERM, abort );
 
-        Configurator::mConfigFileName = "mosquitto.xml";
+        // Declare Framework
+	Framework* fw = new Framework( argc, argv );
 
-        // Open Configuration File
-        Configurator* configurator = new Configurator();
+        // Retrieve Factory
+        auto factory = Singleton<Factories>::Instance();
 
-        // Build Mosquitto Instance
-        std::string* hostname = new std::string();
-        configurator->GetProperty( "mosquitto", "hostname", (std::string&)*hostname );
+        // Retrieve Mosquitto Client
+        auto mosquitto = factory.Construct<IMosquitto>( "Mosquitto", "mosquitto" );
 
-        std::string* username = new std::string();
-        configurator->GetProperty( "mosquitto", "username", (std::string&)*username );
-
-        std::string* password = new std::string();
-        configurator->GetProperty( "mosquitto", "password", (std::string&)*password );
-
-        int* port = new int();
-        configurator->GetProperty( "mosquitto", "port", (int&)*port );
-
-        Mosquitto mosquitto( *configurator, *hostname, *port, *username, *password );
-        IParameter* param = new Dummy();
+        // Retrieve Parameter
+        auto parameter = factory.Construct<IParameter>( "Parameter", "dummy" );
 
         // Start State Machine
-        mosquitto.Attach( *param );
-        StateMachine::Accept( mosquitto );
+        mosquitto->Attach( *parameter );
+        StateMachine::Accept( *mosquitto );
 
         while ( StateMachine::IsRunning() )
         {

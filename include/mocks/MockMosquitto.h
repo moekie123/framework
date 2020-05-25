@@ -1,11 +1,16 @@
 #pragma once
 
-#include "../../Visitor.h"
+// Inheritance
 #include "Generic.h"
+
+// Design Patterns
+#include "Visitor.h"
+
+// Interfaces
 #include "IMosquitto.h"
 
+// Third-Party
 #include <gmock/gmock.h>
-#include <string>
 
 class MockMosquittoVisitor : public MosquittoVisitor
 {

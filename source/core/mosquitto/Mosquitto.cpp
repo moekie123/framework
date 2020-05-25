@@ -65,13 +65,16 @@ Mosquitto::Mosquitto() : mHostname( "localhost" ), mPort( 1883 ), mUsername( "rs
         mClient = nullptr;
 }
 
-Mosquitto::Mosquitto( const IConfigurator& _config, const std::string& _hostname, const int& _port, const std::string& _username, const std::string& _password ) : mHostname( _hostname ),
-                                                                                                                                                                   mPort( _port ),
-                                                                                                                                                                   mUsername( _username ),
-                                                                                                                                                                   mPassword( _password )
+Mosquitto::Mosquitto( const IConfigurator& _config )
 {
         spdlog::debug( "{}", __PRETTY_FUNCTION__ );
         SetName( "Mosquitto" );
+
+        _config.GetProperty( "mosquitto", "hostname", mHostname );
+        _config.GetProperty( "mosquitto", "username", mUsername );
+        _config.GetProperty( "mosquitto", "password", mPassword );
+        _config.GetProperty( "mosquitto", "port", mPort );
+
         mClient = nullptr;
 }
 
@@ -188,10 +191,10 @@ bool Mosquitto::visitLoop( const StateMachine& )
   			 * Convert the iterator, which is stored in a vector a Observer*, back to a parameter
 			 */
                         // TODO
-                        auto parameter = dynamic_cast<IParameter*>( ( *it ) );
+                        //    	auto parameter = dynamic_cast<IParameter*>( ( *it ) );
+                        //	ret = mosquitto_topic_matches_sub( parameter->GetName().c_str(), message.first.c_str(), &match );
 
-                        ret = mosquitto_topic_matches_sub( parameter->GetName().c_str(), message.first.c_str(), &match );
-
+                        ret = mosquitto_topic_matches_sub( ( *it )->GetName().c_str(), message.first.c_str(), &match );
                         if ( ret != MOSQ_ERR_SUCCESS )
                         {
                                 spdlog::error( "Failed matching topic [{}]", mosquitto_strerror( errno ) );
@@ -209,7 +212,7 @@ bool Mosquitto::visitLoop( const StateMachine& )
                                 // Observer< IMosquitto >* param = dynamic_cast< IParameter* >( parameter );
 
                                 // This will avoid ambgious Update calls since there are multiple observers in IParameter.
-                                //param->Update( this );
+                                ( *it )->Update( *this );
                         }
                 }
 

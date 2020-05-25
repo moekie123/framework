@@ -5,13 +5,13 @@
 #include "IMosquitto.h"
 
 // Design Patterns
-#include "../../StateMachine.h"
+#include "StateMachine.h"
 #include "Factory.h"
 #include "Singleton.h"
 
 // Testing
-#include "MockMosquitto.h"
 #include "mocks/MockConfigurator.h"
+#include "mocks/MockMosquitto.h"
 #include "mocks/MockParameter.h"
 
 // Third-Party
@@ -59,13 +59,13 @@ class MosquittoFeature : public ::testing::Test
  */
 TEST_F( MosquittoFeature, Default )
 {
-        Mosquitto* mosquitto = new Mosquitto( mConfig, "localhost", 1883, "rsalm", "rsalm" );
+        Mosquitto* mosquitto = new Mosquitto( mConfig );
         ASSERT_NE( mosquitto, nullptr );
 }
 
 TEST_F( MosquittoFeature, Interface )
 {
-        IMosquitto* mosquitto = new Mosquitto( mConfig, "localhost", 1883, "rsalm", "rsalm" );
+        IMosquitto* mosquitto = new Mosquitto( mConfig );
         ASSERT_NE( mosquitto, nullptr );
 }
 

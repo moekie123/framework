@@ -9,7 +9,6 @@
 
 // Design Patterns
 #include "StateMachine.h"
-#include "Visitor.h"
 
 #include "AbstractFactory.h"
 #include "Builder.h"
@@ -20,8 +19,7 @@
  * @brief (Wrapper Design Pattern) The Mosquitto Class
  * @details This class wraps around the libmosquitto library and functions can be called through the MosquittoVisitor
  */
-class Mosquitto : public IMosquitto,
-                  public MosquittoVisitor
+class Mosquitto : public IMosquitto
 {
        public:
         /**
@@ -40,24 +38,7 @@ class Mosquitto : public IMosquitto,
                 {
                         if ( !Singleton<Mosquitto>::IsConstructed() )
                         {
-                                const std::string label = "Configurator";
-
-                                Factories& factory = Singleton<Factories>::Instance();
-                                IConfigurator* config = factory.Construct<IConfigurator>( label );
-
-                                std::string* hostname = new std::string();
-                                config->GetProperty( "mosquitto", "hostname", (std::string&)*hostname );
-
-                                std::string* username = new std::string();
-                                config->GetProperty( "mosquitto", "username", (std::string&)*username );
-
-                                std::string* password = new std::string();
-                                config->GetProperty( "mosquitto", "password", (std::string&)*password );
-
-                                int* port = new int();
-                                config->GetProperty( "mosquitto", "port", (int&)*port );
-
-                                Mosquitto* mosquitto = new Mosquitto( *config, *hostname, *port, *username, *password );
+                                Mosquitto* mosquitto = new Mosquitto( *_config );
                                 Singleton<Mosquitto>::Register( *mosquitto );
                         }
 
@@ -87,7 +68,7 @@ class Mosquitto : public IMosquitto,
         /**
 	 * @brief The constructor
 	 */
-        Mosquitto( const IConfigurator& _config, const std::string&, const int&, const std::string&, const std::string& );
+        Mosquitto( const IConfigurator& _config );
 
         /**
 	 * @brief The global ParameterBuilder
@@ -115,20 +96,20 @@ class Mosquitto : public IMosquitto,
         /**
 	 * @brief The network addres of the mqtt broker
 	 */
-        const std::string& mHostname;
+        std::string mHostname;
 
         /**
 	 * @brief The network port of the mqtt broker
 	 */
-        const int& mPort;
+        int mPort;
 
         /**
 	 * @brief The Username of the mqtt broker 
 	 */
-        const std::string& mUsername;
+        std::string mUsername;
 
         /**
 	 * @brief The Password of the mqtt broker
 	 */
-        const std::string& mPassword;
+        std::string mPassword;
 };

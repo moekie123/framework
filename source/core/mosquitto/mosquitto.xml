@@ -5,4 +5,11 @@
 		<password>rsalm</password>
 		<hostname>localhost</hostname>
 	</Parameter>
+
+	<Parameter name="dummy">
+		<const>0</const>
+		<value>42</value>
+		<default>0</default>
+	</Parameter>
+
 </Root>
