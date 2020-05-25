@@ -21,29 +21,15 @@ SESSION='Framework'
 
 if [ -d "${FRAMEWORK}" ]; then
 
-	function Rebuild 
-	{
-       		echo "Rebuild the complete project"
-		rm -rf ${FRAMEWORK_BUILD}
-		cmake -S${FRAMEWORK} -B${FRAMEWORK_BUILD}
-       		make --no-print-directory -C ${FRAMEWORK_BUILD}
-	}
+	# Configure Enviroment Variable
+	export FRAMEWORK=$FRAMEWORK
 
-	function session()
-	{
-		if [ ! -z "$1" ]; then
-			SESSION=$1	
-		else
-			SESSION="Framework"
-		fi
-		
-		echo "Session [$SESSION]"
-		export SESSION=$SESSION
-	
-		alias makes='make --no-print-directory -C  ${FRAMEWORK_BUILD} '${SESSION}
-		alias gtest=${SESSION}
-	}
+	export TAGS=$FRAMEWORK/tags
+	export SESSION=$SESSION
 
+	export PATH=$PATH:$FRAMEWORK/binary/
+
+	# Navigation aliasses
 	alias  cdf='cd '$FRAMEWORK
 	alias  cdb='cd '${FRAMEWORK_BUILD}
 	
@@ -67,20 +53,57 @@ if [ -d "${FRAMEWORK}" ]; then
 
 	alias  cdenv='cd '$FRAMEWORK/enviroment
 
+	# Build shortcuts
 	alias makef='make --no-print-directory -C '${FRAMEWORK_BUILD}
 	alias maker='make --no-print-directory -C  ${FRAMEWORK_BUILD} -j4'
 	alias makes='make --no-print-directory -C  ${FRAMEWORK_BUILD} -j4 '${SESSION} 
 
+	function rebuild 
+	{
+       		echo "Rebuild the complete project"
+		rm -rf ${FRAMEWORK_BUILD}
+		cmake -S${FRAMEWORK} -B${FRAMEWORK_BUILD}
+       		make --no-print-directory -C ${FRAMEWORK_BUILD}
+	}
+
+	# Documentation shortcuts
 	alias documention='make --no-print-directory -C  ${FRAMEWORK_BUILD} -j4 doc_install'
 
-	alias gtest=${SESSION}
+	# Execution shortcut
+	alias run=${SESSION}
 
-	export FRAMEWORK=$FRAMEWORK
+	# Shortcut specifier
+	function session()
+	{
+		if [ ! -z "$1" ]; then
+			SESSION=$1	
+		else
+			SESSION="Framework"
+		fi
+		
+		echo "Session [$SESSION]"
+		export SESSION=$SESSION
+	
+		alias makes='make --no-print-directory -C  ${FRAMEWORK_BUILD} '${SESSION}
+		alias run=${SESSION}
+	}
 
-	export TAGS=$FRAMEWORK/tags
-	export SESSION=$SESSION
-
-	export PATH=$PATH:$FRAMEWORK/binary/
+	# Speed Logger Debug
+	export SPDLOG_LEVEL="info"
+	function spdlog()
+	{
+		if [ $SPDLOG_LEVEL == "info" ]; then
+			export SPDLOG_LEVEL="debug"
+		elif [ $SPDLOG_LEVEL == "debug" ]; then
+			export SPDLOG_LEVEL="trace"
+		elif [ $SPDLOG_LEVEL == "trace" ]; then
+			export SPDLOG_LEVEL="info"
+		else
+			# Reset when enviroment variable is corrupt
+			export SPDLOG_LEVEL="info"
+		fi
+		echo "LogLevel [${SPDLOG_LEVEL}]"
+	}
 fi
 
 DRIVER_I2C=false

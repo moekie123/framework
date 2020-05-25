@@ -26,6 +26,7 @@ Usage: Framework [-h]
 Options:
   -h, --help        Print this menu and exit.
   -c, --config      The configuation file [default: config.xml].
+  -v, --verbose     Turn on the debug.
 ```
 
 - **--help**
@@ -33,6 +34,9 @@ Options:
 
 - **--config**
 	With this parameter the configuration file can be changed
+
+- **--verbose**
+	Turn on the (speedlogger) debug 
 
 # Development Tools and Commands
 With the setup a .bash\_profile will be installed. This profile provides a toolkit with command that will help you develop more effecient.
@@ -67,7 +71,7 @@ These are extende 'cd' commands
 - **[cdp]**  Prototypes
 
 ## Build Commands
-- **[Rebuild]** Remove the build directory and rebuild the full project
+- **[rebuild]** Remove the build directory and rebuild the full project
 
 - **[makef]** Normal speed build
 - **[maker]** Rapid speed build (-j4)
@@ -75,8 +79,11 @@ These are extende 'cd' commands
 - **[session]** Tag the target that you are working on
 - **[makes]** Build the project that you have selected with the 'session'-command
 
-## Testing
-- **[gtest]** Run the tests that you have selected with the 'session'-command
+## Run 
+- **[run]** Run the tests that you have selected with the 'session'-command
+
+## Debug
+- **[spdlog]** Toggle logging setting between 'info', 'debug' and 'trace'
 
 ## VIM-Commands
 - **\<F5>** Refactor code style with clang-format 
