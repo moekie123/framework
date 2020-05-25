@@ -4,6 +4,9 @@
 #include <map>
 #include <string>
 
+// Third-Party
+#include <spdlog/spdlog.h>
+
 /**
  * @brief The (Base) Object class
  * @details This class holds the most basic functionalliy that every component in the Framework should be able to work with. 
@@ -55,7 +58,4 @@ class Object
 
         /** @brief the properties of the Parameter */
         std::map<std::string, int> mProperties;
-
-        /** @brief object logger */
-        //        spdlog::logger* mLogger;
 };

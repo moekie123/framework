@@ -7,6 +7,8 @@ Composite::Composite()
 
 bool Composite::Add( Object& _obj )
 {
+        spdlog::debug( "{} {}", __PRETTY_FUNCTION__, _name );
+
         std::string oName = _obj.GetName();
         _obj.SetName( std::string( mName + "/" + oName ) );
 

@@ -7,6 +7,8 @@ Subject::Subject()
 
 bool Subject::Attach( Observer& obs )
 {
+        spdlog::debug( "{} {}", __PRETTY_FUNCTION__ );
+
         mObservers.push_back( &obs );
         return false;
 }

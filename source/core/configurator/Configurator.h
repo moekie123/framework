@@ -38,7 +38,7 @@ class Configurator : public IConfigurator
                         IConfigurator& obj = Singleton<Configurator>::Instance();
                         return &obj;
                 }
-
+        };
         /**
 	 * @brief The global ParameterBuilder
 	 */

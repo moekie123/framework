@@ -29,6 +29,7 @@
         "Options:\n"                                                 \
         "  -h, --help        Print this menu and exit.\n"            \
         "  -c, --config      The configuation file [default: %s].\n" \
+        "  -v, --verbose     Turn on the debug.\n"                   \
         "\n"
 
 Framework::Framework( int argc, char* argv[] ) : mConfigurationFilename( "config.xml" )
@@ -38,17 +39,20 @@ Framework::Framework( int argc, char* argv[] ) : mConfigurationFilename( "config
         // Parse Arguments
         ret = parseArguments( argc, argv );
 
-        // Set Debug Level
-        spdlog::set_level( spdlog::level::debug );
-        spdlog::debug( "Debug Enabled" );
+        spdlog::debug( "Initialize Framework" );
+
+
+        // Open Configuration File
+        spdlog::debug( "Configure Configurator" );
 
         Configurator::mConfigFileName = mConfigurationFilename;
 
-        // Open Configuration File
         Configurator* configurator = new Configurator();
         Singleton<Configurator>::Register( *configurator );
 
         // Build Mosquitto Instance
+        spdlog::debug( "Configure Mosquitto" );
+
         std::string* hostname = new std::string();
         configurator->GetProperty( "mosquitto", "hostname", (std::string&)*hostname );
 
@@ -65,6 +69,7 @@ Framework::Framework( int argc, char* argv[] ) : mConfigurationFilename( "config
         Singleton<Mosquitto>::Register( *mosquitto );
 
         // Creat Abstract Factory
+        spdlog::debug( "Configure Factory" );
         auto factory = Singleton<Factories>::Instance();
 
         /** Current registered builders: */
@@ -97,13 +102,17 @@ int Framework::parseArguments( int argc, char* argv[] )
         struct option long_options[] = {
                 { "help", no_argument, NULL, 'h' },
                 { "config", required_argument, NULL, 'c' },
+                { "verbose", no_argument, NULL, 'v' },
         };
 
         // Loop through all arguments and handle
-        while ( ( c = getopt_long( argc, argv, "hc:", long_options, 0 ) ) != -1 )
+        while ( ( c = getopt_long( argc, argv, "hc:v", long_options, 0 ) ) != -1 )
         {
                 switch ( c )
                 {
+                        case 'v':
+                                spdlog::set_level( spdlog::level::debug );
+                                break;
                         case 'c':
                                 mConfigurationFilename = std::string( optarg );
                                 break;

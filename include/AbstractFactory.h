@@ -40,6 +40,9 @@ class AbstractFactory : public Mixin...
         template <class T>
         T* Construct( const std::string& _name )
         {
+                spdlog::debug( "{} {}", __PRETTY_FUNCTION__, _name );
+
+		// Check whether the name excits
                 auto search = Factory<T>::mBuilders.find( _name );
                 if ( search != Factory<T>::mBuilders.end() )
                 {
@@ -63,7 +66,9 @@ class AbstractFactory : public Mixin...
         template <class T>
         bool Register( const std::string& _name, Builder<T>* _builder )
         {
-                // Check whether the name already excists
+                spdlog::debug( "{} {}", __PRETTY_FUNCTION__, _name );
+              
+		// Check whether the name already excists
                 auto search = Factory<T>::mBuilders.find( _name );
                 if ( search == Factory<T>::mBuilders.end() )
                 {

@@ -37,14 +37,7 @@ class Parameter : public IParameter
  		 */
                 static IParameter* Build( const IConfigurator* _config, const std::string& _name )
                 {
-                        Factories& factory = Singleton<Factories>::Instance();
-
-                        // TODO Removce
-                        const std::string label = "Configurator";
-                        IConfigurator* config = factory.Construct<IConfigurator>( label );
-
-                        IParameter* obj = new Parameter( *config, _name );
-
+                        IParameter* obj = new Parameter( *_config, _name );
                         return obj;
                 }
         };
