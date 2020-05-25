@@ -30,10 +30,17 @@ class Device : public IDevice
         {
                public:
                 /**
-				 * @brief The build method that configures and constructs a new Parameter
-				 * @param _config The pre build Configurator
-				 * @param _name The name of the new Device
-		 		 */
+		 * @brief The constructor will map the Build-Method to the (base) Builder class
+		 */
+                DeviceBuilder() : Builder( BuildDevice )
+                {
+                }
+
+                /**
+		 * @brief The build method that configures and constructs a new Parameter
+		 * @param _config The pre build Configurator
+		 * @param _name The name of the new Device
+		 */
                 static IDevice* BuildDevice( const IConfigurator* _config, const std::string& _name )
                 {
                         const std::string label = "Configurator";
@@ -49,13 +56,7 @@ class Device : public IDevice
                         return device;
                 }
 
-                /**
-	 			 * @brief The constructor will map the Build-Method to the (base) Builder class
-				 */
-                DeviceBuilder() : Builder( BuildDevice )
-                {
-                }
-        };
+         };
 
         /**
 		 * @brief The global Device builder

@@ -25,7 +25,14 @@ class Actuator : public IActuator
         class ActuatorBuilder : public Builder<IActuator>
         {
                public:
-                /**
+                 /**
+	 	 * @brief The constructor will map the Build-Method to the (base) Builder class
+		 */
+                ActuatorBuilder() : Builder( Build )
+                {
+                }
+
+               /**
 		 * @brief The build method that configures and constructs a new Parameter
 		 * @param _config The pre build Configurator
 		 * @param _name The name of the new Actuator
@@ -54,12 +61,6 @@ class Actuator : public IActuator
                         return actuator;
                 }
 
-                /**
-	 	 * @brief The constructor will map the Build-Method to the (base) Builder class
-		 */
-                ActuatorBuilder() : Builder( Build )
-                {
-                }
         };
 
         /**

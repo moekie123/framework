@@ -24,6 +24,13 @@ class Parameter : public IParameter
         {
                public:
                 /**
+	 	 * @brief The constructor will map the Build-Method to the (base) Builder class
+		 */
+                ParameterBuilder() : Builder( ParameterBuilder::Build )
+                {
+                }
+
+                /**
 		 * @brief The build method that configures and constructs a new Parameter
 		 * @param _config Pre build Configurator
 		 * @param _name The name of the new Parameter
@@ -39,13 +46,6 @@ class Parameter : public IParameter
                         IParameter* obj = new Parameter( *config, _name );
 
                         return obj;
-                }
-
-                /**
-	 	 * @brief The constructor will map the Build-Method to the (base) Builder class
-		 */
-                ParameterBuilder() : Builder( ParameterBuilder::Build )
-                {
                 }
         };
 

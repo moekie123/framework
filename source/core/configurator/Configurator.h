@@ -18,45 +18,44 @@ class Configurator : public IConfigurator
 {
        public:
         /**
-		 * @brief The Configurator Builder class to create new (base) Configurator
-		 */
+	 * @brief The Configurator Builder class to create new (base) Configurator
+	 */
         class ConfiguratorBuilder : public Builder<IConfigurator>
         {
                public:
                 /**
-			 * @brief The build method that configures and constructs a new Parameter
- 			 */
+		* @brief The constructor will map the Build-Method to the (base) Builder class
+		*/
+                ConfiguratorBuilder() : Builder( ConfiguratorBuilder::Build )
+                {
+                }
+
+                /**
+		 * @brief The build method that configures and constructs a new Parameter
+ 		 */
                 static IConfigurator* Build( const IConfigurator*, const std::string& )
                 {
                         IConfigurator& obj = Singleton<Configurator>::Instance();
                         return &obj;
                 }
 
-                /**
-	 		 * @brief The constructor will map the Build-Method to the (base) Builder class
-		 	 */
-                ConfiguratorBuilder() : Builder( ConfiguratorBuilder::Build )
-                {
-                }
-        };
-
         /**
-		 * @brief The global ParameterBuilder
-		 */
-        static ConfiguratorBuilder builder;
+	 * @brief The global ParameterBuilder
+	 */
+         static ConfiguratorBuilder builder;
 
-        /** 
-		 * @brief The configuration file will loaded in the in the constructor
-		 */
-        Configurator();
+	/** 
+	 * @brief The configuration file will loaded in the in the constructor
+	 */
+	Configurator();
 
-        /** 
-		 * @brief The name of the configuration file
-		 */
-        static std::string mConfigFileName;
+	/** 
+	 * @brief The name of the configuration file
+	 */
+	static std::string mConfigFileName;
 
        private:
-        /* IConfigurator */
-        bool Get( const std::string& _name, const std::string& _attribute, int& _value ) const override;
-        bool Get( const std::string& _name, const std::string& _attribute, std::string& _value ) const override;
+	/* IConfigurator */
+	bool Get( const std::string& _name, const std::string& _attribute, int& _value ) const override;
+	bool Get( const std::string& _name, const std::string& _attribute, std::string& _value ) const override;
 };

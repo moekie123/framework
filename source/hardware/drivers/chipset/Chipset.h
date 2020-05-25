@@ -22,6 +22,13 @@ class Chipset : public IChipset
         class ChipsetBuilder : public Builder<IChipset>
         {
                public:
+                 /**
+	 	 * @brief The constructor will map the Build-Method to the (base) Builder class
+		 */
+                ChipsetBuilder() : Builder( ChipsetBuilder::Build )
+                {
+                }
+
                 /**
 		 * @brief The build method that configures and constructs a new Parameter
 		 * @param _config The pre build Configurator
@@ -38,12 +45,6 @@ class Chipset : public IChipset
                         return chipset;
                 }
 
-                /**
-	 	 * @brief The constructor will map the Build-Method to the (base) Builder class
-		 */
-                ChipsetBuilder() : Builder( ChipsetBuilder::Build )
-                {
-                }
         };
 
         /** 
