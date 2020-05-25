@@ -40,7 +40,7 @@ if [ -d "${FRAMEWORK}" ]; then
 		echo "Session [$SESSION]"
 		export SESSION=$SESSION
 	
-		alias makes='make --no-print-directory -C  ${FRAMEWORK_BUILD} -j4 '${SESSION}
+		alias makes='make --no-print-directory -C  ${FRAMEWORK_BUILD} '${SESSION}
 		alias gtest=${SESSION}
 	}
 
