@@ -5,6 +5,16 @@ This page provides information regarding
 - Code changes
 - New Features
 
+# Version 0.4.0
+Refactor project
+
+## Development Enviroment
+	- Extende bash_profile
+	- SpeedLogger added to framework
+
+## Core Features
+	- Redesign of building blocks
+
 # Version 0.3.0
 Implement the first building block that combines fundamental design patterns
 	
