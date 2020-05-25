@@ -3,6 +3,9 @@
 #include <typeinfo>
 #include <stdexcept>
 
+// Third-Party
+#include <spdlog/spdlog.h>
+
 /**
  * @brief The generic constructional design pattern Singleton
  */

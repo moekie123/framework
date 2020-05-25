@@ -7,6 +7,6 @@ Observer::Observer()
 
 bool Observer::Update( const Subject& )
 {
-        spdlog::debug( "{} {}", __PRETTY_FUNCTION__ );
+        spdlog::debug( "{}", __PRETTY_FUNCTION__ );
         return true;
 }
