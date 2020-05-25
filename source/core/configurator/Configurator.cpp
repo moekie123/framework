@@ -22,7 +22,7 @@ Configurator::Configurator()
 {
         if ( !document )
         {
-                //                spdlog::info( "Loading XML-File", mConfigFileName );
+                spdlog::info( "Loading XML-File [{}]", mConfigFileName );
 
                 struct stat buffer;
                 if ( stat( mConfigFileName.c_str(), &buffer ) == 0 )

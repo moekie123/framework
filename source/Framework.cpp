@@ -38,9 +38,7 @@ Framework::Framework( int argc, char* argv[] ) : mConfigurationFilename( "config
 
         // Parse Arguments
         ret = parseArguments( argc, argv );
-
         spdlog::debug( "Initialize Framework" );
-
 
         // Open Configuration File
         spdlog::debug( "Configure Configurator" );
