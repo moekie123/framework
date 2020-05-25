@@ -10,13 +10,17 @@
 #include "Observer.h"
 #include "StateMachine.h"
 
+// Third-Party
+#include <spdlog/spdlog.h>
+#include "spdlog/cfg/env.h"
+
 // Stl-Headers
 #include <signal.h>
 #include <unistd.h>
 
 void abort( int s )
 {
-        //        std::cout << "Terminate\n";
+        spdlog::info( "Terminate" );
         StateMachine::dispatch( eTerminate() );
 }
 
@@ -37,7 +41,9 @@ class Dummy : public IParameter
 
 int main( int argc, char* argv[] )
 {
-        //        std::cout << "Booting Application\n";
+        spdlog::cfg::load_env_levels();
+
+        spdlog::info( "Booting Application" );
 
         // Link Callbacks
         signal( SIGINT, abort );
@@ -74,7 +80,7 @@ int main( int argc, char* argv[] )
                 usleep( 50000 );
         }
 
-//        std::cout << "Shutdown Application\n";
+        spdlog::info( "Shutdown Application" );
 
         return 0;
 }

@@ -30,18 +30,16 @@ std::queue<std::pair<std::string, std::string>> payloads;
 */
 void connect_callback( struct mosquitto* mosq, void* obj, int result )
 {
-        //        std::cout << "connect callback [" << result << "]\n";
+        spdlog::debug( "Connect [{}]", result );
 
         switch ( result )
         {
                 case 0:
-                        //                        std::cout << "Succes\n";
                         break;
                 case 1:
                 case 2:
                 case 3:
                 default:
-                        //                        std::cout << "Terminate\n";
                         StateMachine::dispatch( eTerminate() );
         }
 }
@@ -53,7 +51,7 @@ void message_callback( struct mosquitto* mosq, void* obj, const struct mosquitto
         char* buffer = new char[message->payloadlen + 1];
         sprintf( buffer, (char*)message->payload );
 
-        //        std::cout << " Received Message \n";
+        spdlog::trace( "Received message" );
 
         payloads.push( std::make_pair( std::string( message->topic ), std::string( buffer ) ) );
 
@@ -62,8 +60,8 @@ void message_callback( struct mosquitto* mosq, void* obj, const struct mosquitto
 
 Mosquitto::Mosquitto() : mHostname( "localhost" ), mPort( 1883 ), mUsername( "rsalm" ), mPassword( "rsalm" )
 {
-        //        std::cout << "[DEFAULT] Construct Mosquitto\n";
-
+        spdlog::debug( "{}", __PRETTY_FUNCTION__ );
+        SetName( "Mosquitto" );
         mClient = nullptr;
 }
 
@@ -72,40 +70,42 @@ Mosquitto::Mosquitto( const IConfigurator& _config, const std::string& _hostname
                                                                                                                                                                    mUsername( _username ),
                                                                                                                                                                    mPassword( _password )
 {
-        //        std::cout << "Construct Configured Mosquitto\n";
+        spdlog::debug( "{}", __PRETTY_FUNCTION__ );
+        SetName( "Mosquitto" );
         mClient = nullptr;
 }
 
 Mosquitto::~Mosquitto()
 {
-        //        std::cout << "Cleanup Mosquitto Library\n";
+        spdlog::debug( __PRETTY_FUNCTION__ );
 }
 
 bool Mosquitto::visitInitialize( const StateMachine& )
 {
-        //        std::cout << "[Visit] Initialized\n";
+        spdlog::info( "[Visit] Initialize" );
 
         // Clean Memory if not free (yet)
         if ( mClient )
                 free( mClient );
 
         // Initialize Library
-        //        std::cout << "Initialize Mosquitto Library\n";
+        spdlog::debug( "Initialize Mosquitto Library" );
         mosquitto_lib_init();
 
         // Print Version number
         {
                 int x, y, z;
                 mosquitto_lib_version( &x, &y, &z );
-                //                std::cout << "mosquito version " << x << y << z << "\n";
+                spdlog::debug( "Mosquitto Verions {}.{}.{}", x, y, z );
         }
 
         // Construct Client
-        //        std::cout << "Create new client\n";
+        spdlog::debug( "Create new client" );
+
         mClient = mosquitto_new( NULL, true, nullptr );
         if ( !mClient )
         {
-                //                std::cerr << "Failed to create client [" << mosquitto_strerror( errno ) << "]\n";
+                spdlog::error( "Failed to create client [{}]", mosquitto_strerror( errno ) );
                 return false;
         }
 
@@ -115,16 +115,16 @@ bool Mosquitto::visitInitialize( const StateMachine& )
 bool Mosquitto::visitConfigure( const StateMachine& )
 {
         int ret;
-        //        std::cout << "[Visit] Configure username [" << mUsername << "] password [" << mPassword << "]\n";
+        spdlog::info( "[Visit] Configure username [{}] password [{}]", mUsername, mPassword );
 
         ret = mosquitto_username_pw_set( mClient, mUsername.c_str(), mPassword.c_str() );
         if ( ret != MOSQ_ERR_SUCCESS )
         {
-                //                std::cerr << "Failed to set username and password [" << mosquitto_strerror( errno ) << "]\n";
+                spdlog::error( "Failed to set username and password [{}]", mosquitto_strerror( errno ) );
                 return false;
         }
 
-        //        std::cout << "Link callbacks\n";
+        spdlog::debug( "Link callbacks" );
         mosquitto_connect_callback_set( mClient, connect_callback );
         mosquitto_message_callback_set( mClient, message_callback );
 
@@ -134,13 +134,13 @@ bool Mosquitto::visitConfigure( const StateMachine& )
 bool Mosquitto::visitConnect( const StateMachine& )
 {
         int ret;
-        //        std::cout << "[Visit] Connect to [" << mHostname.c_str() << "][" << mPort << "]\n";
+        spdlog::info( "[Visit] Connect to [{}][{}]", mHostname.c_str(), mPort );
 
         ret = mosquitto_connect( mClient, mHostname.c_str(), mPort, 60 );
 
         if ( ret != MOSQ_ERR_SUCCESS )
         {
-                //                std::cerr << "Failed to connect [" << mosquitto_strerror( errno ) << "]\n";
+                spdlog::error( "Failed to connect [{}]", mosquitto_strerror( errno ) );
                 return false;
         }
 
@@ -150,12 +150,12 @@ bool Mosquitto::visitConnect( const StateMachine& )
                 auto param = dynamic_cast<IParameter*>( *it );
                 std::string name = param->GetName();
 
-                //                std::cout << "Subscribe [" << name << "]\n";
+                spdlog::info( "Subscribe [{}]", name );
 
                 ret = mosquitto_subscribe( mClient, NULL, name.c_str(), 0 );
                 if ( ret != MOSQ_ERR_SUCCESS )
                 {
-                        //                        std::cerr << "Failed to subscribe [" << mosquitto_strerror( errno ) << "]\n";
+                        spdlog::error( "Failed to subscribe [{}]", mosquitto_strerror( errno ) );
                         // TODO, This results in immedially destroy, but first a gental disconnect needs to be done actually
                         return false;
                 }
@@ -173,7 +173,7 @@ bool Mosquitto::visitLoop( const StateMachine& )
         ret = mosquitto_loop( mClient, -1, 1 );
         if ( ret != MOSQ_ERR_SUCCESS )
         {
-                //                std::cerr << "General failure in loop [" << mosquitto_strerror( errno ) << "]\n";
+                spdlog::error( "General failure in loop [{}]", mosquitto_strerror( errno ) );
                 return false;
         }
 
@@ -194,11 +194,11 @@ bool Mosquitto::visitLoop( const StateMachine& )
 
                         if ( ret != MOSQ_ERR_SUCCESS )
                         {
-                                //                                std::cerr << "Failed match topic [" << mosquitto_strerror( errno ) << "]\n";
+                                spdlog::error( "Failed matching topic [{}]", mosquitto_strerror( errno ) );
                         }
                         else if ( match )
                         {
-                                //                                std::cout << "[" << message.first << "] " << message.second << "\n";
+                                spdlog::info( "[{}][{}]", message.first, message.second );
 
                                 /* 
 				 * Extract the (parent) Mosquitto Observer from the IParameter
@@ -221,7 +221,7 @@ bool Mosquitto::visitLoop( const StateMachine& )
 
 bool Mosquitto::visitReconnect( const StateMachine& )
 {
-        //        std::cout << "[Visit] Reconnect\n";
+        spdlog::info( "[Visit] Reconnect" );
         /*
 			ret = mosquitto_reconnect( client );
 
@@ -239,7 +239,7 @@ bool Mosquitto::visitReconnect( const StateMachine& )
 bool Mosquitto::visitDisconnect( const StateMachine& )
 {
         int ret;
-        //        std::cout << "[Visit] Disconnect from [" << mHostname << "][" << mPort << "]\n";
+        spdlog::info( "[Visit] Disconnect from [{}][{}]", mHostname, mPort );
 
         // Check if client is already empty
         if ( !mClient )
@@ -249,7 +249,7 @@ bool Mosquitto::visitDisconnect( const StateMachine& )
         ret = mosquitto_disconnect( mClient );
         if ( ret != MOSQ_ERR_SUCCESS )
         {
-                //                std::cerr << "Failed to disconnect [" << mosquitto_strerror( errno ) << "]\n";
+                spdlog::error( "Failed to disconnect [{}]", mosquitto_strerror( errno ) );
                 return false;
         }
 
@@ -258,7 +258,7 @@ bool Mosquitto::visitDisconnect( const StateMachine& )
 
 bool Mosquitto::visitDestroy( const StateMachine& )
 {
-        //        std::cout << "[Visit] Destroy\n";
+        spdlog::info( "[Visit] Destroy" );
 
         // Check if client is already empty
         if ( !mClient )
@@ -269,7 +269,7 @@ bool Mosquitto::visitDestroy( const StateMachine& )
 
         if ( !mClient )
         {
-                //                std::cerr << "Failed to destroy client\n";
+                spdlog::error( "Failed to destroy client" );
                 // Client should be destroy and free by now... So delete it manually
                 free( mClient );
                 return false;
@@ -280,7 +280,7 @@ bool Mosquitto::visitDestroy( const StateMachine& )
 
 bool Mosquitto::visitCleanup( const StateMachine& )
 {
-        //        std::cout << "[Visit] Cleanup\n";
+        spdlog::info( "[Visit] Cleanup" );
 
         // Clean up the Library
         mosquitto_lib_cleanup();

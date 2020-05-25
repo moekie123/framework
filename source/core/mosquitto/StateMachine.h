@@ -5,6 +5,7 @@
 
 // Third-Party
 #include "tinyfsm.hpp"
+#include <spdlog/spdlog.h>
 
 // Stl-Headers
 #include <string>
@@ -133,7 +134,7 @@ class StateMachine
  	 */
         static void Accept( MosquittoVisitor &_visitor )
         {
-                //                std::cout << "Visitor Accepted\n";
+        	spdlog::debug( "Vistor Accepted");
 
                 mClient = &_visitor;
 
