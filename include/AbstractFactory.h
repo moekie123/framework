@@ -32,18 +32,19 @@ class AbstractFactory : public Mixin...
         }
 
         /**
-	*  @brief With Construct the Factory will be picked by (template) specialization and the specfic builder in this Factory is choosen by _name   
-	*  @details Will throw and exception when _name does not match any builder
-	*  @param _name The name of the builder
+	*  @brief With Construct the Factory will be picked by (template) specialization and the specfic builder in this Factory is choosen by _type   
+	*  @details Will throw and exception when _type does not match any builder
+	*  @param _type The name of the builder
+	*  @param _name The name of the new instance
 	*  @return The created class, which is typical a Interface Class
 	*/
         template <class T>
-        T* Construct( const std::string& _name )
+        T* Construct( const std::string& _type, const std::string& _name = "" )
         {
-                spdlog::debug( "{} {}", __PRETTY_FUNCTION__, _name );
+                spdlog::trace( "{} {}", __PRETTY_FUNCTION__, _type );
 
-		// Check whether the name excits
-                auto search = Factory<T>::mBuilders.find( _name );
+                // Check whether the name excits
+                auto search = Factory<T>::mBuilders.find( _type );
                 if ( search != Factory<T>::mBuilders.end() )
                 {
                         // TODO Assumed Configurator is initialized
@@ -58,21 +59,21 @@ class AbstractFactory : public Mixin...
 
         /**
 	* @brief New builders can be added by registering
-	* @details Will throw an exception when _name is already in use
-        * @param _name The name of the registered builder
+	* @details Will throw an exception when _type is already in use
+        * @param _type The name of the registered builder
         * @param _builder The actual builder 
 	* @return True, when build was succesfull
 	*/
         template <class T>
-        bool Register( const std::string& _name, Builder<T>* _builder )
+        bool Register( const std::string& _type, Builder<T>* _builder )
         {
-                spdlog::debug( "{} {}", __PRETTY_FUNCTION__, _name );
-              
-		// Check whether the name already excists
-                auto search = Factory<T>::mBuilders.find( _name );
+                spdlog::trace( "{} {}", __PRETTY_FUNCTION__, _type );
+
+                // Check whether the name already excists
+                auto search = Factory<T>::mBuilders.find( _type );
                 if ( search == Factory<T>::mBuilders.end() )
                 {
-                        Factory<T>::mBuilders.emplace( _name, _builder );
+                        Factory<T>::mBuilders.emplace( _type, _builder );
                         return true;
                 }
 

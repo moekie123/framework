@@ -96,9 +96,14 @@ bool Configurator::Get( const std::string& _name, const std::string& _attribute,
         root->Accept( parameter );
 
         if ( parameter->property )
-                // Get Integer
-                return ( parameter->property->QueryIntText( &_value ) == XML_SUCCESS );
+        {
+                bool res;
+                res =  ( parameter->property->QueryIntText( &_value ) == XML_SUCCESS );
 
+                spdlog::debug( "Configurator Retrieve [{}.{}] : {}", _name, _attribute, _value );
+
+                return res;
+        }
         return false;
 }
 
@@ -119,6 +124,8 @@ bool Configurator::Get( const std::string& _name, const std::string& _attribute,
         {
                 // Get String
                 _value = parameter->property->GetText();
+                spdlog::debug( "Configurator Retrieve [{}.{}] : {}", _name, _attribute, _value );
+
                 return true;
         }
 

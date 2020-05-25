@@ -32,16 +32,16 @@ class Singleton
 	 */
         static void Register( T& _instance )
         {
-                spdlog::debug( "{} > {}", __PRETTY_FUNCTION__, typeid( T ).name() );
+                spdlog::trace( "{} > {}", __PRETTY_FUNCTION__, typeid( T ).name() );
 
                 if ( !IsConstructed() )
                 {
                         Singleton::_instance = &_instance;
-			return;
+                        return;
                 }
- 
+
                 throw std::invalid_argument( "Singleton: Instance already registerd" );
-       }
+        }
 
         /**
 	 * @brief Check if instance is already created
@@ -72,7 +72,7 @@ class Singleton
 
         inline static T* CreateInstance()
         {
-                spdlog::debug( "{} > {}", __PRETTY_FUNCTION__, typeid( T ).name() );
+                spdlog::trace( "{} > {}", __PRETTY_FUNCTION__, typeid( T ).name() );
                 return new T();
         }
 };

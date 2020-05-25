@@ -51,46 +51,33 @@ Framework::Framework( int argc, char* argv[] ) : mConfigurationFilename( "config
         // Build Mosquitto Instance
         spdlog::debug( "Configure Mosquitto" );
 
-        std::string* hostname = new std::string();
-        configurator->GetProperty( "mosquitto", "hostname", (std::string&)*hostname );
-
-        std::string* username = new std::string();
-        configurator->GetProperty( "mosquitto", "username", (std::string&)*username );
-
-        std::string* password = new std::string();
-        configurator->GetProperty( "mosquitto", "password", (std::string&)*password );
-
-        int* port = new int();
-        configurator->GetProperty( "mosquitto", "port", (int&)*port );
-
-        Mosquitto* mosquitto = new Mosquitto( *configurator, *hostname, *port, *username, *password );
+        Mosquitto* mosquitto = new Mosquitto( *configurator );
         Singleton<Mosquitto>::Register( *mosquitto );
 
         // Creat Abstract Factory
         spdlog::debug( "Configure Factory" );
-        auto factory = Singleton<Factories>::Instance();
+	Factories* factory = new Factories();
 
         /** Current registered builders: */
-
         ///	- Configurator
-        factory.Register<IConfigurator>( "Configurator", &Configurator::builder );
+        factory->Register<IConfigurator>( "Configurator", &Configurator::builder );
 
         ///	- Parameter
-        factory.Register<IParameter>( "Parameter", &Parameter::builder );
+        factory->Register<IParameter>( "Parameter", &Parameter::builder );
 
         ///	- Mosquitto
-        factory.Register<IMosquitto>( "Mosquitto", &Mosquitto::builder );
+        factory->Register<IMosquitto>( "Mosquitto", &Mosquitto::builder );
 
         ///	- Chipset
-        factory.Register<IChipset>( "Chipset", &Chipset::builder );
+        factory->Register<IChipset>( "Chipset", &Chipset::builder );
 
         ///	- Device
-        factory.Register<IDevice>( "Device", &Device::builder );
+        factory->Register<IDevice>( "Device", &Device::builder );
 
         ///	- Actuator
-        factory.Register<IActuator>( "Actuator", &Actuator::builder );
+        factory->Register<IActuator>( "Actuator", &Actuator::builder );
 
-        delete port;
+        Singleton<Factories>::Register( *factory );
 };
 
 int Framework::parseArguments( int argc, char* argv[] )

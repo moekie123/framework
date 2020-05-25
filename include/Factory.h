@@ -17,7 +17,7 @@ class Factory
        public:
         Factory()
         {
-                spdlog::debug( "Factory: Construct {}", __PRETTY_FUNCTION__ );
+                spdlog::trace( "{}", __PRETTY_FUNCTION__ );
         }
         /**
 	 * @brief The vector of specialized builders
