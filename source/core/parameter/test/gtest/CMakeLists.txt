@@ -1,6 +1,6 @@
 # Factory Unit Tests
 gsetup( parameter )
-target_link_libraries( gtest-parameter core )
+target_link_libraries( gtest-parameter fundamentals parameter )
 
 #add_executable( gtest-parameter-range gtest-parameter-range.cpp )
 #target_link_libraries( gtest-parameter-range gtest gmock pthread core )

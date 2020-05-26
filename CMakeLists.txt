@@ -50,7 +50,7 @@ include( CTest )
 
 # Validate Source
 message( "Check source code" )
-set(CMAKE_CXX_CPPCHECK "cppcheck")
+#set(CMAKE_CXX_CPPCHECK "cppcheck")
 
 # Build Enviroment
 message( "Setup the directory tree" )
