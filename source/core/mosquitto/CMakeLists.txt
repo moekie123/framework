@@ -1,14 +1,10 @@
 add_library( mqtt OBJECT
 		Mosquitto.cpp
-		StateMachine.cpp
-		Visitor.cpp
 		)
 
 add_executable( fsm-mqtt
 			main.cpp 
-			../../Framework.cpp
-			Mosquitto.cpp
-			StateMachine.cpp )
+			Mosquitto.cpp )
 
 target_link_libraries( fsm-mqtt Framework 
 				mosquitto 

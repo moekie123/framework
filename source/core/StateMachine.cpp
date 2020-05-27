@@ -5,7 +5,7 @@
 bool StateMachine::mRunning = false;
 bool StateMachine::mShutdown = false;
 
-MosquittoVisitor* StateMachine::mClient;
+Visitor* StateMachine::mClient;
 
 // (Forward) State Declaration
 class sIdle;

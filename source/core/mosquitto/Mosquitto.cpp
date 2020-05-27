@@ -187,13 +187,6 @@ bool Mosquitto::visitLoop( const StateMachine& )
 
                 for ( auto it = mObservers.begin(); it != mObservers.end(); it++ )
                 {
-                        /* 
-  			 * Convert the iterator, which is stored in a vector a Observer*, back to a parameter
-			 */
-                        // TODO
-                        //    	auto parameter = dynamic_cast<IParameter*>( ( *it ) );
-                        //	ret = mosquitto_topic_matches_sub( parameter->GetName().c_str(), message.first.c_str(), &match );
-
                         ret = mosquitto_topic_matches_sub( ( *it )->GetName().c_str(), message.first.c_str(), &match );
                         if ( ret != MOSQ_ERR_SUCCESS )
                         {
@@ -202,16 +195,6 @@ bool Mosquitto::visitLoop( const StateMachine& )
                         else if ( match )
                         {
                                 spdlog::info( "[{}][{}]", message.first, message.second );
-
-                                /* 
-				 * Extract the (parent) Mosquitto Observer from the IParameter
-				 *    Take the Observer ( defined as IParamater ) on the right side
-        			 *    Cast this up to extract only the IMosquitto Observer ( left )	
-				 *    TODO, Find out what will happen when multiple observer types are allowed....
-				 */
-                                // Observer< IMosquitto >* param = dynamic_cast< IParameter* >( parameter );
-
-                                // This will avoid ambgious Update calls since there are multiple observers in IParameter.
                                 ( *it )->Update( *this );
                         }
                 }
@@ -235,7 +218,7 @@ bool Mosquitto::visitReconnect( const StateMachine& )
 			}
 
 			std::cout << "Reconnected to [" << hostname << "][" << port << "]\n";
-*/
+	*/
         return true;
 }
 

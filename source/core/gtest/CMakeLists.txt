@@ -25,3 +25,7 @@ target_link_libraries( gtest-composite generic )
 # Observer Unit Tests
 gsetup( observer )
 target_link_libraries( gtest-observer generic )
+
+# Statemachine Unit Tests
+gsetup( statemachine )
+target_link_libraries( gtest-statemachine generic )

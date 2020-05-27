@@ -12,7 +12,8 @@ add_library( generic OBJECT
 		${CMAKE_CURRENT_SOURCE_DIR}/Builder.cpp 
 		${CMAKE_CURRENT_SOURCE_DIR}/Composite.cpp 
 		${CMAKE_CURRENT_SOURCE_DIR}/Observer.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/Subject.cpp )
+		${CMAKE_CURRENT_SOURCE_DIR}/Subject.cpp 
+		${CMAKE_CURRENT_SOURCE_DIR}/StateMachine.cpp )
 
 # Collect Framework sources
 set( CORE_SOURCES

@@ -11,7 +11,7 @@
 #include <string>
 
 // Forward Declaration
-class MosquittoVisitor;
+class Visitor;
 
 // ########## StateMachine Events ##########
 
@@ -132,7 +132,7 @@ class StateMachine
 	 * @brief (Visitor Pattern) This accept(or) part of visitor pattern.
 	 * @details This method will start the StateMachine and will stay here untill the StateMachine is cancelled
  	 */
-        static void Accept( MosquittoVisitor &_visitor )
+        static void Accept( Visitor &_visitor )
         {
         	spdlog::debug( "Vistor Accepted");
 
@@ -151,10 +151,10 @@ class StateMachine
         std::string mName;
 
         /**
-	 * @brief The Mosquitto Client 
+	 * @brief The Visitor Client 
 	 * @details The visitable part in the vistor pattern
 	 */
-        static MosquittoVisitor *mClient;
+        static Visitor *mClient;
 
         /**
 	 * @brief The state of the StateMachien

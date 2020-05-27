@@ -12,7 +12,7 @@
 // Third-Party
 #include <gmock/gmock.h>
 
-class MockMosquittoVisitor : public MosquittoVisitor
+class MockMosquittoVisitor : public Visitor
 {
        public:
         MOCK_METHOD1( visitInitialize, bool( const StateMachine& ) );
