@@ -74,12 +74,13 @@ bool Parameter::SetProperty( const std::string& _property, const int& _value )
         return result;
 }
 
-bool Parameter::Update( const Generic& subject )
+bool Parameter::Update( const Generic& _subject )
 {
+        Generic::Update( _subject );
+
         for ( auto* component : mComponents )
         {
-                // TODO
-                //		component->Update( subject );
+                component->Update( _subject );
         }
         return true;
 }

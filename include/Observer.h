@@ -20,8 +20,9 @@ class Observer : virtual public Object
 
         /**
 	 * @brief The callback for a Subject to notify when a Object has been modified
+	 * @param _subject The instance that invokes this method
 	 */
-        virtual bool Update( const Generic& );
+        virtual bool Update( const Generic& _subject );
 
        private:
         /** 
