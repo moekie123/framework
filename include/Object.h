@@ -24,14 +24,14 @@ class Object
          *  @brief get the name of the derived class
 	 *  @return the name of the created class
          */
-        const std::string& GetName() const;
+        virtual const std::string& GetName() const;
 
         /** 
          *  @brief set the name of the derived class
       	 *  @param _name the new name of the derived class
 	 *  @return true, when the renaming was succesfull
          */
-        bool SetName( const std::string& _name );
+        virtual bool SetName( const std::string& _name );
 
         /** 
       	*  @brief Set an property of the class

@@ -56,5 +56,13 @@ exit:
 
 bool Composite::Reset()
 {
-        return false;
+        volatile bool res = false;
+
+        for ( auto c : mComponents )
+        {
+                res = c->Reset();
+                if ( !res ) break;
+        }
+
+       return res;
 }

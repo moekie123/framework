@@ -26,13 +26,13 @@ class Subject : virtual public Object
 	 * @details With this method Observers can be added to an object.
 	 * @param _gen The observer that should be notified
 	 */
-        bool Attach( Generic& _gen );
+        virtual bool Attach( Generic& _gen );
 
         /**
 	 * @brief The notifier, for all observers
 	 * @details This will run the callback "Update" of each Observer
 	 */
-        bool Notify();
+        virtual bool Notify();
 
        protected:
         /**
