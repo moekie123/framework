@@ -6,6 +6,7 @@
 
 // Third-Party
 #include <gtest/gtest.h>
+#include <gmock/gmock.h>
 
 class Beta
 {
@@ -13,7 +14,21 @@ class Beta
         std::string mName = "Beta";
 };
 
-TEST( Construct, Default )
+// Ignore Nagy Mocks for the Configurator Get(ters)
+using ::testing::NiceMock;
+
+class SingletonFeature : public ::testing::Test
+{
+       private:
+       protected:
+        virtual void TearDown()
+        {
+                if ( Singleton<Beta>::IsConstructed() )
+                        Singleton<Beta>::Unregister();
+        }
+};
+
+TEST_F( SingletonFeature, Construct )
 {
         Beta &b1 = Singleton<Beta>::Instance();
         Beta &b2 = Singleton<Beta>::Instance();
@@ -21,51 +36,40 @@ TEST( Construct, Default )
         ASSERT_EQ( &b1, &b2 );
 }
 
-TEST( Register, NewInstance )
+TEST_F( SingletonFeature, Validationg )
 {
+        ASSERT_EQ( Singleton<Beta>::IsConstructed(), false );
+
         Beta &b1 = Singleton<Beta>::Instance();
 
-        /*
-        Beta b2;
-        Singleton<Beta>::Register( b2 );
-
-        ASSERT_NO_THROW( Beta &b3 = Singleton<Beta>::Instance() );
-*/
+        ASSERT_EQ( Singleton<Beta>::IsConstructed(), true );
 }
 
-TEST( Register, ExistingInstance )
+TEST_F( SingletonFeature, RegisterNewInstance )
 {
-        // GTest does not clear out a Singleton
-        /*
-	Beta b1;
-	Beta b2;
-
-	Singleton< Beta >::Register( b1 );
-    	Beta &b3 = Singleton< Beta >::Instance();
-	ASSERT_EQ( &b1, &b2 );
-
-	Singleton< Beta >::Register( b2 );
-	b3 = Singleton< Beta >::Instance();
-	ASSERT_NE( &b1, &b3 );
-*/
+        Beta *beta = new Beta();
+        ASSERT_NO_THROW( Singleton<Beta>::Register( *beta ) );
 }
 
-TEST( Constructed, NewInstance )
+TEST_F( SingletonFeature, RegisterExistingInstance )
 {
-        // GTest does not clear out a Singleton
-        /*
-	ASSERT_EQ( Singleton< Beta >::IsConstructed(), false );
-*/
+        Beta &instance = Singleton<Beta>::Instance();
+        Beta *beta = new Beta();
+
+        ASSERT_ANY_THROW( Singleton<Beta>::Register( *beta ) );
 }
 
-TEST( Constructed, ExistingInstance )
+TEST_F( SingletonFeature, UnregisterFailure )
 {
-        // GTest does not clear out a Singleton
         /*
-	Beta b1;
-	Singleton< Beta >::Register( b1 );
+	// Beta only exicst in scope
+        {
+                Beta beta;
+                Singleton<Beta>::Register( beta );
+        }
 
-	ASSERT_EQ( Singleton< Beta >::IsConstructed(), true );
+        // Beta does not excists but is registerd....
+        ASSERT_ANY_THROW( Singleton<Beta>::Unregister() );
 */
 }
 
