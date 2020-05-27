@@ -5,61 +5,94 @@
 #include "Observer.h"
 #include "Subject.h"
 
+// Testing
+#include "mocks/MockGeneric.h"
+
 // Third-Party
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-class Beta : public Generic
+// Ignore Nagy Mocks for the Configurator Get(ters)
+using ::testing::NiceMock;
+
+/* All classes that inherent the Composite Class should be included in these unit-tests */
+template <typename T>
+class TypedTest : public ::testing::Test
 {
-       public:
-        bool Update( const Generic& ) override
-        {
-                return false;
-        }
 };
 
-class MockBeta : public Beta
-{
-       public:
-        MOCK_METHOD1( Update, bool( const Generic& ) );
-};
+using Types = ::testing::Types< std::pair<Generic, Generic>>;
+TYPED_TEST_CASE( TypedTest, Types );
 
-TEST( Construct, Default )
+/* Define here which classes in the framework are inheriting Composite */
+TYPED_TEST_CASE( TypedTest, Types );
+
+TYPED_TEST( TypedTest, Default )
 {
-        Beta beta;
-        // Static cast to check whether all classes are intherent
+        typename TypeParam::first_type ObserverClass;
+        typename TypeParam::second_type SubjectClass;
 }
 
-TEST( Subject, AttachObserver )
+TYPED_TEST( TypedTest, AttachMockObserver )
 {
-        Beta observer;
-        Beta subject;
+        MockGeneric mock;
+        std::string name = "Mock";
+
+        typename TypeParam::first_type observer;
+        typename TypeParam::second_type subject;
+
+        // This call is only for logging....
+        EXPECT_CALL( mock, GetName() ).WillOnce( testing::ReturnRef( name ) );
+        subject.Attach( mock );
+}
+
+TYPED_TEST( TypedTest, Attach )
+{
+        typename TypeParam::first_type observer;
+        typename TypeParam::second_type subject;
 
         subject.Attach( observer );
-        // Static cast to check whether all classes are intherent
 }
 
-TEST( Subject, NotifyObserverSuccesfull )
+TYPED_TEST( TypedTest, NotifyMockObserverSussesfull )
 {
-        MockBeta observer;
+        MockGeneric mock;
+        std::string name = "Mock";
 
-        Beta* beta = new Beta();
-        beta->Attach( observer );
+        typename TypeParam::first_type observer;
+        typename TypeParam::second_type subject;
 
-        EXPECT_CALL( observer, Update( testing::_ ) ).WillOnce( testing::Return( true ) );
-        ASSERT_EQ( beta->Notify(), true );
+        // This call is only for logging....
+        EXPECT_CALL( mock, GetName() ).WillOnce( testing::ReturnRef( name ) );
+        subject.Attach( mock );
+
+        EXPECT_CALL( mock, Update( testing::_ ) ).WillOnce( testing::Return( true ) );
+        ASSERT_EQ( subject.Notify(), true );
 }
 
-TEST( Subject, NotifyObserverFailure )
+TYPED_TEST( TypedTest, NotifyObserverSussesfull )
 {
-        MockBeta observer;
+        typename TypeParam::first_type observer;
+        typename TypeParam::second_type subject;
 
-        Beta* beta = new Beta();
+        subject.Attach( observer );
+        ASSERT_EQ( subject.Notify(), true );
+}
 
-        beta->Attach( observer );
+TYPED_TEST( TypedTest, NotifyMockObserverFailure )
+{
+        MockGeneric mock;
+        std::string name = "Mock";
 
-        EXPECT_CALL( observer, Update( testing::_ ) ).WillOnce( testing::Return( false ) );
-        ASSERT_EQ( beta->Notify(), false );
+        typename TypeParam::first_type observer;
+        typename TypeParam::second_type subject;
+
+        // This call is only for logging....
+        EXPECT_CALL( mock, GetName() ).WillOnce( testing::ReturnRef( name ) );
+        subject.Attach( mock );
+
+        EXPECT_CALL( mock, Update( testing::_ ) ).WillOnce( testing::Return( false ) );
+        ASSERT_EQ( subject.Notify(), false );
 }
 
 int main( int argc, char** argv )
