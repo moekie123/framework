@@ -37,6 +37,7 @@ class sIdle : public StateMachine
         // Doxygen Transit{ sIdle -> sIdle [label="eTerminate"] }
         void react( eTerminate const& )
         {
+                spdlog::debug( "Event [eTerminate]" );
                 mShutdown = true;
         };
 };
@@ -67,18 +68,21 @@ class sInitializing : public StateMachine
         // Doxygen Transit{ sInitializing -> sConfiguring [label="eSucces"] }
         void react( eSucces const& )
         {
+                spdlog::debug( "Event [eSucces]" );
                 transit<sConfiguring>();
         };
 
         // Doxygen Transit{ sInitializing -> sCleanup [label="eFailed"] }
         void react( eFailed const& )
         {
+                spdlog::debug( "Event [eFailed]" );
                 transit<sCleanup>();
         };
 
         // Doxygen Transit{ sInitializing -> sCleanup [label="eTerminate"] }
         void react( eTerminate const& )
         {
+                spdlog::debug( "Event [eTerminate]" );
                 mShutdown = true;
                 transit<sCleanup>();
         };
@@ -110,18 +114,21 @@ class sConfiguring : public StateMachine
         // Doxygen Transit{ sConfiguring -> sConnecting [label="eSucces"] }
         void react( eSucces const& )
         {
+                spdlog::debug( "Event [eSucces]" );
                 transit<sConnecting>();
         };
 
         // Doxygen Transit{ sConfiguring -> sDestroy [label="eDestroy"] }
         void react( eFailed const& )
         {
+                spdlog::debug( "Event [eFailed]" );
                 transit<sDestroy>();
         };
 
         // Doxygen Transit{ sConfiguring -> sDestroy [label="eTerminate"] }
         void react( eTerminate const& )
         {
+                spdlog::debug( "Event [eTerminate]" );
                 mShutdown = true;
                 transit<sDestroy>();
         };
@@ -153,18 +160,21 @@ class sConnecting : public StateMachine
         // Doxygen Transit{ sConnecting -> sListening [label="eSucces"] }
         void react( eSucces const& )
         {
+                spdlog::debug( "Event [eSucces]" );
                 transit<sListening>();
         };
 
         // Doxygen Transit{ sConnecting -> sDestroy [label="eDestroy"] }
         void react( eFailed const& )
         {
+                spdlog::debug( "Event [eFailed]" );
                 transit<sDestroy>();
         };
 
         // Doxygen Transit{ sConnecting -> sDestroy [label="eTerminate"] }
         void react( eTerminate const& )
         {
+                spdlog::debug( "Event [eTerminate]" );
                 mShutdown = true;
                 transit<sDestroy>();
         };
@@ -192,12 +202,14 @@ class sListening : public StateMachine
         // Doxygen Transit{ sListening -> sDisconnecting [label="eTerminate"] }
         void react( eFailed const& )
         {
+                spdlog::debug( "Event [eFailed]" );
                 mShutdown = true;
                 transit<sDisconnecting>();
         };
 
         void react( eTerminate const& )
         {
+                spdlog::debug( "Event [eTerminate]" );
                 mShutdown = true;
                 transit<sDisconnecting>();
         };
@@ -229,18 +241,21 @@ class sDisconnecting : public StateMachine
         // Doxygen Transit{ sDisconnecting -> sDestroy [label="eSucces"] }
         void react( eSucces const& )
         {
+                spdlog::debug( "Event [eSucces]" );
                 transit<sDestroy>();
         };
 
         // Doxygen Transit{ sDisconnecting -> sDisconnecting [label="eFailure"] }
         void react( eFailed const& )
         {
+                spdlog::debug( "Event [eFailed]" );
                 transit<sDisconnecting>();
         };
 
         // Doxygen Transit{ sDisconnecting -> sDestroy [label="eTerminate"] }
         void react( eTerminate const& )
         {
+                spdlog::debug( "Event [eTerminate]" );
                 mShutdown = true;
                 transit<sDestroy>();
         };
@@ -272,18 +287,21 @@ class sDestroy : public StateMachine
         // Doxygen Transit{ sDestroy -> sCleanup [label="eSucces"] }
         void react( eSucces const& )
         {
+                spdlog::debug( "Event [eSucces]" );
                 transit<sCleanup>();
         };
 
         // Doxygen Transit{ sDestroy -> sDestroy [label="eFailed"] }
         void react( eFailed const& )
         {
+                spdlog::debug( "Event [eFailed]" );
                 transit<sDestroy>();
         };
 
         // Doxygen Transit{ sDestroy -> sCleanup [label="eTerminate"] }
         void react( eTerminate const& )
         {
+                spdlog::debug( "Event [eTerminate]" );
                 mShutdown = true;
                 transit<sCleanup>();
         };
@@ -315,18 +333,21 @@ class sCleanup : public StateMachine
         // Doxygen Transit{ sCleanup -> sIdle [label="eSucces"] }
         void react( eSucces const& )
         {
+                spdlog::debug( "Event [eSucces]" );
                 transit<sIdle>();
         };
 
         // Doxygen Transit{ sCleanup -> sIdle [label="eFailed"] }
         void react( eFailed const& )
         {
+                spdlog::debug( "Event [eFailed]" );
                 transit<sCleanup>();
         };
 
         // Doxygen Transit{ sCleanup -> sIdle [label="eTerminate"] }
         void react( eTerminate const& )
         {
+                spdlog::debug( "Event [eTerminate]" );
                 mShutdown = true;
                 transit<sIdle>();
         };
