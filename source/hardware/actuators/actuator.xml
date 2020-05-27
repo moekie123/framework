@@ -1,0 +1,19 @@
+<Root>
+	<Parameter name="mosquitto">
+		<port>1883</port>
+		<username>rsalm</username>
+		<password>rsalm</password>
+		<hostname>localhost</hostname>
+	</Parameter>
+
+	<Parameter name="actuator">
+	
+	</Parameter>
+
+	<Parameter name="dummy">
+		<const>0</const>
+		<value>42</value>
+		<default>0</default>
+	</Parameter>
+
+</Root>

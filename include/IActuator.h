@@ -3,9 +3,13 @@
 // Inherentance
 #include "Generic.h"
 
+// Design Patterns
+#include "Visitor.h"
+
 /**
- * @brief The generic interface for Actuators
+ * @brief The Actuator Interface
  */
-class IActuator : public Generic
+class IActuator : public Generic,
+                  public Visitor
 {
 };

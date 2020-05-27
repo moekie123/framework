@@ -41,7 +41,7 @@ class Actuator : public IActuator
                 {
                         Factories& factory = Singleton<Factories>::Instance();
 
-                        Actuator* actuator = new Actuator( _name );
+                        Actuator* actuator = new Actuator( *_config, _name );
 
                         const std::string parameters[] = {
                                 "/config/refresh",
@@ -72,5 +72,17 @@ class Actuator : public IActuator
 	 * @brief The base constructor
 	 * @param _name The name of the actuartor
 	 */
-        Actuator( std::string _name );
+        Actuator( const IConfigurator& _config, std::string _name );
+
+        /** 
+	 * Visitor Pattern Methods
+	 */
+        bool visitInitialize( const StateMachine& ) override;
+        bool visitConfigure( const StateMachine& ) override;
+        bool visitConnect( const StateMachine& ) override;
+        bool visitLoop( const StateMachine& ) override;
+        bool visitReconnect( const StateMachine& ) override;
+        bool visitDisconnect( const StateMachine& ) override;
+        bool visitDestroy( const StateMachine& ) override;
+        bool visitCleanup( const StateMachine& ) override;
 };
