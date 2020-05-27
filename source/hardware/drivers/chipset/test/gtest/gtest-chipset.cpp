@@ -33,14 +33,20 @@ class ConstructFeature : public ::testing::Test
 
         virtual void SetUp()
         {
-                Singleton<IConfigurator>::Register( mConfig );
+                 if ( !Singleton<IConfigurator>::IsConstructed() )
+                {
+                	Singleton<IConfigurator>::Register( mConfig );
+		}
 
-                Factories* factory = new Factories();
-                factory->Register<IConfigurator>( "Configurator", &MockConfigurator::builder );
-                factory->Register<IParameter>( "Parameter", &MockParameter::builder );
+                if ( !Singleton<Factories>::IsConstructed() )
+                {
+			Factories* factory = new Factories();
+			factory->Register<IConfigurator>( "Configurator", &MockConfigurator::builder );
+			factory->Register<IParameter>( "Parameter", &MockParameter::builder );
 
-                Singleton<Factories>::Register( *factory );
-        }
+			Singleton<Factories>::Register( *factory );
+        	}
+	}
 };
 
 // Constructor Tests

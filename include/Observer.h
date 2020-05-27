@@ -1,10 +1,10 @@
 #pragma once
 
-// Design Patterns
-#include "Subject.h"
+// Inheritance, Design Patterns
+#include "Object.h"
 
 // Forward Declaration
-class Subject;
+class Generic;
 
 /**
  * @brief The (Base) Observer class
@@ -21,7 +21,7 @@ class Observer : virtual public Object
         /**
 	 * @brief The callback for a Subject to notify when a Object has been modified
 	 */
-        virtual bool Update( const Subject& );
+        virtual bool Update( const Generic& );
 
        private:
         /** 
@@ -32,3 +32,6 @@ class Observer : virtual public Object
                 return *this;
         }
 };
+
+/* This file is already included through Generic.h */
+#include "Generic.h"

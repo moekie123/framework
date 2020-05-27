@@ -12,7 +12,6 @@ const std::map<std::string, int> defaults = {
 
 Object::Object()
 {
-
         for ( auto it = defaults.begin(); it != defaults.end(); ++it )
         {
                 mProperties[it->first] = it->second;

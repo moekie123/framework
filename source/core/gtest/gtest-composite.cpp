@@ -1,3 +1,6 @@
+// Inheritance
+#include "Generic.h"
+
 // Design Pattern
 #include "Composite.h"
 
@@ -5,7 +8,7 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-class Beta : public Composite
+class Beta : public Generic
 {
        public:
         virtual void Trigger()

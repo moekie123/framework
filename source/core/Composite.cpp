@@ -5,14 +5,14 @@ Composite::Composite()
 {
 }
 
-bool Composite::Add( Object& _obj )
+bool Composite::Add( Generic& _gen )
 {
         spdlog::debug( "{}", __PRETTY_FUNCTION__ );
 
-        std::string oName = _obj.GetName();
-        _obj.SetName( std::string( mName + "/" + oName ) );
+        std::string oName = _gen.GetName();
+        _gen.SetName( std::string( mName + "/" + oName ) );
 
-        mComponents.push_back( &_obj );
+        mComponents.push_back( &_gen );
 
         return false;
 }

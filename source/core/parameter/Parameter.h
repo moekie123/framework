@@ -60,5 +60,5 @@ class Parameter : public IParameter
         bool GetProperty( const std::string& property, int& value ) override;
 
         /** Observer Methods */
-        bool Update( const Subject& ) override;
+        bool Update( const Generic& ) override;
 };

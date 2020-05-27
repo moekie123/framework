@@ -47,7 +47,7 @@ class MockParameter : public IParameter
         MOCK_METHOD2( GetProperty, bool( const std::string&, int& ) );
 
         /* IObserver */
-        MOCK_METHOD1( Update, bool( const Subject& ) );
+        MOCK_METHOD1( Update, bool( const Generic& ) );
 };
 
 MockParameter::MockBuilder MockParameter::builder;

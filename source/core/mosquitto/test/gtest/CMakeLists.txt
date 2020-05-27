@@ -1,7 +1,7 @@
 # Mosquitto Unit Tests
 gsetup( mosquitto )
 target_link_libraries( 	gtest-mosquitto 
-			fundamentals
+			generic
 			mqtt
 			mosquitto			
 			)

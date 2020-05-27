@@ -2,13 +2,12 @@
 
 // Design Patterns
 #include "Object.h"
-#include "Observer.h"
 
 // Stl-Headers
 #include <vector>
 
 // Forward Declaration
-class Observer;
+class Generic;
 
 /**
  * @brief The (Base) Subject class
@@ -25,9 +24,9 @@ class Subject : virtual public Object
         /** 
 	 * @brief The observer registrator
 	 * @details With this method Observers can be added to an object.
-	 * @param _obs The observer that should be notified
+	 * @param _gen The observer that should be notified
 	 */
-        bool Attach( Observer& _obs );
+        bool Attach( Generic& _gen );
 
         /**
 	 * @brief The notifier, for all observers
@@ -39,7 +38,7 @@ class Subject : virtual public Object
         /**
 	 * @brief The vector of registerd Observers 
 	 */
-        std::vector<Observer*> mObservers;
+        std::vector<Generic*> mObservers;
 
        private:
         /** 
@@ -50,3 +49,6 @@ class Subject : virtual public Object
                 return *this;
         }
 };
+
+/* This file is already included through Generic.h */
+#include "Generic.h"

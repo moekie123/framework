@@ -1,3 +1,6 @@
+// Inheritance
+#include "Generic.h"
+
 // Design Pattern
 #include "Observer.h"
 #include "Subject.h"
@@ -6,11 +9,10 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-class Beta : public Subject,
-             public Observer
+class Beta : public Generic
 {
        public:
-        bool Update( const Subject& ) override
+        bool Update( const Generic& ) override
         {
                 return false;
         }
@@ -19,7 +21,7 @@ class Beta : public Subject,
 class MockBeta : public Beta
 {
        public:
-        MOCK_METHOD1( Update, bool( const Subject& ) );
+        MOCK_METHOD1( Update, bool( const Generic& ) );
 };
 
 TEST( Construct, Default )

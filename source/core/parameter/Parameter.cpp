@@ -74,7 +74,7 @@ bool Parameter::SetProperty( const std::string& _property, const int& _value )
         return result;
 }
 
-bool Parameter::Update( const Subject& subject )
+bool Parameter::Update( const Generic& subject )
 {
         for ( auto* component : mComponents )
         {

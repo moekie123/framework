@@ -6,6 +6,8 @@
 // Stl-Headers
 #include <vector>
 
+class Generic;
+
 /**
  * @brief The (Base) Composite class
  */
@@ -19,10 +21,9 @@ class Composite : virtual public Object
 
         /**
 	 * @brief (Composite-) Nodes and Leafs can be add to the instance by this Add-methods
-	 * @param _obs The Object that will observe
-	 * TODO This should be the Generic
+	 * @param _gen The Object that will observe
  	 */
-        bool Add( Object& _obs );
+        bool Add( Generic& _gen );
 
         /** Object Methods */
         bool SetProperty( const std::string& _property, const int& _value ) override;
@@ -33,7 +34,7 @@ class Composite : virtual public Object
         /** 
 	 * @brief The added observers
 	 */
-        std::vector<Object*> mComponents;
+        std::vector<Generic*> mComponents;
 
        private:
         /** 
@@ -44,3 +45,6 @@ class Composite : virtual public Object
                 return *this;
         }
 };
+
+/* This file is already included through Generic.h */
+#include "Generic.h"

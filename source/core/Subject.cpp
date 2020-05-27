@@ -5,11 +5,11 @@ Subject::Subject()
 {
 }
 
-bool Subject::Attach( Observer& obs )
+bool Subject::Attach( Generic& _gen )
 {
-        spdlog::debug( "{} [{} -> {}]", __PRETTY_FUNCTION__, obs.GetName(), mName );
+        spdlog::debug( "{} [{} -> {}]", __PRETTY_FUNCTION__, _gen.GetName(), mName );
 
-        mObservers.push_back( &obs );
+        mObservers.push_back( &_gen );
         return false;
 }
 
@@ -19,10 +19,10 @@ bool Subject::Notify()
 
         for ( auto o : mObservers )
         {
-                res = o->Update( *this );
+                res = o->Update( *mGeneric );
 
                 // Observer returned failure
-                if ( !res ) break;
+             	if ( !res ) break;
         }
 
         return res;

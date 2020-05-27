@@ -7,6 +7,9 @@
 // Third-Party
 #include <spdlog/spdlog.h>
 
+// Forward Declaration
+class Generic;
+
 /**
  * @brief The (Base) Object class
  * @details This class holds the most basic functionalliy that every component in the Framework should be able to work with. 
@@ -53,6 +56,11 @@ class Object
         virtual bool Reset();
 
        protected:
+        /** @brief The Generic Object Element
+	*   @details used for upwards inheritance  
+	*/
+        Generic* mGeneric;
+
         /** @brief name of the component */
         std::string mName;
 

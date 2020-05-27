@@ -3,7 +3,7 @@ add_subdirectory( parameter )
 add_subdirectory( mosquitto )
 add_subdirectory( gtest )
 
-add_library( fundamentals OBJECT
+add_library( generic OBJECT
 		# Include Core Fundamentals	
 		${CMAKE_CURRENT_SOURCE_DIR}/Object.cpp
 		${CMAKE_CURRENT_SOURCE_DIR}/Generic.cpp
@@ -17,7 +17,7 @@ add_library( fundamentals OBJECT
 # Collect Framework sources
 set( CORE_SOURCES
 	# Include the Fundamentals
-        $<TARGET_OBJECTS:fundamentals>
+        $<TARGET_OBJECTS:generic>
 
 	# Include the Configurator
         $<TARGET_OBJECTS:configurator>

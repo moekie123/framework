@@ -5,7 +5,7 @@ Observer::Observer()
 {
 }
 
-bool Observer::Update( const Subject& )
+bool Observer::Update( const Generic& )
 {
         spdlog::debug( "{}", __PRETTY_FUNCTION__ );
         return true;

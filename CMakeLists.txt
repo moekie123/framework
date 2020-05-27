@@ -74,9 +74,9 @@ add_custom_command( TARGET Application
 			COMMAND echo "Build Framework [${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}${VERSION_META}]"
 			PRE_BUILD)
 	
-target_link_libraries( Application PUBLIC Framework
-					  tinyxml2
-				      	  mosquitto )
+target_link_libraries( Application PUBLIC 	Framework	
+					  	tinyxml2
+				      	  	mosquitto )
 
 add_dependencies( Application version )
 

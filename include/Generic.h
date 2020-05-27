@@ -1,10 +1,10 @@
 #pragma once
 
 // Design Patterns
-#include "Composite.h"
 #include "Object.h"
 #include "Observer.h"
 #include "Subject.h"
+#include "Composite.h"
 
 /**
  * @brief The (Base) Generic class combines all fundamental design patterns as one object
@@ -14,8 +14,13 @@ class Generic : virtual public Object,
                 public Observer,
                 public Subject
 {
-       public:
-       private:
+       	public:
+         Generic()
+         {
+                 mGeneric = this;
+         }
+
+        private:
         /** 
 	 * @brief Required to suppress the "no-virtual-move-assign"-Compiler Warning 
 	 */
@@ -24,3 +29,5 @@ class Generic : virtual public Object,
                 return *this;
         }
 };
+
+

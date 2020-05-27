@@ -31,17 +31,23 @@ class ConstructFeature : public ::testing::Test
 
         virtual void SetUp()
         {
-                EXPECT_CALL( mConfig, GetInteger( "Parameter", "const", testing::_ ) ).WillRepeatedly( testing::Return( true ) );
-                EXPECT_CALL( mConfig, GetInteger( "Parameter", "default", testing::_ ) ).WillRepeatedly( testing::Return( true ) );
-                EXPECT_CALL( mConfig, GetInteger( "Parameter", "value", testing::_ ) ).WillRepeatedly( testing::Return( true ) );
+                if ( !Singleton<IConfigurator>::IsConstructed() )
+                {
+                        EXPECT_CALL( mConfig, GetInteger( "Parameter", "const", testing::_ ) ).WillRepeatedly( testing::Return( true ) );
+                        EXPECT_CALL( mConfig, GetInteger( "Parameter", "default", testing::_ ) ).WillRepeatedly( testing::Return( true ) );
+                        EXPECT_CALL( mConfig, GetInteger( "Parameter", "value", testing::_ ) ).WillRepeatedly( testing::Return( true ) );
 
-                Singleton<IConfigurator>::Register( mConfig );
+                        Singleton<IConfigurator>::Register( mConfig );
+                }
 
-                Factories *factory = new Factories();
-                factory->Register<IConfigurator>( "Configurator", &MockConfigurator::builder );
+                if( !Singleton< Factories >::IsConstructed() )
+                {
+                        Factories *factory = new Factories();
+                        factory->Register<IConfigurator>( "Configurator", &MockConfigurator::builder );
 
-                Singleton<Factories>::Register( *factory );
-        }
+                        Singleton<Factories>::Register( *factory );
+                }
+	}
 };
 
 // Other Test that we already trust a working Constructor

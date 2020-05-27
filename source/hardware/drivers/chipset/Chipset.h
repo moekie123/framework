@@ -59,7 +59,4 @@ class Chipset : public IChipset
 	 * @param _name The name of the new Chipset
 	 */
         Chipset( const IConfigurator& _config, std::string _name );
-
-        /** Observer Methods */
-        bool Update( const Subject& ) override;
 };

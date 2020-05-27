@@ -44,11 +44,28 @@ class Singleton
         }
 
         /**
+	 * @brief Clear the register
+	 */
+        static void Unregister()
+        {
+                spdlog::trace( "{} > {}", __PRETTY_FUNCTION__, typeid( T ).name() );
+
+                if ( Singleton::_instance != 0 )
+                {
+                        delete Singleton::_instance;
+                        Singleton::_instance = 0;
+                        return;
+                }
+
+                spdlog::warn( "Singleton already cleared" );
+        }
+
+        /**
 	 * @brief Check if instance is already created
 	 */
         static bool IsConstructed()
         {
-                return !( Singleton::_instance == nullptr );
+                return ( Singleton::_instance != 0 );
         }
 
        protected:

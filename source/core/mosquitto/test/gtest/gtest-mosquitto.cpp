@@ -5,9 +5,9 @@
 #include "IMosquitto.h"
 
 // Design Patterns
-#include "StateMachine.h"
 #include "Factory.h"
 #include "Singleton.h"
+#include "StateMachine.h"
 
 // Testing
 #include "mocks/MockConfigurator.h"
@@ -33,24 +33,29 @@ class MosquittoFeature : public ::testing::Test
 
         virtual void SetUp()
         {
-                mConfig.stringResults["hostname"] = "localhost";
-                EXPECT_CALL( mConfig, GetString( "mosquitto", "hostname", testing::_ ) ).WillRepeatedly( testing::Return( true ) );
+                if ( !Singleton<MockConfigurator>::IsConstructed() )
+                {
+                        mConfig.stringResults["hostname"] = "localhost";
+                        EXPECT_CALL( mConfig, GetString( "mosquitto", "hostname", testing::_ ) ).WillRepeatedly( testing::Return( true ) );
 
-                mConfig.stringResults["port"] = "1833";
-                EXPECT_CALL( mConfig, GetString( "mosquitto", "port", testing::_ ) ).WillRepeatedly( testing::Return( true ) );
+                        mConfig.stringResults["port"] = "1833";
+                        EXPECT_CALL( mConfig, GetString( "mosquitto", "port", testing::_ ) ).WillRepeatedly( testing::Return( true ) );
 
-                mConfig.stringResults["username"] = "rsalm";
-                EXPECT_CALL( mConfig, GetString( "mosquitto", "username", testing::_ ) ).WillRepeatedly( testing::Return( true ) );
+                        mConfig.stringResults["username"] = "rsalm";
+                        EXPECT_CALL( mConfig, GetString( "mosquitto", "username", testing::_ ) ).WillRepeatedly( testing::Return( true ) );
 
-                mConfig.stringResults["password"] = "rsalm";
-                EXPECT_CALL( mConfig, GetString( "mosquitto", "password", testing::_ ) ).WillRepeatedly( testing::Return( true ) );
+                        mConfig.stringResults["password"] = "rsalm";
+                        EXPECT_CALL( mConfig, GetString( "mosquitto", "password", testing::_ ) ).WillRepeatedly( testing::Return( true ) );
 
-                Singleton<MockConfigurator>::Register( mConfig );
+                        Singleton<MockConfigurator>::Register( mConfig );
+                }
 
-                Factories* factory = new Factories();
-                factory->Register<IConfigurator>( "Configurator", &MockConfigurator::builder );
-
-                Singleton<Factories>::Register( *factory );
+                if ( !Singleton<Factories>::IsConstructed() )
+                {
+                        Factories* factory = new Factories();
+                        factory->Register<IConfigurator>( "Configurator", &MockConfigurator::builder );
+ 	                Singleton<Factories>::Register( *factory );
+               }
         }
 };
 
