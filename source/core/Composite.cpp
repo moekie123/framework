@@ -7,10 +7,10 @@ Composite::Composite()
 
 bool Composite::Add( Generic& _gen )
 {
-        spdlog::debug( "{}", __PRETTY_FUNCTION__ );
+        std::string name = mName + "/" + _gen.GetName();
+        _gen.SetName( std::string( name ));
 
-        std::string oName = _gen.GetName();
-        _gen.SetName( std::string( mName + "/" + oName ) );
+        spdlog::debug( "Add [{}]", name );
 
         mComponents.push_back( &_gen );
 

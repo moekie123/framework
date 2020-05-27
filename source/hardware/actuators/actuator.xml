@@ -7,7 +7,8 @@
 	</Parameter>
 
 	<Parameter name="actuator">
-	
+		<driver>pca9685</driver>
+		<chip>/sys/class/pwm/pwmchip0/</chip>
 	</Parameter>
 
 	<Parameter name="dummy">

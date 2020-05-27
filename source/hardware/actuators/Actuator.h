@@ -44,17 +44,17 @@ class Actuator : public IActuator
                         Actuator* actuator = new Actuator( *_config, _name );
 
                         const std::string parameters[] = {
-                                "/config/refresh",
-                                "/config/log",
-                                "/config/mode",
-                                "/config/stepsize",
-                                "/config/period",
-                                "/config/profile",
+                                "config/refresh",
+                                "config/log",
+                                "config/mode",
+                                "config/stepsize",
+                                "config/period",
+                                "config/profile",
                         };
 
                         for ( const std::string& parameter : parameters )
                         {
-                                IParameter* p = factory.Construct<IParameter>( "Parameter" );
+                                IParameter* p = factory.Construct<IParameter>( "Parameter", parameter );
                                 actuator->Add( *p );
                         }
 
@@ -85,4 +85,8 @@ class Actuator : public IActuator
         bool visitDisconnect( const StateMachine& ) override;
         bool visitDestroy( const StateMachine& ) override;
         bool visitCleanup( const StateMachine& ) override;
+
+       private:
+        std::string mDriver;
+        std::string mChip;
 };

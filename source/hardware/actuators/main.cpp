@@ -6,7 +6,6 @@
 
 // Interfaces
 #include "IActuator.h"
-#include "IParameter.h"
 
 // Design Patterns
 #include "AbstractFactory.h"
@@ -46,13 +45,9 @@ int main( int argc, char* argv[] )
         auto factory = Singleton<Factories>::Instance();
 
         // Retrieve Actuator Client
-        auto actuator = factory.Construct<IActuator>( "Actuator", "Actuator" );
-
-        // Retrieve Parameter
-        auto parameter = factory.Construct<IParameter>( "Parameter", "dummy" );
+        auto actuator = factory.Construct<IActuator>( "Actuator", "actuator" );
 
         // Start State Machine
-        actuator->Attach( *parameter );
         StateMachine::Accept( *actuator );
 
         while ( StateMachine::IsRunning() )

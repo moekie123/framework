@@ -6,7 +6,8 @@ add_executable( fsm-actuator
 			Actuator.cpp )
 
 target_link_libraries( fsm-actuator Framework 
-				    mosquitto 
+				    mosquitto
+				    stdc++fs 
 				    tinyxml2 )
 
 add_subdirectory( test )
