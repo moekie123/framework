@@ -55,6 +55,9 @@ TEST( Specalization, Integer )
         ASSERT_EQ( cf->GetProperty<int>( "gtest-parameter", "Parameter", "value", value ), true );
         ASSERT_EQ( value, 42 );
 
+        ASSERT_EQ( cf->GetProperty<int>( "gtest-server", "Communication", "port", value ), true );
+        ASSERT_EQ( value, 123 );
+
         delete cf;
 }
 

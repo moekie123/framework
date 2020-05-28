@@ -1,4 +1,8 @@
 <Root>
+	<Communication name="gtest-server" > 
+		<hostname>localhost</hostname>
+		<port>123</port>
+	</Communication>
 
 	<Parameter name="gtest-parameter" > 
 		<value>42</value>
