@@ -32,7 +32,6 @@ class PWM:
 
 			if ( _property.compare( "period" ) == 0 )
 			{
-
 				file.open( mFilePeriod, std::ios::out );
 			}
 			else if ( _property.compare( "dutycycle" ) == 0 )

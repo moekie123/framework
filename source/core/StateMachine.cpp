@@ -10,8 +10,11 @@ Visitor* StateMachine::mClient;
 // (Forward) State Declaration
 class sIdle;
 class sInitializing;
-class sConfiguring;
+
+class sPreConfiguring;
 class sConnecting;
+class sPostConfiguring;
+
 class sListening;
 class sDisconnecting;
 class sDestroy;
@@ -65,11 +68,11 @@ class sInitializing : public StateMachine
                 }
         }
 
-        // Doxygen Transit{ sInitializing -> sConfiguring [label="eSucces"] }
+        // Doxygen Transit{ sInitializing -> sPreConfiguring [label="eSucces"] }
         void react( eSucces const& )
         {
                 spdlog::debug( "Event [eSucces]" );
-                transit<sConfiguring>();
+                transit<sPreConfiguring>();
         };
 
         // Doxygen Transit{ sInitializing -> sCleanup [label="eFailed"] }
@@ -92,16 +95,16 @@ class sInitializing : public StateMachine
  *  @brief The Configuring State
  *  @details From this State the StateMachine will call the Mosquito Client to configure, by visiting 'Mosquitto::visitConfigure'
  */
-class sConfiguring : public StateMachine
+class sPreConfiguring : public StateMachine
 {
        public:
-        sConfiguring() : StateMachine( "Configuring" ) {}
+        sPreConfiguring() : StateMachine( "PreConfiguring" ) {}
 
        private:
-        // Doxygen Transit{ sConfiguring -> sConfiguring [label="eCycle"] }
+        // Doxygen Transit{ sPreConfiguring -> sPreConfiguring [label="eCycle"] }
         void react( eCycle const& )
         {
-                if ( mClient->visitConfigure( *this ) )
+                if ( mClient->visitPreConfigure( *this ) )
                 {
                         StateMachine::dispatch( eSucces() );
                 }
@@ -111,21 +114,21 @@ class sConfiguring : public StateMachine
                 }
         }
 
-        // Doxygen Transit{ sConfiguring -> sConnecting [label="eSucces"] }
+        // Doxygen Transit{ sPreConfiguring -> sConnecting [label="eSucces"] }
         void react( eSucces const& )
         {
                 spdlog::debug( "Event [eSucces]" );
                 transit<sConnecting>();
         };
 
-        // Doxygen Transit{ sConfiguring -> sDestroy [label="eDestroy"] }
+        // Doxygen Transit{ sPreConfiguring -> sDestroy [label="eDestroy"] }
         void react( eFailed const& )
         {
                 spdlog::debug( "Event [eFailed]" );
                 transit<sDestroy>();
         };
 
-        // Doxygen Transit{ sConfiguring -> sDestroy [label="eTerminate"] }
+        // Doxygen Transit{ sPreConfiguring -> sDestroy [label="eTerminate"] }
         void react( eTerminate const& )
         {
                 spdlog::debug( "Event [eTerminate]" );
@@ -161,7 +164,7 @@ class sConnecting : public StateMachine
         void react( eSucces const& )
         {
                 spdlog::debug( "Event [eSucces]" );
-                transit<sListening>();
+                transit<sPostConfiguring>();
         };
 
         // Doxygen Transit{ sConnecting -> sDestroy [label="eDestroy"] }
@@ -177,6 +180,51 @@ class sConnecting : public StateMachine
                 spdlog::debug( "Event [eTerminate]" );
                 mShutdown = true;
                 transit<sDestroy>();
+        };
+};
+
+/** 
+ *  @brief The PreConfiguring State
+ */
+class sPostConfiguring : public StateMachine
+{
+       public:
+        sPostConfiguring() : StateMachine( "PostConfiguring" ) {}
+
+       private:
+        // Doxygen Transit{ sPostConfiguring -> sPostConfiguring [label="eCycle"] }
+        void react( eCycle const& )
+        {
+                if ( mClient->visitPostConfigure( *this ) )
+                {
+                        StateMachine::dispatch( eSucces() );
+                }
+                else
+                {
+                        StateMachine::dispatch( eFailed() );
+                }
+        }
+
+        // Doxygen Transit{ sPostConfiguring -> sListing [label="eSucces"] }
+        void react( eSucces const& )
+        {
+                spdlog::debug( "Event [eSucces]" );
+                transit<sListening>();
+        };
+
+        // Doxygen Transit{ sPostConfiguring -> sDisconnecting [label="eDestroy"] }
+        void react( eFailed const& )
+        {
+                spdlog::debug( "Event [eFailed]" );
+                transit<sDisconnecting>();
+        };
+
+        // Doxygen Transit{ sPostConfiguring -> sDisconnecting [label="eTerminate"] }
+        void react( eTerminate const& )
+        {
+                spdlog::debug( "Event [eTerminate]" );
+                mShutdown = true;
+                transit<sDisconnecting>();
         };
 };
 

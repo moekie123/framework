@@ -99,9 +99,22 @@ bool Actuator::visitInitialize( const StateMachine& )
         return fs::exists( mChip );
 }
 
-bool Actuator::visitConfigure( const StateMachine& )
+bool Actuator::visitPreConfigure( const StateMachine& )
 {
-        spdlog::info( "[Visit] Configure" );
+        spdlog::info( "[Visit] PreConfigure" );
+        return true;
+}
+
+bool Actuator::visitConnect( const StateMachine& )
+{
+        spdlog::info( "[Visit] Connect" );
+
+        return true;
+}
+
+bool Actuator::visitPostConfigure( const StateMachine& )
+{
+        spdlog::info( "[Visit] PostConfigure" );
 
         std::string filename = "";
 
@@ -132,13 +145,6 @@ bool Actuator::visitConfigure( const StateMachine& )
                 /* Store pointer */
                 fds.push_back( pfd );
         }
-
-        return true;
-}
-
-bool Actuator::visitConnect( const StateMachine& )
-{
-        spdlog::info( "[Visit] Connect" );
 
         return false;
 }

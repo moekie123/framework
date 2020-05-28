@@ -115,10 +115,10 @@ bool Mosquitto::visitInitialize( const StateMachine& )
         return true;
 }
 
-bool Mosquitto::visitConfigure( const StateMachine& )
+bool Mosquitto::visitPreConfigure( const StateMachine& )
 {
         int ret;
-        spdlog::info( "[Visit] Configure username [{}] password [{}]", mUsername, mPassword );
+        spdlog::info( "[Visit] PreConfigure username [{}] password [{}]", mUsername, mPassword );
 
         ret = mosquitto_username_pw_set( mClient, mUsername.c_str(), mPassword.c_str() );
         if ( ret != MOSQ_ERR_SUCCESS )
@@ -164,6 +164,12 @@ bool Mosquitto::visitConnect( const StateMachine& )
                 }
         }
 
+        return true;
+}
+
+bool Mosquitto::visitPostConfigure( const StateMachine& )
+{
+        spdlog::info( "[Visit] PostConfigure" );
         return true;
 }
 

@@ -21,16 +21,22 @@ class Visitor
         virtual bool visitInitialize( const StateMachine& ) = 0;
 
         /**
-  		 * @brief The configure step
-                 * @details Here the instance is loaded in memory and should be configured
+  		 * @brief The Pre-configure step, 
+                 * @details for before connection can be enstablished
                  */
-        virtual bool visitConfigure( const StateMachine& ) = 0;
+        virtual bool visitPreConfigure( const StateMachine& ) = 0;
 
         /**
   		 * @brief The connect step
                  * @details Here the insta instance will connect with the configuration
                  */
         virtual bool visitConnect( const StateMachine& ) = 0;
+
+        /**
+  		 * @brief The Post-Configure step, 
+                 * @details for after the connection is enstablised
+                 */
+        virtual bool visitPostConfigure( const StateMachine& ) = 0;
 
         /**
   		 * @brief The loop step
