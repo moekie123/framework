@@ -38,17 +38,17 @@ class MockConfigurator : public IConfigurator
         };
         static MockBuilder builder;
 
-        MOCK_CONST_METHOD3( GetInteger, bool( const std::string&, const std::string&, const std::string&, int& ) );
-        bool Get( const std::string& _name, const std::string& _type, const std::string& _attribute, int& _value ) const override
+        MOCK_CONST_METHOD4( GetInteger, bool( const std::string&, const std::string&, const std::string&, int& ) );
+        bool Get( const std::string& _type, const std::string& _name, const std::string& _attribute, int& _value ) const override
         {
-                return GetInteger( _name, _attribute, _value );
+                return GetInteger( _type, _name, _attribute, _value );
         }
 
         std::map<std::string, std::string> stringResults;
-        MOCK_CONST_METHOD3( GetString, bool( const std::string&, const std::string&, const std::string&, std::string& ) );
-        bool Get( const std::string& _name, const std::string& _type, const std::string& _attribute, std::string& _value ) const override
+        MOCK_CONST_METHOD4( GetString, bool( const std::string&, const std::string&, const std::string&, std::string& ) );
+        bool Get( const std::string& _type, const std::string& _name, const std::string& _attribute, std::string& _value ) const override
         {
-                bool result = GetString( _name, _type, _attribute, _value );
+                bool result = GetString( _type, _name, _attribute, _value );
 
                 auto it = stringResults.find( _attribute );
                 if ( it != stringResults.end() )

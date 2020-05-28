@@ -1,10 +1,10 @@
 <Root>
-	<Parameter name="mosquitto">
+	<Mosquitto name="client">
 		<port>1883</port>
 		<username>rsalm</username>
 		<password>rsalm</password>
 		<hostname>localhost</hostname>
-	</Parameter>
+	</Mosquitto>
 
 	<Parameter name="dummy">
 		<const>0</const>

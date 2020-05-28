@@ -6,15 +6,9 @@
 		<hostname>localhost</hostname>
 	</Parameter>
 
-	<Parameter name="actuator">
+	<Actuator name="actuator">
 		<driver>pca9685</driver>
 		<chip>/sys/class/pwm/pwmchip0/</chip>
-	</Parameter>
-
-	<Parameter name="dummy">
-		<const>0</const>
-		<value>42</value>
-		<default>0</default>
-	</Parameter>
+	</Actuator>
 
 </Root>

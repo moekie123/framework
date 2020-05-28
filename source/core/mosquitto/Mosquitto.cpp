@@ -12,8 +12,8 @@
 #include <spdlog/spdlog.h>
 
 // Stl-Headers
-#include <string>
 #include <queue>
+#include <string>
 #include <utility>
 
 Mosquitto::MosquittoBuilder Mosquitto::builder;
@@ -70,10 +70,10 @@ Mosquitto::Mosquitto( const IConfigurator& _config )
         spdlog::debug( "{}", __PRETTY_FUNCTION__ );
         SetName( "Mosquitto" );
 
-        _config.GetProperty( "mosquitto", "hostname", mHostname );
-        _config.GetProperty( "mosquitto", "username", mUsername );
-        _config.GetProperty( "mosquitto", "password", mPassword );
-        _config.GetProperty( "mosquitto", "port", mPort );
+        _config.GetProperty( "Mosquitto", "client", "hostname", mHostname );
+        _config.GetProperty( "Mosquitto", "client", "username", mUsername );
+        _config.GetProperty( "Mosquitto", "client", "password", mPassword );
+        _config.GetProperty( "Mosquitto", "client", "port", mPort );
 
         mClient = nullptr;
 }

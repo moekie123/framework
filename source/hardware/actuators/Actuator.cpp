@@ -26,8 +26,8 @@ Actuator::Actuator( const IConfigurator& _config, std::string _name )
 {
         mName = _name;
 
-        _config.GetProperty( mName, "driver", mDriver );
-        _config.GetProperty( mName, "chip", mChip );
+        _config.GetProperty( "Actuator", mName, "driver", mDriver );
+        _config.GetProperty( "Actuator", mName, "chip", mChip );
 
         fds["period"] = -1;
         fds["dutycycle"] = -1;

@@ -50,14 +50,14 @@ class ConstructFeature : public ::testing::Test
 TEST_F( ConstructFeature, Default )
 {
         /* Configurator Mock is defined in the feature */
-        Actuator *a = new Actuator( "Actuator" );
+        Actuator *a = new Actuator( mConfig, "Actuator" );
         ASSERT_NE( a, nullptr );
 }
 
 TEST_F( ConstructFeature, Interface )
 {
         /* Configurator Mock is defined in the feature */
-        IActuator *a = new Actuator( "Actuator" );
+        IActuator *a = new Actuator( mConfig, "Actuator" );
         ASSERT_NE( a, nullptr );
 }
 

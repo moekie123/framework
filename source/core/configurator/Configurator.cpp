@@ -74,8 +74,8 @@ Configurator::~Configurator()
  */
 class XMLFramework : public tinyxml2::XMLVisitor
 {
-        const std::string& mName;
         const std::string& mType;
+        const std::string& mName;
         const std::string& mAttribute;
 
        public:
@@ -90,8 +90,8 @@ class XMLFramework : public tinyxml2::XMLVisitor
 	 * @param _name The name of the paramter that needs to be found
 	 * @param _attribute The attribute that request is searching for
 	 */
-        XMLFramework( const std::string& _name, const std::string& _type, const std::string& _attribute ) : mName( _name ),
-                                                                                                            mType( _type ),
+        XMLFramework( const std::string& _type, const std::string& _name, const std::string& _attribute ) : mType( _type ),
+                                                                                                            mName( _name ),
                                                                                                             mAttribute( _attribute )
         {
         }
@@ -122,7 +122,7 @@ class XMLFramework : public tinyxml2::XMLVisitor
         }
 };
 
-bool Configurator::Get( const std::string& _name, const std::string& _type, const std::string& _attribute, int& _value ) const
+bool Configurator::Get( const std::string& _type, const std::string& _name, const std::string& _attribute, int& _value ) const
 {
         tinyxml2::XMLElement* root;
 
@@ -132,7 +132,7 @@ bool Configurator::Get( const std::string& _name, const std::string& _type, cons
         root = document->RootElement();
 
         // Search for property
-      	XMLFramework* config = new XMLFramework( _name, _type, _attribute );
+        XMLFramework* config = new XMLFramework( _type, _name, _attribute );
         root->Accept( config );
 
         // Property
@@ -148,7 +148,7 @@ bool Configurator::Get( const std::string& _name, const std::string& _type, cons
         return false;
 }
 
-bool Configurator::Get( const std::string& _name, const std::string& _type, const std::string& _attribute, std::string& _value ) const
+bool Configurator::Get( const std::string& _type, const std::string& _name, const std::string& _attribute, std::string& _value ) const
 {
         tinyxml2::XMLElement* root;
 
@@ -157,7 +157,7 @@ bool Configurator::Get( const std::string& _name, const std::string& _type, cons
         root = document->RootElement();
 
         // Search for property
-        XMLFramework* config = new XMLFramework( _name, _type, _attribute );
+        XMLFramework* config = new XMLFramework( _type, _name, _attribute );
         root->Accept( config );
 
         if ( config->property )

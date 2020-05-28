@@ -36,16 +36,16 @@ class MosquittoFeature : public ::testing::Test
                 if ( !Singleton<MockConfigurator>::IsConstructed() )
                 {
                         mConfig.stringResults["hostname"] = "localhost";
-                        EXPECT_CALL( mConfig, GetString( "mosquitto", "hostname", testing::_ ) ).WillRepeatedly( testing::Return( true ) );
+                        EXPECT_CALL( mConfig, GetString( "Mosquitto", "client", "hostname", testing::_ ) ).WillRepeatedly( testing::Return( true ) );
 
                         mConfig.stringResults["port"] = "1833";
-                        EXPECT_CALL( mConfig, GetString( "mosquitto", "port", testing::_ ) ).WillRepeatedly( testing::Return( true ) );
+                        EXPECT_CALL( mConfig, GetString( "Mosquitto", "client", "port", testing::_ ) ).WillRepeatedly( testing::Return( true ) );
 
                         mConfig.stringResults["username"] = "rsalm";
-                        EXPECT_CALL( mConfig, GetString( "mosquitto", "username", testing::_ ) ).WillRepeatedly( testing::Return( true ) );
+                        EXPECT_CALL( mConfig, GetString( "Mosquitto", "client", "username", testing::_ ) ).WillRepeatedly( testing::Return( true ) );
 
                         mConfig.stringResults["password"] = "rsalm";
-                        EXPECT_CALL( mConfig, GetString( "mosquitto", "password", testing::_ ) ).WillRepeatedly( testing::Return( true ) );
+                        EXPECT_CALL( mConfig, GetString( "Mosquitto", "client", "password", testing::_ ) ).WillRepeatedly( testing::Return( true ) );
 
                         Singleton<MockConfigurator>::Register( mConfig );
                 }

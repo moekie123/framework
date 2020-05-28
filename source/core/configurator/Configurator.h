@@ -61,6 +61,6 @@ class Configurator : public IConfigurator
 
        private:
 	/* IConfigurator */
-        bool Get( const std::string& _name, const std::string& _type, const std::string& _attribute, int& _value ) const override;
-        bool Get( const std::string& _name, const std::string& _type, const std::string& _attribute, std::string& _value ) const override;
+        bool Get( const std::string& _type, const std::string& _name, const std::string& _attribute, int& _value ) const override;
+        bool Get( const std::string& _type, const std::string& _name, const std::string& _attribute, std::string& _value ) const override;
 };

@@ -52,10 +52,10 @@ TEST( Specalization, Integer )
 
         IConfigurator *cf = new Configurator();
 
-        ASSERT_EQ( cf->GetProperty<int>( "gtest-parameter", "Parameter", "value", value ), true );
+        ASSERT_EQ( cf->GetProperty<int>( "Parameter", "gtest-parameter", "value", value ), true );
         ASSERT_EQ( value, 42 );
 
-        ASSERT_EQ( cf->GetProperty<int>( "gtest-server", "Communication", "port", value ), true );
+        ASSERT_EQ( cf->GetProperty<int>( "Communication", "gtest-server", "port", value ), true );
         ASSERT_EQ( value, 123 );
 
         delete cf;
@@ -67,7 +67,7 @@ TEST( Specalization, String )
 
         IConfigurator *cf = new Configurator();
 
-        ASSERT_EQ( cf->GetProperty<std::string>( "gtest-parameter", "Parameter", "value", value ), true );
+        ASSERT_EQ( cf->GetProperty<std::string>( "Parameter", "gtest-parameter", "value", value ), true );
         ASSERT_EQ( value, "42" );
 
         delete cf;
@@ -99,7 +99,7 @@ TYPED_TEST( TypedTest, UnknownName )
         ParamType value;
 
         IConfigurator *cf = new Configurator();
-        ASSERT_EQ( cf->GetProperty<ParamType>( "unknown", "Parameter", "value", value ), false );
+        ASSERT_EQ( cf->GetProperty<ParamType>( "Parameter", "unknown", "value", value ), false );
 
         delete cf;
 }
@@ -110,7 +110,7 @@ TYPED_TEST( TypedTest, UnknownType )
         ParamType value;
 
         IConfigurator *cf = new Configurator();
-        ASSERT_EQ( cf->GetProperty<ParamType>( "gtest-parameter", "unknown", "value", value ), false );
+        ASSERT_EQ( cf->GetProperty<ParamType>( "unknown", "gtest-parameter", "value", value ), false );
 
         delete cf;
 }
@@ -121,7 +121,7 @@ TYPED_TEST( TypedTest, UnknownAttribute )
         ParamType value;
 
         IConfigurator *cf = new Configurator();
-        ASSERT_EQ( cf->GetProperty<ParamType>( "gtest-parameter", "Parameter", "unknown", value ), false );
+        ASSERT_EQ( cf->GetProperty<ParamType>( "Parameter", "gtest-parameter", "unknown", value ), false );
 
         delete cf;
 }
