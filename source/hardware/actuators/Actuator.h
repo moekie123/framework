@@ -25,14 +25,14 @@ class Actuator : public IActuator
         class ActuatorBuilder : public Builder<IActuator>
         {
                public:
-                 /**
+                /**
 	 	 * @brief The constructor will map the Build-Method to the (base) Builder class
 		 */
                 ActuatorBuilder() : Builder( Build )
                 {
                 }
 
-               /**
+                /**
 		 * @brief The build method that configures and constructs a new Parameter
 		 * @param _config The pre build Configurator
 		 * @param _name The name of the new Actuator
@@ -60,7 +60,6 @@ class Actuator : public IActuator
 
                         return actuator;
                 }
-
         };
 
         /**
@@ -73,6 +72,13 @@ class Actuator : public IActuator
 	 * @param _name The name of the actuartor
 	 */
         Actuator( const IConfigurator& _config, std::string _name );
+
+        /**
+	 * @brief Enable/Disable the channels of the chip
+	 * @param _enable True; Enable the channels
+	 * @return The amount of channels that are enabled/disableld
+	 */
+        int Channels( bool _enable );
 
         /** 
 	 * Visitor Pattern Methods

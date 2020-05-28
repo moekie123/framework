@@ -12,13 +12,19 @@
 // Stl-Headers
 #include <fcntl.h>
 #include <filesystem>
-#include <map>
 #include <string>
+#include <vector>
 
 namespace fs = std::filesystem;
 
-std::map<std::string, int> fds;
-int channels = 0;
+struct pwm_file_descriptors
+{
+        int id;
+        int enable;
+        int period;
+        int duty_cycle;
+};
+std::vector<pwm_file_descriptors*> fds;
 
 Actuator::ActuatorBuilder Actuator::builder;
 
@@ -28,9 +34,63 @@ Actuator::Actuator( const IConfigurator& _config, std::string _name )
 
         _config.GetProperty( "Actuator", mName, "driver", mDriver );
         _config.GetProperty( "Actuator", mName, "chip", mChip );
+}
 
-        fds["period"] = -1;
-        fds["dutycycle"] = -1;
+int Actuator::Channels( bool _enable )
+{
+        spdlog::info( "Configure Channels" );
+
+        // Actuator Chip Descriptors
+        int fd_npwm = -1;
+        int fd_config = -1;
+
+        int channels = 0;
+
+        std::string filename = "";
+        int result = 0;  // Read and Write Result
+
+        // Open Chip Descriptors
+        filename = mChip + "npwm";
+        fd_npwm = open( filename.c_str(), O_RDONLY );
+        if ( fd_npwm < 0 ) goto exit;
+
+        filename = mChip + ( _enable ? "export" : "unexport" );
+        fd_config = open( filename.c_str(), O_WRONLY );
+        if ( fd_config < 0 ) goto exit;
+
+        // Get the channels
+        {
+                char* buf = (char*)calloc( 10, sizeof( char ) );
+
+                result = read( fd_npwm, buf, 10 );
+                if ( result < 0 ) goto exit;
+
+                channels = std::stoi( buf, nullptr );
+
+                free( buf );
+
+                spdlog::info( "Channels [{}]", channels );
+        }
+        if ( channels <= 0 ) goto exit;
+
+        // Iterate through all channels
+        for ( int i = 0; i < channels; i++ )
+        {
+                std::string index = std::to_string( i );
+                spdlog::debug( "{} Channel [{}]", ( _enable ? "Export" : "Unexport" ), index );
+
+                // Open Channel
+                write( fd_config, index.c_str(), strlen( index.c_str() ) );
+        }
+
+exit:
+        // Close Chip Descriptors
+        if ( fd_npwm != -1 )
+                close( fd_npwm );
+        if ( fd_config != -1 )
+                close( fd_config );
+
+        return channels;
 }
 
 bool Actuator::visitInitialize( const StateMachine& )
@@ -41,60 +101,51 @@ bool Actuator::visitInitialize( const StateMachine& )
 
 bool Actuator::visitConfigure( const StateMachine& )
 {
-        int fd = -1;
         spdlog::info( "[Visit] Configure" );
 
-        // Read N-Channels
-        std::string npwm = mChip + "npwm";
-        fd = open( npwm.c_str(), O_RDONLY );
+        std::string filename = "";
 
-        if ( fd != -1 )
+        int channels = Channels( true );
+
+        // Iterate through all channels
+        for ( int i = 0; i < channels; i++ )
         {
-                char* buf = (char*)calloc( 10, sizeof( char ) );
+                std::string index = std::to_string( i );
 
-                read( fd, buf, 10 );
-                channels = std::stoi( buf, nullptr );
-                close( fd );
+                /* Configure the channels */
+                pwm_file_descriptors* pfd = new pwm_file_descriptors{ -1, -1, -1, -1 };
 
-                free( buf );
+                pfd->id = i;
 
-                spdlog::info( "Channels [{}]", channels );
-                return true;
+                filename = mChip + "pwm" + std::to_string( i ) + "/" + "period";
+                pfd->period = open( filename.c_str(), O_WRONLY );
+                if ( pfd->period == -1 ) break;
+
+                filename = mChip + "pwm" + std::to_string( i ) + "/" + "enable";
+                pfd->enable = open( filename.c_str(), O_WRONLY );
+                if ( pfd->enable == -1 ) break;
+
+                filename = mChip + "pwm" + std::to_string( i ) + "/" + "duty_cycle";
+                pfd->duty_cycle = open( filename.c_str(), O_WRONLY );
+                if ( pfd->duty_cycle == -1 ) break;
+
+                /* Store pointer */
+                fds.push_back( pfd );
         }
-        return false;
+
+        return true;
 }
 
 bool Actuator::visitConnect( const StateMachine& )
 {
-        int fd = -1;
         spdlog::info( "[Visit] Connect" );
 
-        // Open Export
-        std::string exprt = mChip + "export";
-        fd = open( exprt.c_str(), O_WRONLY );
-
-        if ( fd != -1 )
-        {
-                // Iterate through all channels
-                for ( int i = 0; i < channels; i++ )
-                {
-                        std::string index = std::to_string( i );
-                        spdlog::debug("Export Channel [{}]", index );
-                        write( fd, index.c_str(), strlen( index.c_str() ) );
-
-			/* Configure the channels */
-                }
-                close( fd );
-                return true;
-        }
         return false;
 }
 
 bool Actuator::visitLoop( const StateMachine& )
 {
         //        spdlog::info( "[Visit] Loop" );
-
-        // Move the server
         return true;
 }
 
@@ -114,26 +165,26 @@ bool Actuator::visitDisconnect( const StateMachine& )
 
 bool Actuator::visitDestroy( const StateMachine& )
 {
-        int fd;
         spdlog::info( "[Visit] Destroy" );
 
-        // Open Export
-        std::string exprt = mChip + "unexport";
-        fd = open( exprt.c_str(), O_WRONLY );
-
-        if ( fd != -1 )
+        // close and delete array of pointers
+        for ( auto fd : fds )
         {
-                // Iterate through all channels
-                for ( int i = 0; i < 17; i++ )
-                {
-                        std::string index = std::to_string( i );
-                        spdlog::debug( "Unexport Channel [{}]", index );
-                        write( fd, index.c_str(), strlen( index.c_str() ) );
-                }
-                close( fd );
-                return true;
+                if ( fd->enable > 0 )
+                        close( fd->enable );
+
+                if ( fd->period > 0 )
+                        close( fd->period );
+
+                if ( fd->duty_cycle > 0 )
+                        close( fd->duty_cycle );
+
+                delete fd;
         }
-        return false;
+        fds.clear();
+
+        Channels( false );
+        return true;
 }
 
 bool Actuator::visitCleanup( const StateMachine& )
