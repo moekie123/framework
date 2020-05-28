@@ -75,8 +75,10 @@ add_custom_command( TARGET Application
 			PRE_BUILD)
 	
 target_link_libraries( Application PUBLIC 	Framework	
+					  	mosquitto 
 					  	tinyxml2
-				      	  	mosquitto )
+						stdc++fs )
+
 
 add_dependencies( Application version )
 

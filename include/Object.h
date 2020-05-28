@@ -20,6 +20,8 @@ class Object
        public:
         Object();
 
+        virtual ~Object() = default;
+
         /** 
          *  @brief get the name of the derived class
 	 *  @return the name of the created class

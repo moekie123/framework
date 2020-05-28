@@ -1,3 +1,3 @@
-# Factory Unit Tests
+#Factory Unit Tests
 gsetup( configurator )
-target_link_libraries( gtest-configurator generic configurator tinyxml2 )
+target_link_libraries( gtest-configurator generic configurator tinyxml2	stdc++fs )

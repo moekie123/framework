@@ -12,4 +12,6 @@
 class IActuator : public Generic,
                   public Visitor
 {
+       public:
+       	virtual ~IActuator() = default;
 };

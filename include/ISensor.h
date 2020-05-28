@@ -8,4 +8,6 @@
  */
 class ISensor : public Generic
 {
+       public:
+        virtual ~ISensor() = default;
 };

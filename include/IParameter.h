@@ -7,4 +7,6 @@
  */
 class IParameter : public Generic
 {
+       public:
+        virtual ~IParameter() = default;
 };

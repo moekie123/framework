@@ -20,6 +20,8 @@ class Generic : virtual public Object,
                  mGeneric = this;
          }
 
+         virtual ~Generic() = default;
+
         private:
         /** 
 	 * @brief Required to suppress the "no-virtual-move-assign"-Compiler Warning 

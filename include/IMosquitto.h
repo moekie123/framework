@@ -12,4 +12,6 @@
 class IMosquitto : public Generic,
                    public Visitor
 {
+       public:
+        virtual ~IMosquitto() = default;
 };

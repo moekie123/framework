@@ -8,4 +8,6 @@
  */
 class IDevice : public Generic
 {
+       public:
+        virtual ~IDevice() = default;
 };

@@ -8,4 +8,6 @@
  */
 class IChipset : public Generic
 {
+       public:
+        virtual ~IChipset() = default;
 };

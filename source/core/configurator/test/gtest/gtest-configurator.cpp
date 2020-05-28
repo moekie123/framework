@@ -10,7 +10,7 @@
 #include <gtest/gtest.h>
 
 // Stl-Headers
-#include <unistd.h>
+#include <filesystem>
 #include <string>
 #include <type_traits>
 #include <typeinfo>
@@ -29,17 +29,21 @@ TYPED_TEST_CASE( TypedTest, Types );
 TEST( Default, Construct )
 {
         Configurator *cf = new Configurator();
+        delete cf;
 }
 
 TEST( Default, ConstructInterface )
 {
         IConfigurator *icf = new Configurator();
+        delete icf;
 }
 
 TEST( Default, ConstructBuilder )
 {
-        auto configurator = Configurator::builder.Build( nullptr, "Configurator" );
-        ASSERT_EQ( typeid( Generic ), typeid( configurator ) );
+        auto cf = Configurator::builder.Build( nullptr, "Configurator" );
+        ASSERT_EQ( typeid( IConfigurator * ), typeid( cf ) );
+
+        delete cf;
 }
 
 TEST( Specalization, Integer )
@@ -48,8 +52,10 @@ TEST( Specalization, Integer )
 
         IConfigurator *cf = new Configurator();
 
-        ASSERT_EQ( cf->GetProperty<int>( "gtest-parameter", "value", value ), true );
+        ASSERT_EQ( cf->GetProperty<int>( "gtest-parameter", "Parameter", "value", value ), true );
         ASSERT_EQ( value, 42 );
+
+        delete cf;
 }
 
 TEST( Specalization, String )
@@ -58,24 +64,30 @@ TEST( Specalization, String )
 
         IConfigurator *cf = new Configurator();
 
-        ASSERT_EQ( cf->GetProperty<std::string>( "gtest-parameter", "value", value ), true );
+        ASSERT_EQ( cf->GetProperty<std::string>( "gtest-parameter", "Parameter", "value", value ), true );
         ASSERT_EQ( value, "42" );
+
+        delete cf;
 }
 
 TEST( IntegerException, Unknown )
 {
         int value;
         IConfigurator *cf = new Configurator();
-        ASSERT_EQ( cf->GetProperty<int>( "unknown", "unknown", value ), false );
+        ASSERT_EQ( cf->GetProperty<int>( "unknown", "unknown", "unknown", value ), false );
+
+        delete cf;
 }
 
-TYPED_TEST( TypedTest, UnknownNameAndAttribute )
+TYPED_TEST( TypedTest, AllUnknown )
 {
         using ParamType = typename TestFixture::ParamType;
         ParamType value;
 
         IConfigurator *cf = new Configurator();
-        ASSERT_EQ( cf->GetProperty<ParamType>( "unknown", "unknown", value ), false );
+        ASSERT_EQ( cf->GetProperty<ParamType>( "unknown", "unknown", "unknown", value ), false );
+
+        delete cf;
 }
 
 TYPED_TEST( TypedTest, UnknownName )
@@ -84,7 +96,20 @@ TYPED_TEST( TypedTest, UnknownName )
         ParamType value;
 
         IConfigurator *cf = new Configurator();
-        ASSERT_EQ( cf->GetProperty<ParamType>( "unknown", "value", value ), false );
+        ASSERT_EQ( cf->GetProperty<ParamType>( "unknown", "Parameter", "value", value ), false );
+
+        delete cf;
+}
+
+TYPED_TEST( TypedTest, UnknownType )
+{
+        using ParamType = typename TestFixture::ParamType;
+        ParamType value;
+
+        IConfigurator *cf = new Configurator();
+        ASSERT_EQ( cf->GetProperty<ParamType>( "gtest-parameter", "unknown", "value", value ), false );
+
+        delete cf;
 }
 
 TYPED_TEST( TypedTest, UnknownAttribute )
@@ -93,16 +118,21 @@ TYPED_TEST( TypedTest, UnknownAttribute )
         ParamType value;
 
         IConfigurator *cf = new Configurator();
-        ASSERT_EQ( cf->GetProperty<ParamType>( "gtest-parameter", "unknown", value ), false );
+        ASSERT_EQ( cf->GetProperty<ParamType>( "gtest-parameter", "Parameter", "unknown", value ), false );
+
+        delete cf;
 }
 
 int main( int argc, char **argv )
 {
-        if ( access( filename.c_str(), F_OK ) != -1 )
+        if ( std::filesystem::exists( filename ) )
         {
                 Configurator::mConfigFileName = filename;
                 ::testing::InitGoogleTest( &argc, argv );
                 return RUN_ALL_TESTS();
         }
+        else
+                spdlog::info( "Gtests aborted, Failed to load [{}]", filename );
+
         return 0;
 }
