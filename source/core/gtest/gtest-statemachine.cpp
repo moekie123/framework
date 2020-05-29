@@ -17,93 +17,96 @@
 using ::testing::NiceMock;
 using ::testing::Return;
 
+using gVisitor = NiceMock<MockMosquittoVisitor<0> >;
+using gStateMachine = StateMachine<0>;
+
 TEST( StateMachine, InitializeFailure )
 {
-        NiceMock<MockMosquittoVisitor> visitor;
-        StateMachine::Accept( visitor );
+        gVisitor visitor;
+        gStateMachine::Accept( visitor );
 
         // UpStream
         EXPECT_CALL( visitor, visitInitialize( testing::_ ) ).WillOnce( testing::Return( false ) );
-        StateMachine::dispatch( eCycle() );
+        gStateMachine::dispatch( eCycle() );
 
         // DownStream
         EXPECT_CALL( visitor, visitCleanup( testing::_ ) ).WillOnce( testing::Return( true ) );
-        StateMachine::dispatch( eCycle() );
+        gStateMachine::dispatch( eCycle() );
 }
 
 TEST( StateMachine, ConfigureFailure )
 {
-        NiceMock<MockMosquittoVisitor> visitor;
-        StateMachine::Accept( visitor );
+        gVisitor visitor;
+        gStateMachine::Accept( visitor );
 
         // UpStream
         EXPECT_CALL( visitor, visitInitialize( testing::_ ) ).WillOnce( testing::Return( true ) );
-        StateMachine::dispatch( eCycle() );
+        gStateMachine::dispatch( eCycle() );
 
         EXPECT_CALL( visitor, visitPreConfigure( testing::_ ) ).WillOnce( testing::Return( false ) );
-        StateMachine::dispatch( eCycle() );
+        gStateMachine::dispatch( eCycle() );
 
         // DownStream
         EXPECT_CALL( visitor, visitDestroy( testing::_ ) ).WillOnce( testing::Return( true ) );
-        StateMachine::dispatch( eCycle() );
+        gStateMachine::dispatch( eCycle() );
 
         EXPECT_CALL( visitor, visitCleanup( testing::_ ) ).WillOnce( testing::Return( true ) );
-        StateMachine::dispatch( eCycle() );
+        gStateMachine::dispatch( eCycle() );
 }
 
 TEST( StateMachine, ConnectFailure )
 {
-        NiceMock<MockMosquittoVisitor> visitor;
-        StateMachine::Accept( visitor );
+        gVisitor visitor;
+        gStateMachine::Accept( visitor );
 
         // UpStream
         EXPECT_CALL( visitor, visitInitialize( testing::_ ) ).WillOnce( testing::Return( true ) );
-        StateMachine::dispatch( eCycle() );
+        gStateMachine::dispatch( eCycle() );
 
         EXPECT_CALL( visitor, visitPreConfigure( testing::_ ) ).WillOnce( testing::Return( true ) );
-        StateMachine::dispatch( eCycle() );
+        gStateMachine::dispatch( eCycle() );
 
         EXPECT_CALL( visitor, visitConnect( testing::_ ) ).WillOnce( testing::Return( false ) );
-        StateMachine::dispatch( eCycle() );
+        gStateMachine::dispatch( eCycle() );
 
         // DownStream
         EXPECT_CALL( visitor, visitDestroy( testing::_ ) ).WillOnce( testing::Return( true ) );
-        StateMachine::dispatch( eCycle() );
+        gStateMachine::dispatch( eCycle() );
 
         EXPECT_CALL( visitor, visitCleanup( testing::_ ) ).WillOnce( testing::Return( true ) );
-        StateMachine::dispatch( eCycle() );
+        gStateMachine::dispatch( eCycle() );
 }
 
 TEST( StateMachine, LoopFailure )
 {
-        NiceMock<MockMosquittoVisitor> visitor;
-        StateMachine::Accept( visitor );
+        gVisitor visitor;
+        gStateMachine::Accept( visitor );
 
         // UpStream
         EXPECT_CALL( visitor, visitInitialize( testing::_ ) ).WillOnce( testing::Return( true ) );
-        StateMachine::dispatch( eCycle() );
+        gStateMachine::dispatch( eCycle() );
 
         EXPECT_CALL( visitor, visitPreConfigure( testing::_ ) ).WillOnce( testing::Return( true ) );
-        StateMachine::dispatch( eCycle() );
+        gStateMachine::dispatch( eCycle() );
 
         EXPECT_CALL( visitor, visitConnect( testing::_ ) ).WillOnce( testing::Return( true ) );
-        StateMachine::dispatch( eCycle() );
+        gStateMachine::dispatch( eCycle() );
 
         EXPECT_CALL( visitor, visitPostConfigure( testing::_ ) ).WillOnce( testing::Return( true ) );
-        StateMachine::dispatch( eCycle() );
+        gStateMachine::dispatch( eCycle() );
 
         EXPECT_CALL( visitor, visitLoop( testing::_ ) ).WillOnce( testing::Return( false ) );
-        StateMachine::dispatch( eCycle() );
+        gStateMachine::dispatch( eCycle() );
 
         // DownStream
         EXPECT_CALL( visitor, visitDisconnect( testing::_ ) ).WillOnce( testing::Return( true ) );
-        StateMachine::dispatch( eCycle() );
+        gStateMachine::dispatch( eCycle() );
 
         EXPECT_CALL( visitor, visitDestroy( testing::_ ) ).WillOnce( testing::Return( true ) );
-        StateMachine::dispatch( eCycle() );
+        gStateMachine::dispatch( eCycle() );
 
         EXPECT_CALL( visitor, visitCleanup( testing::_ ) ).WillOnce( testing::Return( true ) );
-        StateMachine::dispatch( eCycle() );
+        gStateMachine::dispatch( eCycle() );
 }
 
 /* DONT MODIFY, THIS IS A TEMPLATE 

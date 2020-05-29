@@ -4,6 +4,7 @@
 #include "StateMachine.h"
 
 // Forward Declaration
+template <int inum>
 class StateMachine;
 
 /**
@@ -11,60 +12,61 @@ class StateMachine;
  * @details This class contains all methods that the StateMachine is depending on as a Visitor
  * Check the state diagram of the StateMachine to see when each step is evoked
  */
+template <int inum>
 class Visitor
 {
-       public:
+      public:
         /**
   		 * @brief The initializing step
                  * @details Here the instance should be initializeing
                  */
-        virtual bool visitInitialize( const StateMachine& ) = 0;
+        virtual bool visitInitialize( const StateMachine<inum>& ) = 0;
 
         /**
   		 * @brief The Pre-configure step, 
                  * @details for before connection can be enstablished
                  */
-        virtual bool visitPreConfigure( const StateMachine& ) = 0;
+        virtual bool visitPreConfigure( const StateMachine<inum>& ) = 0;
 
         /**
   		 * @brief The connect step
                  * @details Here the insta instance will connect with the configuration
                  */
-        virtual bool visitConnect( const StateMachine& ) = 0;
+        virtual bool visitConnect( const StateMachine<inum>& ) = 0;
 
         /**
   		 * @brief The Post-Configure step, 
                  * @details for after the connection is enstablised
                  */
-        virtual bool visitPostConfigure( const StateMachine& ) = 0;
+        virtual bool visitPostConfigure( const StateMachine<inum>& ) = 0;
 
         /**
   		 * @brief The loop step
                  * @details Here the connection is enstablished
                  */
-        virtual bool visitLoop( const StateMachine& ) = 0;
+        virtual bool visitLoop( const StateMachine<inum>& ) = 0;
 
         /**
   		 * @brief The reconnect step
                  * @details Here the instance gets the opertunity to reconnect
                  */
-        virtual bool visitReconnect( const StateMachine& ) = 0;
+        virtual bool visitReconnect( const StateMachine<inum>& ) = 0;
 
         /**
   		 * @brief The disconnect step
                  * @details Here the instance can gracefully disconnect
                  */
-        virtual bool visitDisconnect( const StateMachine& ) = 0;
+        virtual bool visitDisconnect( const StateMachine<inum>& ) = 0;
 
         /**
   		 * @brief The destroy step
                  * @details Here the instance will get rid of old configurations
                  */
-        virtual bool visitDestroy( const StateMachine& ) = 0;
+        virtual bool visitDestroy( const StateMachine<inum>& ) = 0;
 
         /**
   		 * @brief The cleanup step
                  * @details Here the instance can be deleted
                  */
-        virtual bool visitCleanup( const StateMachine& ) = 0;
+        virtual bool visitCleanup( const StateMachine<inum>& ) = 0;
 };

@@ -10,7 +10,7 @@
  * @brief The Mosquitto Interface
  */
 class IMosquitto : public Generic,
-                   public Visitor
+                   public Visitor<0>
 {
        public:
         virtual ~IMosquitto() = default;

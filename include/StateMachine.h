@@ -11,6 +11,7 @@
 #include <string>
 
 // Forward Declaration
+template <int inum>
 class Visitor;
 
 // ########## StateMachine Events ##########
@@ -53,8 +54,9 @@ struct eTerminate : tinyfsm::Event
  * @brief The (Base) Statemachine Class
  * @details This class holds the basics for a state in the StateMachine
  */
+template <int inum>
 class StateMachine
-    : public tinyfsm::Fsm<StateMachine>
+    : public tinyfsm::Fsm<StateMachine<inum>>
 {
        public:
         /**
@@ -72,8 +74,8 @@ class StateMachine
  	 */
         virtual void entry( void )
         {
-                 spdlog::trace( "StateMachine: S[{}] E[OnEntry]", mName );
-       }
+                spdlog::trace( "StateMachine: S[{}] E[OnEntry]", mName );
+        }
 
         /**
 	 * @brief OnExit
@@ -132,13 +134,13 @@ class StateMachine
 	 * @brief (Visitor Pattern) This accept(or) part of visitor pattern.
 	 * @details This method will start the StateMachine and will stay here untill the StateMachine is cancelled
  	 */
-        static void Accept( Visitor &_visitor )
+        static void Accept( Visitor<inum> &_visitor )
         {
                 spdlog::debug( "Vistor Accepted" );
 
                 mClient = &_visitor;
 
-                StateMachine::start();
+                StateMachine<inum>::start();
 
                 mRunning = true;
         }
@@ -154,7 +156,7 @@ class StateMachine
 	 * @brief The Visitor Client 
 	 * @details The visitable part in the vistor pattern
 	 */
-        static Visitor *mClient;
+        static Visitor<inum> *mClient;
 
         /**
 	 * @brief The state of the StateMachien

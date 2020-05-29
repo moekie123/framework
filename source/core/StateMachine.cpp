@@ -2,47 +2,68 @@
 #include "StateMachine.h"
 
 // Declaring static variables
-bool StateMachine::mRunning = false;
+template <int inum>
+bool StateMachine<inum>::mRunning = false;
 
-bool StateMachine::mShutdown = false;
+template <int inum>
+bool StateMachine<inum>::mShutdown = false;
 
-Visitor* StateMachine::mClient;
+template <int inum>
+Visitor<inum>* StateMachine<inum>::mClient;
 
 // (Forward) State Declaration
+template <int inum>
 class sIdle;
+
+template <int inum>
 class sInitializing;
 
+template <int inum>
 class sPreConfiguring;
+
+template <int inum>
 class sConnecting;
+
+template <int inum>
 class sPostConfiguring;
 
+template <int inum>
 class sListening;
+
+template <int inum>
 class sDisconnecting;
+
+template <int inum>
 class sDestroy;
+
+template <int inum>
 class sCleanup;
 
 /** 
  *  @brief The Idle State
  *  @details From this State the StateMachine can exit
  */
-class sIdle : public StateMachine
+template <int inum>
+class sIdle : public StateMachine< inum >
 {
-       public:
-        sIdle() : StateMachine( "Idle" ) {}
+         using base = StateMachine<inum>;
 
-       private:
-        // Doxygen Transit{ sIdle -> sIdle [label="eCycle"] }
-        void react( eCycle const& )
-        {
-                if ( mShutdown )
-                        mRunning = false;
+      public:
+       sIdle() : base( "Idle" ) {}
+
+      private:
+       // Doxygen Transit{ sIdle -> sIdle [label="eCycle"] }
+       void react( eCycle const& )
+       {
+               if ( base::mShutdown )
+                       base::mRunning = false;
         }
 
         // Doxygen Transit{ sIdle -> sIdle [label="eTerminate"] }
         void react( eTerminate const& )
         {
                 spdlog::debug( "Event [eTerminate]" );
-                mShutdown = true;
+                base::mShutdown = true;
         };
 };
 
@@ -50,22 +71,24 @@ class sIdle : public StateMachine
  *  @brief The Initializing State
  *  @details From this State the StateMachine will call the Mosquito Client to intialize by visiting 'Mosquitto::visitInitialize'
  */
-class sInitializing : public StateMachine
+template <int inum>
+class sInitializing : public StateMachine< inum >
 {
-       public:
-        sInitializing() : StateMachine( "Initializing" ) {}
+         using base = StateMachine<inum>;
+     public:
+        sInitializing() : base( "Initializing" ) {}
 
        private:
         // Doxygen Transit{ sInitializing -> sInitializing [label="eCycle"] }
         void react( eCycle const& )
         {
-                if ( mClient->visitInitialize( *this ) )
+                if ( base::mClient->visitInitialize( *this ) )
                 {
-                        StateMachine::dispatch( eSucces() );
+                        base::dispatch( eSucces() );
                 }
                 else
                 {
-                        StateMachine::dispatch( eFailed() );
+                        base::dispatch( eFailed() );
                 }
         }
 
@@ -73,22 +96,22 @@ class sInitializing : public StateMachine
         void react( eSucces const& )
         {
                 spdlog::debug( "Event [eSucces]" );
-                transit<sPreConfiguring>();
+                base::template transit<sPreConfiguring<inum>>();
         };
 
         // Doxygen Transit{ sInitializing -> sCleanup [label="eFailed"] }
         void react( eFailed const& )
         {
                 spdlog::debug( "Event [eFailed]" );
-                transit<sCleanup>();
+                base::template transit<sCleanup<inum>>();
         };
 
         // Doxygen Transit{ sInitializing -> sCleanup [label="eTerminate"] }
         void react( eTerminate const& )
         {
                 spdlog::debug( "Event [eTerminate]" );
-                mShutdown = true;
-                transit<sCleanup>();
+                base::mShutdown = true;
+                base::template transit<sCleanup<inum>>();
         };
 };
 
@@ -96,22 +119,25 @@ class sInitializing : public StateMachine
  *  @brief The Configuring State
  *  @details From this State the StateMachine will call the Mosquito Client to configure, by visiting 'Mosquitto::visitConfigure'
  */
-class sPreConfiguring : public StateMachine
+template <int inum>
+class sPreConfiguring : public StateMachine<inum>
 {
+        using base = StateMachine<inum>;
+
        public:
-        sPreConfiguring() : StateMachine( "PreConfiguring" ) {}
+        sPreConfiguring() : base( "PreConfiguring" ) {}
 
        private:
         // Doxygen Transit{ sPreConfiguring -> sPreConfiguring [label="eCycle"] }
         void react( eCycle const& )
         {
-                if ( mClient->visitPreConfigure( *this ) )
+                if ( base::mClient->visitPreConfigure( *this ) )
                 {
-                        StateMachine::dispatch( eSucces() );
+                        base::dispatch( eSucces() );
                 }
                 else
                 {
-                        StateMachine::dispatch( eFailed() );
+                        base::dispatch( eFailed() );
                 }
         }
 
@@ -119,22 +145,22 @@ class sPreConfiguring : public StateMachine
         void react( eSucces const& )
         {
                 spdlog::debug( "Event [eSucces]" );
-                transit<sConnecting>();
+                base::template transit<sConnecting<inum>>();
         };
 
         // Doxygen Transit{ sPreConfiguring -> sDestroy [label="eDestroy"] }
         void react( eFailed const& )
         {
                 spdlog::debug( "Event [eFailed]" );
-                transit<sDestroy>();
+                base::template transit<sDestroy<inum>>();
         };
 
         // Doxygen Transit{ sPreConfiguring -> sDestroy [label="eTerminate"] }
         void react( eTerminate const& )
         {
                 spdlog::debug( "Event [eTerminate]" );
-                mShutdown = true;
-                transit<sDestroy>();
+                base::mShutdown = true;
+                base::template transit<sDestroy<inum>>();
         };
 };
 
@@ -142,22 +168,25 @@ class sPreConfiguring : public StateMachine
  *  @brief The Connecting State
  *  @details From this State the StateMachine will call the Mosquito Client to connect, by visiting 'Mosquitto::visitConnect'
  */
-class sConnecting : public StateMachine
+template <int inum>
+class sConnecting : public StateMachine<inum>
 {
+        using base = StateMachine<inum>;
+
        public:
-        sConnecting() : StateMachine( "Connecting" ) {}
+        sConnecting() : base( "Connecting" ) {}
 
        private:
         // Doxygen Transit{ sConnecting -> sConnecting [label="eCycle"] }
         void react( eCycle const& )
         {
-                if ( mClient->visitConnect( *this ) )
+                if ( base::mClient->visitConnect( *this ) )
                 {
-                        StateMachine::dispatch( eSucces() );
+                        base::dispatch( eSucces() );
                 }
                 else
                 {
-                        StateMachine::dispatch( eFailed() );
+                        base::dispatch( eFailed() );
                 }
         }
 
@@ -165,44 +194,47 @@ class sConnecting : public StateMachine
         void react( eSucces const& )
         {
                 spdlog::debug( "Event [eSucces]" );
-                transit<sPostConfiguring>();
+                base::template transit<sPostConfiguring<inum>>();
         };
 
         // Doxygen Transit{ sConnecting -> sDestroy [label="eDestroy"] }
         void react( eFailed const& )
         {
                 spdlog::debug( "Event [eFailed]" );
-                transit<sDestroy>();
+                base::template transit<sDestroy<inum>>();
         };
 
         // Doxygen Transit{ sConnecting -> sDestroy [label="eTerminate"] }
         void react( eTerminate const& )
         {
                 spdlog::debug( "Event [eTerminate]" );
-                mShutdown = true;
-                transit<sDestroy>();
+                base::mShutdown = true;
+                base::template transit<sDestroy<inum>>();
         };
 };
 
 /** 
  *  @brief The PreConfiguring State
  */
-class sPostConfiguring : public StateMachine
+template <int inum>
+class sPostConfiguring : public StateMachine<inum>
 {
+        using base = StateMachine<inum>;
+
        public:
-        sPostConfiguring() : StateMachine( "PostConfiguring" ) {}
+        sPostConfiguring() : base( "PostConfiguring" ) {}
 
        private:
         // Doxygen Transit{ sPostConfiguring -> sPostConfiguring [label="eCycle"] }
         void react( eCycle const& )
         {
-                if ( mClient->visitPostConfigure( *this ) )
+                if ( base::mClient->visitPostConfigure( *this ) )
                 {
-                        StateMachine::dispatch( eSucces() );
+                        base::dispatch( eSucces() );
                 }
                 else
                 {
-                        StateMachine::dispatch( eFailed() );
+                        base::dispatch( eFailed() );
                 }
         }
 
@@ -210,22 +242,22 @@ class sPostConfiguring : public StateMachine
         void react( eSucces const& )
         {
                 spdlog::debug( "Event [eSucces]" );
-                transit<sListening>();
+                base::template transit<sListening<inum>>();
         };
 
         // Doxygen Transit{ sPostConfiguring -> sDisconnecting [label="eDestroy"] }
         void react( eFailed const& )
         {
                 spdlog::debug( "Event [eFailed]" );
-                transit<sDisconnecting>();
+                base::template transit<sDisconnecting<inum>>();
         };
 
         // Doxygen Transit{ sPostConfiguring -> sDisconnecting [label="eTerminate"] }
         void react( eTerminate const& )
         {
                 spdlog::debug( "Event [eTerminate]" );
-                mShutdown = true;
-                transit<sDisconnecting>();
+                base::mShutdown = true;
+                base::template transit<sDisconnecting<inum>>();
         };
 };
 
@@ -233,18 +265,21 @@ class sPostConfiguring : public StateMachine
  *  @brief The Listening State
  *  @details From this State the StateMachine will call the Mosquito Client to listen for new messages, by visiting 'Mosquitto::visitLoop'
  */
-class sListening : public StateMachine
+template <int inum>
+class sListening : public StateMachine<inum>
 {
+        using base = StateMachine<inum>;
+
        public:
-        sListening() : StateMachine( "Listening" ) {}
+        sListening() : base( "Listening" ) {}
 
        private:
         // Doxygen Transit{ sListening -> sListening [label="eCycle"] }
         void react( eCycle const& )
         {
-                if ( mClient->visitLoop( *this ) == false )
+                if ( base::mClient->visitLoop( *this ) == false )
                 {
-                        StateMachine::dispatch( eFailed() );
+                        base::dispatch( eFailed() );
                 }
         }
 
@@ -252,15 +287,15 @@ class sListening : public StateMachine
         void react( eFailed const& )
         {
                 spdlog::debug( "Event [eFailed]" );
-                mShutdown = true;
-                transit<sDisconnecting>();
+                base::mShutdown = true;
+                base::template transit<sDisconnecting<inum>>();
         };
 
         void react( eTerminate const& )
         {
                 spdlog::debug( "Event [eTerminate]" );
-                mShutdown = true;
-                transit<sDisconnecting>();
+                base::mShutdown = true;
+                base::template transit<sDisconnecting<inum>>();
         };
 };
 
@@ -268,22 +303,25 @@ class sListening : public StateMachine
  *  @brief The Disconnecting State
  *  @details From this State the StateMachine will call the Mosquito Client to disconnect, by visiting 'Mosquitto::visitDisconnect'
  */
-class sDisconnecting : public StateMachine
+template <int inum>
+class sDisconnecting : public StateMachine<inum>
 {
+        using base = StateMachine<inum>;
+
        public:
-        sDisconnecting() : StateMachine( "Disconnecting" ) {}
+        sDisconnecting() : base( "Disconnecting" ) {}
 
        private:
         // Doxygen Transit{ sDisconnecting -> sDisconnecting [label="eCycle"] }
         void react( eCycle const& )
         {
-                if ( mClient->visitDisconnect( *this ) )
+                if ( base::mClient->visitDisconnect( *this ) )
                 {
-                        StateMachine::dispatch( eSucces() );
+                        base::dispatch( eSucces() );
                 }
                 else
                 {
-                        StateMachine::dispatch( eFailed() );
+                        base::dispatch( eFailed() );
                 }
         }
 
@@ -291,22 +329,22 @@ class sDisconnecting : public StateMachine
         void react( eSucces const& )
         {
                 spdlog::debug( "Event [eSucces]" );
-                transit<sDestroy>();
+                base::template transit<sDestroy<inum>>();
         };
 
         // Doxygen Transit{ sDisconnecting -> sDisconnecting [label="eFailure"] }
         void react( eFailed const& )
         {
                 spdlog::debug( "Event [eFailed]" );
-                transit<sDisconnecting>();
+                base::template transit<sDisconnecting<inum>>();
         };
 
         // Doxygen Transit{ sDisconnecting -> sDestroy [label="eTerminate"] }
         void react( eTerminate const& )
         {
                 spdlog::debug( "Event [eTerminate]" );
-                mShutdown = true;
-                transit<sDestroy>();
+                base::mShutdown = true;
+                base::template transit<sDestroy<inum>>();
         };
 };
 
@@ -314,22 +352,25 @@ class sDisconnecting : public StateMachine
  *  @brief The Destroy State
  *  @details From this State the StateMachine will call the Mosquito Client to destroy, by visiting 'Mosquitto::visitDestroy'
  */
-class sDestroy : public StateMachine
+template <int inum>
+class sDestroy : public StateMachine<inum>
 {
+        using base = StateMachine<inum>;
+
        public:
-        sDestroy() : StateMachine( "Destroying" ) {}
+        sDestroy() : base( "Destroying" ) {}
 
        private:
         // Doxygen Transit{ sDestroy -> sDestroy [label="eCycle"] }
         void react( eCycle const& )
         {
-                if ( mClient->visitDestroy( *this ) )
+                if ( base::mClient->visitDestroy( *this ) )
                 {
-                        StateMachine::dispatch( eSucces() );
+                        base::dispatch( eSucces() );
                 }
                 else
                 {
-                        StateMachine::dispatch( eFailed() );
+                        base::dispatch( eFailed() );
                 }
         }
 
@@ -337,22 +378,22 @@ class sDestroy : public StateMachine
         void react( eSucces const& )
         {
                 spdlog::debug( "Event [eSucces]" );
-                transit<sCleanup>();
+                base::template transit<sCleanup<inum>>();
         };
 
         // Doxygen Transit{ sDestroy -> sDestroy [label="eFailed"] }
         void react( eFailed const& )
         {
                 spdlog::debug( "Event [eFailed]" );
-                transit<sDestroy>();
+                base::template transit<sDestroy<inum>>();
         };
 
         // Doxygen Transit{ sDestroy -> sCleanup [label="eTerminate"] }
         void react( eTerminate const& )
         {
                 spdlog::debug( "Event [eTerminate]" );
-                mShutdown = true;
-                transit<sCleanup>();
+                base::mShutdown = true;
+                base::template transit<sCleanup<inum>>();
         };
 };
 
@@ -360,22 +401,25 @@ class sDestroy : public StateMachine
  *  @brief The Cleanup State
  *  @details From this State the StateMachine will call the Mosquito Client to clean up, by visiting 'Mosquitto::visitCleanup'
  */
-class sCleanup : public StateMachine
+template <int inum>
+class sCleanup : public StateMachine<inum>
 {
+        using base = StateMachine<inum>;
+
        public:
-        sCleanup() : StateMachine( "CleaningUp" ) {}
+        sCleanup() : base( "CleaningUp" ) {}
 
        private:
         // Doxygen Transit{ sCleanup -> sCleanup [label="eCycle"] }
         void react( eCycle const& )
         {
-                if ( mClient->visitCleanup( *this ) )
+                if ( base::mClient->visitCleanup( *this ) )
                 {
-                        StateMachine::dispatch( eSucces() );
+                        base::dispatch( eSucces() );
                 }
                 else
                 {
-                        StateMachine::dispatch( eFailed() );
+                        base::dispatch( eFailed() );
                 }
         }
 
@@ -383,22 +427,22 @@ class sCleanup : public StateMachine
         void react( eSucces const& )
         {
                 spdlog::debug( "Event [eSucces]" );
-                transit<sIdle>();
+                base::template transit<sIdle<inum>>();
         };
 
         // Doxygen Transit{ sCleanup -> sIdle [label="eFailed"] }
         void react( eFailed const& )
         {
                 spdlog::debug( "Event [eFailed]" );
-                transit<sCleanup>();
+                base::template transit<sCleanup<inum>>();
         };
 
         // Doxygen Transit{ sCleanup -> sIdle [label="eTerminate"] }
         void react( eTerminate const& )
         {
                 spdlog::debug( "Event [eTerminate]" );
-                mShutdown = true;
-                transit<sIdle>();
+                base::mShutdown = true;
+                base::template transit<sIdle<inum>>();
         };
 };
 
@@ -407,4 +451,4 @@ class sCleanup : public StateMachine
  * For now (development phase) immedially start with initializing
  */
 //FSM_INITIAL_STATE( StateMachine, sIdle )
-FSM_INITIAL_STATE( StateMachine, sInitializing )
+FSM_INITIAL_STATE( StateMachine<0>, sInitializing<0> )
