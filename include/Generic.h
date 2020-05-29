@@ -15,10 +15,7 @@ class Generic : virtual public Object,
                 public Subject
 {
        	public:
-         Generic()
-         {
-                 mGeneric = this;
-         }
+         Generic();
 
          virtual ~Generic() = default;
 

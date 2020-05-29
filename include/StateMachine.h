@@ -4,8 +4,8 @@
 #include "Visitor.h"
 
 // Third-Party
-#include "tinyfsm.hpp"
 #include <spdlog/spdlog.h>
+#include "tinyfsm.hpp"
 
 // Stl-Headers
 #include <string>
@@ -72,8 +72,8 @@ class StateMachine
  	 */
         virtual void entry( void )
         {
-                //                std::cout << "StateMachine: S[" << mName << "] E[OnEntry]\n";
-        }
+                 spdlog::trace( "StateMachine: S[{}] E[OnEntry]", mName );
+       }
 
         /**
 	 * @brief OnExit
@@ -81,7 +81,7 @@ class StateMachine
 	 */
         virtual void exit( void )
         {
-                //                std::cout << "StateMachine: S[" << mName << "] E[OnExit]\n";
+                spdlog::trace( "StateMachine: S[{}] E[OnExit]", mName );
         }
 
         /* Events */
@@ -134,7 +134,7 @@ class StateMachine
  	 */
         static void Accept( Visitor &_visitor )
         {
-        	spdlog::debug( "Vistor Accepted");
+                spdlog::debug( "Vistor Accepted" );
 
                 mClient = &_visitor;
 
