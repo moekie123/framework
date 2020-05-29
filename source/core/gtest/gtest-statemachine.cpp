@@ -40,7 +40,7 @@ TEST( StateMachine, ConfigureFailure )
         EXPECT_CALL( visitor, visitInitialize( testing::_ ) ).WillOnce( testing::Return( true ) );
         StateMachine::dispatch( eCycle() );
 
-        EXPECT_CALL( visitor, visitConfigure( testing::_ ) ).WillOnce( testing::Return( false ) );
+        EXPECT_CALL( visitor, visitPreConfigure( testing::_ ) ).WillOnce( testing::Return( false ) );
         StateMachine::dispatch( eCycle() );
 
         // DownStream
@@ -60,7 +60,7 @@ TEST( StateMachine, ConnectFailure )
         EXPECT_CALL( visitor, visitInitialize( testing::_ ) ).WillOnce( testing::Return( true ) );
         StateMachine::dispatch( eCycle() );
 
-        EXPECT_CALL( visitor, visitConfigure( testing::_ ) ).WillOnce( testing::Return( true ) );
+        EXPECT_CALL( visitor, visitPreConfigure( testing::_ ) ).WillOnce( testing::Return( true ) );
         StateMachine::dispatch( eCycle() );
 
         EXPECT_CALL( visitor, visitConnect( testing::_ ) ).WillOnce( testing::Return( false ) );
@@ -83,10 +83,13 @@ TEST( StateMachine, LoopFailure )
         EXPECT_CALL( visitor, visitInitialize( testing::_ ) ).WillOnce( testing::Return( true ) );
         StateMachine::dispatch( eCycle() );
 
-        EXPECT_CALL( visitor, visitConfigure( testing::_ ) ).WillOnce( testing::Return( true ) );
+        EXPECT_CALL( visitor, visitPreConfigure( testing::_ ) ).WillOnce( testing::Return( true ) );
         StateMachine::dispatch( eCycle() );
 
         EXPECT_CALL( visitor, visitConnect( testing::_ ) ).WillOnce( testing::Return( true ) );
+        StateMachine::dispatch( eCycle() );
+
+        EXPECT_CALL( visitor, visitPostConfigure( testing::_ ) ).WillOnce( testing::Return( true ) );
         StateMachine::dispatch( eCycle() );
 
         EXPECT_CALL( visitor, visitLoop( testing::_ ) ).WillOnce( testing::Return( false ) );

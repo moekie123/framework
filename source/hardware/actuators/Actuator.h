@@ -1,8 +1,14 @@
 #pragma once
 
+// Inheritance
+#include "Generic.h"
+
 // Interfaces
 #include "IActuator.h"
 #include "IParameter.h"
+
+// ???
+#include "Channel.h"
 
 // Design Patterns
 #include "AbstractFactory.h"
@@ -39,23 +45,18 @@ class Actuator : public IActuator
  		 */
                 static IActuator* Build( const IConfigurator* _config, const std::string& _name )
                 {
-                        Factories& factory = Singleton<Factories>::Instance();
+                        int channels = 0;
 
                         Actuator* actuator = new Actuator( *_config, _name );
 
-                        const std::string parameters[] = {
-                                "config/refresh",
-                                "config/log",
-                                "config/mode",
-                                "config/stepsize",
-                                "config/period",
-                                "config/profile",
-                        };
+                        _config->GetProperty( "Actuator", _name, "channels", channels );
 
-                        for ( const std::string& parameter : parameters )
+                        for ( int index = 0; index < channels; index++ )
                         {
-                                IParameter* p = factory.Construct<IParameter>( "Parameter", parameter );
-                                actuator->Add( *p );
+                                spdlog::info( "Configure Channels [{}]", index );
+
+                                Channel* channel = new Channel( _config, std::to_string( index ) );
+                                actuator->Add( *channel );
                         }
 
                         return actuator;
@@ -87,7 +88,7 @@ class Actuator : public IActuator
         bool visitPreConfigure( const StateMachine& ) override;
         bool visitConnect( const StateMachine& ) override;
         bool visitPostConfigure( const StateMachine& ) override;
-	bool visitLoop( const StateMachine& ) override;
+        bool visitLoop( const StateMachine& ) override;
         bool visitReconnect( const StateMachine& ) override;
         bool visitDisconnect( const StateMachine& ) override;
         bool visitDestroy( const StateMachine& ) override;

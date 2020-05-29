@@ -109,6 +109,17 @@ bool Actuator::visitConnect( const StateMachine& )
 {
         spdlog::info( "[Visit] Connect" );
 
+        /*
+        // Retrieve Factory
+        auto factory = Singleton<Factories>::Instance();
+
+        // Retrieve Mosquitto Client
+        auto mosquitto = factory.Construct<IMosquitto>( "Mosquitto", "mosquitto" );
+        for ( auto component : mComponents )
+        {
+      		mosquitto->Attach( *component );
+        }
+*/
         return true;
 }
 
@@ -151,6 +162,11 @@ bool Actuator::visitPostConfigure( const StateMachine& )
 
 bool Actuator::visitLoop( const StateMachine& )
 {
+        // "period", 20000000 );
+
+        // min = 450000;
+        // max = 2300000;
+
         //        spdlog::info( "[Visit] Loop" );
         return true;
 }
@@ -177,8 +193,10 @@ bool Actuator::visitDestroy( const StateMachine& )
         for ( auto fd : fds )
         {
                 if ( fd->enable > 0 )
+                {
+                        write( fd->enable, "0", 1 );
                         close( fd->enable );
-
+                }
                 if ( fd->period > 0 )
                         close( fd->period );
 

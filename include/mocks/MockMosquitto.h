@@ -16,8 +16,9 @@ class MockMosquittoVisitor : public Visitor
 {
        public:
         MOCK_METHOD1( visitInitialize, bool( const StateMachine& ) );
-        MOCK_METHOD1( visitConfigure, bool( const StateMachine& ) );
+        MOCK_METHOD1( visitPreConfigure, bool( const StateMachine& ) );
         MOCK_METHOD1( visitConnect, bool( const StateMachine& ) );
+        MOCK_METHOD1( visitPostConfigure, bool( const StateMachine& ) );
         MOCK_METHOD1( visitLoop, bool( const StateMachine& ) );
         MOCK_METHOD1( visitReconnect, bool( const StateMachine& ) );
         MOCK_METHOD1( visitDisconnect, bool( const StateMachine& ) );

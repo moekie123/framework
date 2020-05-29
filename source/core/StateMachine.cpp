@@ -3,6 +3,7 @@
 
 // Declaring static variables
 bool StateMachine::mRunning = false;
+
 bool StateMachine::mShutdown = false;
 
 Visitor* StateMachine::mClient;
