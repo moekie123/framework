@@ -40,7 +40,7 @@ void connect_callback( struct mosquitto* mosq, void* obj, int result )
                 case 2:
                 case 3:
                 default:
-                        StateMachine::dispatch( eTerminate() );
+                        MqttStateMachine::dispatch( eTerminate() );
         }
 }
 
@@ -83,7 +83,7 @@ Mosquitto::~Mosquitto()
         spdlog::debug( __PRETTY_FUNCTION__ );
 }
 
-bool Mosquitto::visitInitialize( const StateMachine& )
+bool Mosquitto::visitInitialize( const MqttStateMachine& )
 {
         spdlog::info( "[Visit] Initialize" );
 
@@ -115,7 +115,7 @@ bool Mosquitto::visitInitialize( const StateMachine& )
         return true;
 }
 
-bool Mosquitto::visitPreConfigure( const StateMachine& )
+bool Mosquitto::visitPreConfigure( const MqttStateMachine& )
 {
         int ret;
         spdlog::info( "[Visit] PreConfigure username [{}] password [{}]", mUsername, mPassword );
@@ -134,7 +134,7 @@ bool Mosquitto::visitPreConfigure( const StateMachine& )
         return true;
 }
 
-bool Mosquitto::visitConnect( const StateMachine& )
+bool Mosquitto::visitConnect( const MqttStateMachine& )
 {
         int ret;
         spdlog::info( "[Visit] Connect to [{}][{}]", mHostname.c_str(), mPort );
@@ -150,8 +150,7 @@ bool Mosquitto::visitConnect( const StateMachine& )
         for ( auto it = mObservers.begin(); it != mObservers.end(); it++ )
         {
                 /* All should pass, return false immedially when one fails */
-                auto param = dynamic_cast<IParameter*>( *it );
-                std::string name = param->GetName();
+                std::string name = (*it)->GetName();
 
                 spdlog::info( "Subscribe [{}]", name );
 
@@ -167,13 +166,13 @@ bool Mosquitto::visitConnect( const StateMachine& )
         return true;
 }
 
-bool Mosquitto::visitPostConfigure( const StateMachine& )
+bool Mosquitto::visitPostConfigure( const MqttStateMachine& )
 {
         spdlog::info( "[Visit] PostConfigure" );
         return true;
 }
 
-bool Mosquitto::visitLoop( const StateMachine& )
+bool Mosquitto::visitLoop( const MqttStateMachine& )
 {
         int ret;
         bool match = false;
@@ -211,7 +210,7 @@ bool Mosquitto::visitLoop( const StateMachine& )
         return true;
 }
 
-bool Mosquitto::visitReconnect( const StateMachine& )
+bool Mosquitto::visitReconnect( const MqttStateMachine& )
 {
         spdlog::info( "[Visit] Reconnect" );
         /*
@@ -228,7 +227,7 @@ bool Mosquitto::visitReconnect( const StateMachine& )
         return true;
 }
 
-bool Mosquitto::visitDisconnect( const StateMachine& )
+bool Mosquitto::visitDisconnect( const MqttStateMachine& )
 {
         int ret;
         spdlog::info( "[Visit] Disconnect from [{}][{}]", mHostname, mPort );
@@ -248,7 +247,7 @@ bool Mosquitto::visitDisconnect( const StateMachine& )
         return true;
 }
 
-bool Mosquitto::visitDestroy( const StateMachine& )
+bool Mosquitto::visitDestroy( const MqttStateMachine& )
 {
         spdlog::info( "[Visit] Destroy" );
 
@@ -270,7 +269,7 @@ bool Mosquitto::visitDestroy( const StateMachine& )
         return true;
 }
 
-bool Mosquitto::visitCleanup( const StateMachine& )
+bool Mosquitto::visitCleanup( const MqttStateMachine& )
 {
         spdlog::info( "[Visit] Cleanup" );
 

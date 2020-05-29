@@ -26,7 +26,7 @@
 void abort( int s )
 {
         spdlog::info( "Terminate" );
-        StateMachine::dispatch( eTerminate() );
+        MqttStateMachine::dispatch( eTerminate() );
 }
 
 int main( int argc, char* argv[] )
@@ -54,11 +54,13 @@ int main( int argc, char* argv[] )
 
         // Start State Machine
         mosquitto->Attach( *parameter );
-        StateMachine::Accept( *mosquitto );
+        MqttStateMachine::Accept( *mosquitto );
 
-        while ( StateMachine::IsRunning() )
+        // TODO: Start Trigger got removed from the accept !!
+
+        while ( MqttStateMachine::IsRunning() )
         {
-                StateMachine::dispatch( eCycle() );
+                MqttStateMachine::dispatch( eCycle() );
                 usleep( 50000 );
         }
 

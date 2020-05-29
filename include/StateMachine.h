@@ -140,7 +140,7 @@ class StateMachine
 
                 mClient = &_visitor;
 
-                StateMachine<inum>::start();
+                //                StateMachine<inum>::start();
 
                 mRunning = true;
         }
@@ -170,3 +170,11 @@ class StateMachine
 	 */
         static bool mShutdown;
 };
+
+using MqttStateMachine = StateMachine<0>;
+using ActuatorStateMachine = StateMachine<1>;
+
+using StateMachines = tinyfsm::FsmList<
+    MqttStateMachine,
+    ActuatorStateMachine>;
+

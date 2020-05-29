@@ -21,7 +21,8 @@
  */
 class Mosquitto : public IMosquitto
 {
-       public:
+ 
+     public:
         /**
 	 * @brief The Mosquitto Builder class to build a new Mosquitto client
 	 * @details It acctually retuns a Singleton
@@ -78,15 +79,15 @@ class Mosquitto : public IMosquitto
         /** 
 	 * Visitor Pattern Methods
 	 */
-        bool visitInitialize( const StateMachine& ) override;
-	bool visitPreConfigure( const StateMachine& ) override;
-        bool visitConnect( const StateMachine& ) override;
-       	bool visitPostConfigure( const StateMachine& ) override;
-	bool visitLoop( const StateMachine& ) override;
-        bool visitReconnect( const StateMachine& ) override;
-        bool visitDisconnect( const StateMachine& ) override;
-        bool visitDestroy( const StateMachine& ) override;
-        bool visitCleanup( const StateMachine& ) override;
+        bool visitInitialize( const MqttStateMachine& ) override;
+	bool visitPreConfigure( const MqttStateMachine& ) override;
+        bool visitConnect( const MqttStateMachine& ) override;
+       	bool visitPostConfigure( const MqttStateMachine& ) override;
+	bool visitLoop( const MqttStateMachine& ) override;
+        bool visitReconnect( const MqttStateMachine& ) override;
+        bool visitDisconnect( const MqttStateMachine& ) override;
+        bool visitDestroy( const MqttStateMachine& ) override;
+        bool visitCleanup( const MqttStateMachine& ) override;
 
        private:
         /**

@@ -10,7 +10,7 @@
  * @brief The Actuator Interface
  */
 class IActuator : public Generic,
-                  public Visitor
+                  public Visitor<1>
 {
        public:
        	virtual ~IActuator() = default;

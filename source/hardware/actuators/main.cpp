@@ -6,6 +6,7 @@
 
 // Interfaces
 #include "IActuator.h"
+#include "IMosquitto.h"
 
 // Design Patterns
 #include "AbstractFactory.h"
@@ -24,7 +25,7 @@
 void abort( int s )
 {
         spdlog::info( "Terminate" );
-        StateMachine::dispatch( eTerminate() );
+        StateMachines::dispatch( eTerminate() );
 }
 
 int main( int argc, char* argv[] )
@@ -39,20 +40,27 @@ int main( int argc, char* argv[] )
         signal( SIGTERM, abort );
 
         // Declare Framework
-	Framework* fw = new Framework( argc, argv );
+        Framework* fw = new Framework( argc, argv );
 
         // Retrieve Factory
         auto factory = Singleton<Factories>::Instance();
 
-        // Retrieve Actuator Client
+        // Configure the Mosquitto Client
+        auto mosquitto = factory.Construct<IMosquitto>( "Mosquitto", "mosquitto" );
         auto actuator = factory.Construct<IActuator>( "Actuator", "actuator" );
 
-        // Start State Machine
-        StateMachine::Accept( *actuator );
+        // Link Observers
+        mosquitto->Attach( *actuator );
 
-        while ( StateMachine::IsRunning() )
+        // Link the vistiors
+        MqttStateMachine::Accept( *mosquitto );
+        ActuatorStateMachine::Accept( *actuator );
+
+        // Loop through
+        StateMachines::start();
+        while ( ActuatorStateMachine::IsRunning() )
         {
-                StateMachine::dispatch( eCycle() );
+                StateMachines::dispatch( eCycle() );
                 usleep( 50000 );
         }
 

@@ -44,19 +44,19 @@ class sCleanup;
  *  @details From this State the StateMachine can exit
  */
 template <int inum>
-class sIdle : public StateMachine< inum >
+class sIdle : public StateMachine<inum>
 {
-         using base = StateMachine<inum>;
+        using base = StateMachine<inum>;
 
-      public:
-       sIdle() : base( "Idle" ) {}
+       public:
+        sIdle() : base( "Idle" ) {}
 
-      private:
-       // Doxygen Transit{ sIdle -> sIdle [label="eCycle"] }
-       void react( eCycle const& )
-       {
-               if ( base::mShutdown )
-                       base::mRunning = false;
+       private:
+        // Doxygen Transit{ sIdle -> sIdle [label="eCycle"] }
+        void react( eCycle const& )
+        {
+                if ( base::mShutdown )
+                        base::mRunning = false;
         }
 
         // Doxygen Transit{ sIdle -> sIdle [label="eTerminate"] }
@@ -72,10 +72,11 @@ class sIdle : public StateMachine< inum >
  *  @details From this State the StateMachine will call the Mosquito Client to intialize by visiting 'Mosquitto::visitInitialize'
  */
 template <int inum>
-class sInitializing : public StateMachine< inum >
+class sInitializing : public StateMachine<inum>
 {
-         using base = StateMachine<inum>;
-     public:
+        using base = StateMachine<inum>;
+
+       public:
         sInitializing() : base( "Initializing" ) {}
 
        private:
@@ -452,3 +453,5 @@ class sCleanup : public StateMachine<inum>
  */
 //FSM_INITIAL_STATE( StateMachine, sIdle )
 FSM_INITIAL_STATE( StateMachine<0>, sInitializing<0> )
+FSM_INITIAL_STATE( StateMachine<1>, sInitializing<1> )
+

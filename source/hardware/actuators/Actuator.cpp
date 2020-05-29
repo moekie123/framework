@@ -93,19 +93,19 @@ exit:
         return channels;
 }
 
-bool Actuator::visitInitialize( const StateMachine& )
+bool Actuator::visitInitialize( const ActuatorStateMachine& )
 {
         spdlog::info( "[Visit] Initialize" );
         return fs::exists( mChip );
 }
 
-bool Actuator::visitPreConfigure( const StateMachine& )
+bool Actuator::visitPreConfigure( const ActuatorStateMachine& )
 {
         spdlog::info( "[Visit] PreConfigure" );
         return true;
 }
 
-bool Actuator::visitConnect( const StateMachine& )
+bool Actuator::visitConnect( const ActuatorStateMachine& )
 {
         spdlog::info( "[Visit] Connect" );
 
@@ -123,7 +123,7 @@ bool Actuator::visitConnect( const StateMachine& )
         return true;
 }
 
-bool Actuator::visitPostConfigure( const StateMachine& )
+bool Actuator::visitPostConfigure( const ActuatorStateMachine& )
 {
         spdlog::info( "[Visit] PostConfigure" );
 
@@ -157,10 +157,10 @@ bool Actuator::visitPostConfigure( const StateMachine& )
                 fds.push_back( pfd );
         }
 
-        return false;
+        return true;
 }
 
-bool Actuator::visitLoop( const StateMachine& )
+bool Actuator::visitLoop( const ActuatorStateMachine& )
 {
         // "period", 20000000 );
 
@@ -171,13 +171,13 @@ bool Actuator::visitLoop( const StateMachine& )
         return true;
 }
 
-bool Actuator::visitReconnect( const StateMachine& )
+bool Actuator::visitReconnect( const ActuatorStateMachine& )
 {
         spdlog::info( "[Visit] Reconnect" );
         return false;
 }
 
-bool Actuator::visitDisconnect( const StateMachine& )
+bool Actuator::visitDisconnect( const ActuatorStateMachine& )
 {
         spdlog::info( "[Visit] Disconnect" );
 
@@ -185,7 +185,7 @@ bool Actuator::visitDisconnect( const StateMachine& )
         return true;
 }
 
-bool Actuator::visitDestroy( const StateMachine& )
+bool Actuator::visitDestroy( const ActuatorStateMachine& )
 {
         spdlog::info( "[Visit] Destroy" );
 
@@ -211,7 +211,7 @@ bool Actuator::visitDestroy( const StateMachine& )
         return true;
 }
 
-bool Actuator::visitCleanup( const StateMachine& )
+bool Actuator::visitCleanup( const ActuatorStateMachine& )
 {
         spdlog::info( "[Visit] Cleanup" );
         // Gracefull terminate

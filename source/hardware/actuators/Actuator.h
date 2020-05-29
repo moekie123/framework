@@ -15,9 +15,11 @@
 #include "Builder.h"
 #include "Factory.h"
 #include "Singleton.h"
+#include "StateMachine.h"
 
 // Stl-Headers
 #include <string>
+
 
 /**
  * @brief The (base) Actuator class
@@ -84,15 +86,15 @@ class Actuator : public IActuator
         /** 
 	 * Visitor Pattern Methods
 	 */
-        bool visitInitialize( const StateMachine& ) override;
-        bool visitPreConfigure( const StateMachine& ) override;
-        bool visitConnect( const StateMachine& ) override;
-        bool visitPostConfigure( const StateMachine& ) override;
-        bool visitLoop( const StateMachine& ) override;
-        bool visitReconnect( const StateMachine& ) override;
-        bool visitDisconnect( const StateMachine& ) override;
-        bool visitDestroy( const StateMachine& ) override;
-        bool visitCleanup( const StateMachine& ) override;
+        bool visitInitialize( const ActuatorStateMachine& ) override;
+        bool visitPreConfigure( const ActuatorStateMachine& ) override;
+        bool visitConnect( const ActuatorStateMachine& ) override;
+        bool visitPostConfigure( const ActuatorStateMachine& ) override;
+        bool visitLoop( const ActuatorStateMachine& ) override;
+        bool visitReconnect( const ActuatorStateMachine& ) override;
+        bool visitDisconnect( const ActuatorStateMachine& ) override;
+        bool visitDestroy( const ActuatorStateMachine& ) override;
+        bool visitCleanup( const ActuatorStateMachine& ) override;
 
        private:
         std::string mDriver;
