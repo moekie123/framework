@@ -18,8 +18,8 @@
 #include "StateMachine.h"
 
 // Stl-Headers
+#include <vector>
 #include <string>
-
 
 /**
  * @brief The (base) Actuator class
@@ -49,15 +49,24 @@ class Actuator : public IActuator
                 {
                         int channels = 0;
 
-                        Actuator* actuator = new Actuator( *_config, _name );
+                        // Retrieve Factory
+		        auto factory = Singleton<Factories>::Instance();
 
+                        // Get mosquito client
+                        auto mosquitto = factory.Construct<IMosquitto>( "Mosquitto", "mosquitto" );
+
+                        // Createe new Actuator
+                        Actuator* actuator = new Actuator( *_config, _name );
                         _config->GetProperty( "Actuator", _name, "channels", channels );
 
+                        // Add Channels to the actuator
                         for ( int index = 0; index < channels; index++ )
                         {
                                 spdlog::info( "Configure Channels [{}]", index );
 
-                                Channel* channel = new Channel( _config, std::to_string( index ) );
+                                Channel* channel = new Channel( _config, _name + "/ch" + std::to_string( index ) );
+
+                                mosquitto->Attach( *channel );
                                 actuator->Add( *channel );
                         }
 
@@ -96,7 +105,9 @@ class Actuator : public IActuator
         bool visitDestroy( const ActuatorStateMachine& ) override;
         bool visitCleanup( const ActuatorStateMachine& ) override;
 
+
        private:
+
         std::string mDriver;
         std::string mChip;
 };

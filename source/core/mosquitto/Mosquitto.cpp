@@ -200,7 +200,10 @@ bool Mosquitto::visitLoop( const MqttStateMachine& )
                         else if ( match )
                         {
                                 spdlog::info( "[{}][{}]", message.first, message.second );
-                                ( *it )->Update( *this );
+
+                                // Package should be lexed on invalid charaters
+                                // Package should be converted to RadidJson
+                                ( *it )->Update( *this, "JSON PACKAGE" );
                         }
                 }
 

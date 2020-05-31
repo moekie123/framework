@@ -15,3 +15,4 @@ class IMosquitto : public Generic,
        public:
         virtual ~IMosquitto() = default;
 };
+

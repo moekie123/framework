@@ -21,6 +21,7 @@ class Observer : virtual public Object
         /**
 	 * @brief The callback for a Subject to notify when a Object has been modified
 	 * @param _subject The instance that invokes this method
+	 * @return True, when Update was succesfull
 	 */
         virtual bool Update( const Generic& _subject );
 

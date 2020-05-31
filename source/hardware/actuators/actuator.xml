@@ -7,13 +7,21 @@
 	</Mosquitto>
 
 	<Actuator name="actuator">
-		<channels>1</channels>
+		<channels>2</channels>
 		<driver>pca9685</driver>
-		<chip>/sys/class/pwm/pwmchip0/</chip>
 	</Actuator>
 
-	<Channel name="1">
-		<path>/sys/class/pwm/pwmchip0/pwm12</path>
+	<Channel name="actuator/ch0">
+		<id>0</id>
+		<path>/sys/class/pwm/pwmchip0</path>
+		<enable>1</enable>
+		<period>20000000</period>
+		<dutycycle>1000000</dutycycle>
+	</Channel>
+
+	<Channel name="actuator/ch1">
+		<id>1</id>
+		<path>/sys/class/pwm/pwmchip0</path>
 		<enable>1</enable>
 		<period>20000000</period>
 		<dutycycle>1000000</dutycycle>
