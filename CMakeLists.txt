@@ -48,13 +48,16 @@ function( gsetup gtest-name )
 endfunction()
 include( CTest )
 
+# Validate Source
+message( "Check source code" )
+set(CMAKE_CXX_CPPCHECK "cppcheck")
+
 # SpeedLog compile much faster...
 message( "SpeedLog Static Library" )
 add_definitions(-DSPDLOG_COMPILED_LIB) 
 
-# Validate Source
-message( "Check source code" )
-set(CMAKE_CXX_CPPCHECK "cppcheck")
+# Configuration
+add_definitions( -DCONFIGURATION_FILE="${CMAKE_CURRENT_SOURCE_DIR}/framework.xml" ) 
 
 # Build Enviroment
 message( "Setup the directory tree" )

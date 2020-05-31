@@ -33,15 +33,15 @@
         "  -v, --verbose     Turn on the debug.\n"                   \
         "\n"
 
-Framework::Framework( int argc, char* argv[] ) : mConfigurationFilename( "config.xml" )
+Framework::Framework( int argc, char* argv[] ) : mConfigurationFilename( CONFIGURATION_FILE )
 {
         int ret;
 
         // Parse Arguments
         ret = parseArguments( argc, argv );
         spdlog::debug( "Framework Version [{}]", FRAMEWORK_VERSION );
- 
-       // Open Configuration File
+
+        // Open Configuration File
         spdlog::debug( "Configure Configurator" );
 
         Configurator::mConfigFileName = mConfigurationFilename;
