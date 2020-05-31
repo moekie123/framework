@@ -46,6 +46,10 @@ echo "Install Kernel Toolkit"
 	apt-get install git bc bison flex libssl-dev $FORCE
 	apt-get install libncurses5-dev $FORCE
 
+echo "Include local (shared) libraries"
+	# This wil preoritatize the /usr/local/lib above the other lib-directories
+	cp config/etc/ld.so.conf.d/arm-linux-gnueabihf.conf /etc/ld.so.conf.d/arm-linux-gnueabihf.conf
+ 
 echo "Install I2C Toolkit"
 	apt-get install -y i2c-tools $FORCE
 

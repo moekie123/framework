@@ -3,9 +3,10 @@
 
 // Third-Party
 #include <rapidjson/document.h>
-#include <rapidjson/pointer.h>
 
 //Stl-Headers
+#include <fcntl.h>
+#include <unistd.h>
 #include <string>
 #include <vector>
 
@@ -21,11 +22,11 @@ bool Channel::Update( const IMosquitto& _mqtt, const rapidjson::Document& _jpack
                 if ( _jpackage.HasMember( label.c_str() ) )
                 {
                         int v = _jpackage[label.c_str()].GetInt();
-			std::string msg = std::to_string( v );
+                        std::string msg = std::to_string( v );
 
                         spdlog::info( "{} : [{}]", label, msg );
-                       	write( mFds[ label.c_str() ], msg.c_str(), strlen( msg.c_str() ) );
-               }
+                        write( mFds[label.c_str()], msg.c_str(), strlen( msg.c_str() ) );
+                }
         }
         return true;
 }

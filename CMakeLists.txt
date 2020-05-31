@@ -48,9 +48,13 @@ function( gsetup gtest-name )
 endfunction()
 include( CTest )
 
+# SpeedLog compile much faster...
+message( "SpeedLog Static Library" )
+add_definitions(-DSPDLOG_COMPILED_LIB) 
+
 # Validate Source
 message( "Check source code" )
-#set(CMAKE_CXX_CPPCHECK "cppcheck")
+set(CMAKE_CXX_CPPCHECK "cppcheck")
 
 # Build Enviroment
 message( "Setup the directory tree" )
@@ -77,6 +81,7 @@ add_custom_command( TARGET Application
 target_link_libraries( Application PUBLIC 	Framework	
 					  	mosquitto 
 					  	tinyxml2
+						spdlog
 						stdc++fs )
 
 

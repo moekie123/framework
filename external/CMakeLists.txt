@@ -145,7 +145,7 @@ if( NOT LOGGER_FOUND )
 	#Install speed logger 
 	ExternalProject_Add( EXTERNAL_LOGGER
 		PREFIX ${CMAKE_SOURCE_DIR}/external/logger
-		CMAKE_ARGS "-DSPDLOG_BUILD_SHARED=ON"
+		CMAKE_ARGS "-DSPDLOG_BUILD_SHARED=ON -DSPDLOG_STATIC_LIB=ON"
 		GIT_REPOSITORY https://github.com/gabime/spdlog.git
 		GIT_TAG "v1.6.0"
 	)

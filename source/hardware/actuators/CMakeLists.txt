@@ -10,6 +10,7 @@ add_executable( fsm-actuator
 target_link_libraries( fsm-actuator Framework 
 				    mosquitto
 				    stdc++fs 
-				    tinyxml2 )
+				    tinyxml2 
+				    spdlog)
 
 add_subdirectory( test )
