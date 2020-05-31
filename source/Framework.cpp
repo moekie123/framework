@@ -1,5 +1,6 @@
 // Framework
 #include "Framework.h"
+#include "version.h"
 
 // Design Patterns
 #include "AbstractFactory.h"
@@ -38,9 +39,9 @@ Framework::Framework( int argc, char* argv[] ) : mConfigurationFilename( "config
 
         // Parse Arguments
         ret = parseArguments( argc, argv );
-        spdlog::debug( "Initialize Framework" );
-
-        // Open Configuration File
+        spdlog::debug( "Framework Version [{}]", FRAMEWORK_VERSION );
+ 
+       // Open Configuration File
         spdlog::debug( "Configure Configurator" );
 
         Configurator::mConfigFileName = mConfigurationFilename;
@@ -56,7 +57,7 @@ Framework::Framework( int argc, char* argv[] ) : mConfigurationFilename( "config
 
         // Creat Abstract Factory
         spdlog::debug( "Configure Factory" );
-	Factories* factory = new Factories();
+        Factories* factory = new Factories();
 
         /** Current registered builders: */
         ///	- Configurator
