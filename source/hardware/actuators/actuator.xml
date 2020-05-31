@@ -12,9 +12,9 @@
 	</Actuator>
 
 	<Channel name="actuator/ch0">
-		<id>0</id>
+		<id>12</id>
 		<path>/sys/class/pwm/pwmchip0</path>
-		<enable>1</enable>
+		<enable>0</enable>
 		<period>20000000</period>
 		<dutycycle>1000000</dutycycle>
 	</Channel>
@@ -22,7 +22,7 @@
 	<Channel name="actuator/ch1">
 		<id>1</id>
 		<path>/sys/class/pwm/pwmchip0</path>
-		<enable>1</enable>
+		<enable>0</enable>
 		<period>20000000</period>
 		<dutycycle>1000000</dutycycle>
 	</Channel>

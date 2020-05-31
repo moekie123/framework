@@ -9,6 +9,7 @@
 
 // Third-Party
 #include <mosquitto.h>
+#include <rapidjson/document.h>
 #include <spdlog/spdlog.h>
 
 // Stl-Headers
@@ -150,7 +151,7 @@ bool Mosquitto::visitConnect( const MqttStateMachine& )
         for ( auto it = mObservers.begin(); it != mObservers.end(); it++ )
         {
                 /* All should pass, return false immedially when one fails */
-                std::string name = (*it)->GetName();
+                std::string name = ( *it )->GetName();
 
                 spdlog::info( "Subscribe [{}]", name );
 
@@ -190,6 +191,16 @@ bool Mosquitto::visitLoop( const MqttStateMachine& )
                 // Get the first element from the queue
                 auto message = payloads.front();
 
+                // Convert payload to json document
+                rapidjson::Document jpackage;
+                jpackage.Parse( message.second.c_str() );
+
+                if ( !jpackage.IsObject() )
+                {
+                        spdlog::warn( "Invalid Payload [{}]", message.second );
+                        return false;
+                }
+
                 for ( auto it = mObservers.begin(); it != mObservers.end(); it++ )
                 {
                         ret = mosquitto_topic_matches_sub( ( *it )->GetName().c_str(), message.first.c_str(), &match );
@@ -203,7 +214,7 @@ bool Mosquitto::visitLoop( const MqttStateMachine& )
 
                                 // Package should be lexed on invalid charaters
                                 // Package should be converted to RadidJson
-                                ( *it )->Update( *this, "JSON PACKAGE" );
+                                ( *it )->Update( *this, jpackage );
                         }
                 }
 

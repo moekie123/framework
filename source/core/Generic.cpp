@@ -1,13 +1,17 @@
+// Inheritance
 #include "Generic.h"
+
+// Third-Party
+#include <rapidjson/document.h>
 
 Generic::Generic()
 {
         mGeneric = this;
 }
 
-bool Generic::Update( const IMosquitto& _mqtt, const std::string& _package )
+bool Generic::Update( const IMosquitto& _mqtt, const rapidjson::Document& _jpackage )
 {
-        spdlog::debug( "Mosquito Observer Package Received [{}]", _package );
+        spdlog::debug( "Mosquito Observer Package Received" );
         return true;
 }
 

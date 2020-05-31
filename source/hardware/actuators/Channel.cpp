@@ -1,4 +1,9 @@
+// Inheritance
 #include "Channel.h"
+
+// Third-Party
+#include <rapidjson/document.h>
+#include <rapidjson/pointer.h>
 
 //Stl-Headers
 #include <string>
@@ -6,12 +11,22 @@
 
 const std::vector<std::string> labels = { "enable", "period", "duty_cycle" };
 
-bool Channel::Update( const IMosquitto& _mqtt, const std::string& _package )
+bool Channel::Update( const IMosquitto& _mqtt, const rapidjson::Document& _jpackage )
 {
-        spdlog::info( "Channel Received Message [{}]", _package );
+        spdlog::info( "Channel Received Message" );
 
-        mPayloads.push( _package );
+        // Connect all filedescriptors
+        for ( auto label : labels )
+        {
+                if ( _jpackage.HasMember( label.c_str() ) )
+                {
+                        int v = _jpackage[label.c_str()].GetInt();
+			std::string msg = std::to_string( v );
 
+                        spdlog::info( "{} : [{}]", label, msg );
+                       	write( mFds[ label.c_str() ], msg.c_str(), strlen( msg.c_str() ) );
+               }
+        }
         return true;
 }
 
@@ -76,17 +91,7 @@ bool Channel::visitPostConfigure( const ActuatorStateMachine& )
 bool Channel::visitLoop( const ActuatorStateMachine& )
 {
         spdlog::trace( "Loop Channel [{}]", mId );
-
-        if ( !mPayloads.empty() )
-        {
-                // Get the first element from the queue
-                auto message = mPayloads.front();
-                spdlog::info( "Channel [{}] | Process Payload | [{}]", mId, message );
-
-                mPayloads.pop();
-        }
-
-   	return true;
+        return true;
 }
 
 bool Channel::visitReconnect( const ActuatorStateMachine& )

@@ -6,6 +6,9 @@
 #include "Observer.h"
 #include "Subject.h"
 
+// Third-Party
+#include <rapidjson/document.h>
+
 class IMosquitto;
 /**
  * @brief The (Base) Generic class combines all fundamental design patterns as one object
@@ -29,7 +32,7 @@ class Generic : virtual public Object,
 	 * 	TODO Package should be a a RadidJson document
 	 * @return True, when Update was succesfull
 	 */
-        virtual bool Update( const IMosquitto& _mqtt, const std::string& _package );
+        virtual bool Update( const IMosquitto& _mqtt, const rapidjson::Document& _jpackage );
 
         /* Observer Methods */
         virtual bool Update( const Generic& _subject ) override;

@@ -11,6 +11,9 @@
 
 // Third-Party
 #include <spdlog/spdlog.h>
+#include <rapidjson/document.h>
+
+// Stl-Headers
 #include <map>
 #include <queue>
 
@@ -34,14 +37,12 @@ class Channel : public Generic,
         bool visitCleanup( const ActuatorStateMachine& ) override;
 
         /** Observer Methods */
-        // TODO Package should be a radid json document
-        bool Update( const IMosquitto& _mqtt, const std::string& _package ) override;
+        bool Update( const IMosquitto& _mqtt, const rapidjson::Document& _jpackage ) override;
 
        private:
         std::string mId;
         std::string mPath;
         std::map<std::string, int> mFds;
 
-        // TODO Should be a Rapid Json Package
-        std::queue<std::string> mPayloads;
+        std::queue<rapidjson::Document> mPayloads;
 };

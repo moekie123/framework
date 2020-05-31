@@ -105,9 +105,7 @@ class Actuator : public IActuator
         bool visitDestroy( const ActuatorStateMachine& ) override;
         bool visitCleanup( const ActuatorStateMachine& ) override;
 
-
        private:
-
         std::string mDriver;
         std::string mChip;
 };
