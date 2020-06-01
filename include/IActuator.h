@@ -1,11 +1,11 @@
 #pragma once
 
+// Type Defention
+#include "Modules.h"
+
 // Inherentance
 #include "Channel.h"
 #include "Generic.h"
-
-// Design Patterns
-#include "Visitor.h"
 
 // STL-Headers
 #include <vector>
@@ -14,7 +14,7 @@
  * @brief The Actuator Interface
  */
 class IActuator : public Generic,
-                  public Visitor<1>
+                  public ActuatorVisitor
 {
        public:
         /**

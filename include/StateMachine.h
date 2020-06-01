@@ -170,11 +170,3 @@ class StateMachine
 	 */
         static bool mShutdown;
 };
-
-using MqttStateMachine = StateMachine<0>;
-using ActuatorStateMachine = StateMachine<1>;
-
-using StateMachines = tinyfsm::FsmList<
-    MqttStateMachine,
-    ActuatorStateMachine>;
-

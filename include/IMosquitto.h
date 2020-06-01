@@ -1,16 +1,16 @@
 #pragma once
 
+// Type Defention
+#include "Modules.h"
+
 // Inheritance
 #include "Generic.h"
-
-// Design Patterns
-#include "Visitor.h"
 
 /** 
  * @brief The Mosquitto Interface
  */
 class IMosquitto : public Generic,
-                   public Visitor<0>
+                   public MqttVisitor
 {
        public:
         virtual ~IMosquitto() = default;
