@@ -10,6 +10,8 @@
 // Third-Party
 #include <mosquitto.h>
 #include <rapidjson/document.h>
+#include <rapidjson/stringbuffer.h>
+#include <rapidjson/writer.h>
 #include <spdlog/spdlog.h>
 
 // Stl-Headers
@@ -290,5 +292,40 @@ bool Mosquitto::visitCleanup( const MqttStateMachine& )
         // Clean up the Library
         mosquitto_lib_cleanup();
 
+        return true;
+}
+
+bool Mosquitto::Update( const Generic& _gen )
+{
+        int ret;
+
+        const std::string topic = _gen.GetName() + "/reply";
+        spdlog::info( "Mosquitto Publish [{}]", topic.c_str() );
+
+        // Convert payload to json document
+        /*
+        rapidjson::Document jpackage;
+        jpackage.Parse( message.second.c_str() );
+	*/
+        const char* json = "{\"module\":\"accepted\"}";
+        
+	/*  
+     	Document d;
+        d.Parse( json );
+	*/
+
+        /*
+        StringBuffer buffer;
+        Writer<StringBuffer> writer( buffer );
+        d.Accept( writer );
+
+	//std::cout << buffer.GetString() << std::endl;
+	*/
+        ret = mosquitto_publish( mClient, NULL, topic.c_str(), strlen( json ), json, 0, false );
+        if ( ret != MOSQ_ERR_SUCCESS )
+        {
+                spdlog::error( "Failed to Publish [{}][{}]", topic, mosquitto_strerror( errno ) );
+                return false;
+        }
         return true;
 }

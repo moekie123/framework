@@ -66,7 +66,10 @@ class Actuator : public IActuator
 
                                 Channel* channel = new Channel( _config, _name + "/ch" + std::to_string( index ) );
 
+				// Link Mosquitto Client and Channel
                                 mosquitto->Attach( *channel );
+                                channel->Attach( *mosquitto );
+
                                 actuator->Add( *channel );
                         }
 

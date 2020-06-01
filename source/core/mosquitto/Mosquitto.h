@@ -76,6 +76,11 @@ class Mosquitto : public IMosquitto
 	 */
         static MosquittoBuilder builder;
 
+        /**
+	 * Observer Pattern Methods
+ 	 */
+        bool Update( const Generic& ) override;
+
         /** 
 	 * Visitor Pattern Methods
 	 */

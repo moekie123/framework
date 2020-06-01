@@ -26,8 +26,12 @@ bool Channel::Update( const IMosquitto& _mqtt, const rapidjson::Document& _jpack
 
                         spdlog::info( "{} : [{}]", label, msg );
                         write( mFds[label.c_str()], msg.c_str(), strlen( msg.c_str() ) );
+
                 }
         }
+
+        Notify();
+
         return true;
 }
 
