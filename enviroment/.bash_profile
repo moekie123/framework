@@ -78,7 +78,7 @@ if [ -d "${FRAMEWORK}" ]; then
 		if [ ! -z "$1" ]; then
 			SESSION=$1	
 		else
-			SESSION="Framework"
+			SESSION="Application"
 		fi
 		
 		echo "Session [$SESSION]"
@@ -87,6 +87,22 @@ if [ -d "${FRAMEWORK}" ]; then
 		alias makes='make --no-print-directory -C  ${FRAMEWORK_BUILD} '${SESSION}
 		alias run=${SESSION}
 	}
+
+	_binary_options()
+	{
+		local curr_arg;
+
+		curr_arg=${COMP_WORDS[COMP_CWORD]}
+
+		options=""
+		for filename in $FRAMEWORK/binary/*; do
+			name=${filename##*/}
+			options="${options} ${name}" 
+		done
+
+		COMPREPLY=( $(compgen -W "$options" -- $curr_arg ) );
+	}
+	complete -F _binary_options session
 
 	# Speed Logger Debug
 	export SPDLOG_LEVEL="info"
@@ -118,4 +134,7 @@ fi
 if [ "$DRIVER_I2C" = true ]; then
 	alias i2c='i2cdetect -y 1'
 fi
+
+
+
 
