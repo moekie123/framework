@@ -302,26 +302,9 @@ bool Mosquitto::Update( const Generic& _gen )
         const std::string topic = _gen.GetName() + "/reply";
         spdlog::info( "Mosquitto Publish [{}]", topic.c_str() );
 
-        // Convert payload to json document
-        /*
-        rapidjson::Document jpackage;
-        jpackage.Parse( message.second.c_str() );
-	*/
-        const char* json = "{\"module\":\"accepted\"}";
-        
-	/*  
-     	Document d;
-        d.Parse( json );
-	*/
+        const std::string& json = _gen.ToJson();
 
-        /*
-        StringBuffer buffer;
-        Writer<StringBuffer> writer( buffer );
-        d.Accept( writer );
-
-	//std::cout << buffer.GetString() << std::endl;
-	*/
-        ret = mosquitto_publish( mClient, NULL, topic.c_str(), strlen( json ), json, 0, false );
+        ret = mosquitto_publish( mClient, NULL, topic.c_str(), strlen( json.c_str() ), json.c_str(), 0, false );
         if ( ret != MOSQ_ERR_SUCCESS )
         {
                 spdlog::error( "Failed to Publish [{}][{}]", topic, mosquitto_strerror( errno ) );

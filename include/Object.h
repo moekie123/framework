@@ -4,9 +4,6 @@
 #include <map>
 #include <string>
 
-// Third-Party
-#include <spdlog/spdlog.h>
-
 // Forward Declaration
 class Generic;
 
@@ -56,6 +53,18 @@ class Object
 	*  @return True, when reset was succesfull
 	*/
         virtual bool Reset();
+
+        /**
+	*  @brief Get current state of object in a string
+	*  @return The current state of object
+	*/
+        virtual const std::string ToString() const;
+
+        /**
+	*  @brief Get current state of object in json-format
+	*  @return The current state of object
+	*/
+        virtual const std::string ToJson() const;
 
        protected:
         /** @brief The Generic Object Element

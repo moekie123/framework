@@ -36,6 +36,9 @@ class Channel : public Generic,
         bool visitDestroy( const ActuatorStateMachine& ) override;
         bool visitCleanup( const ActuatorStateMachine& ) override;
 
+        /** Object Methods */
+        const std::string ToJson() const override;
+
         /** Observer Methods */
         bool Update( const IMosquitto& _mqtt, const rapidjson::Document& _jpackage ) override;
 

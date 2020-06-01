@@ -6,6 +6,9 @@
 #include <string>
 #include <vector>
 
+// Third-Party
+#include <spdlog/spdlog.h>
+
 const std::map<std::string, int> defaults = {
         { "const", 0 },
 };
@@ -92,6 +95,28 @@ bool Object::SetProperty( const std::string& _property, const int& _value )
 
 bool Object::Reset()
 {
-        spdlog::trace( "Object: Reset");
+        spdlog::trace( "Object: Reset" );
         return false;
+}
+
+const std::string Object::ToString() const
+{
+        /*
+        for ( auto it = mProperties.begin(); it != mProperties.end(); ++it )
+        {
+                msg += it->first;
+        }
+*/
+        return "";
+}
+
+const std::string Object::ToJson() const
+{
+        /*
+        for ( auto it = mProperties.begin(); it != mProperties.end(); ++it )
+        {
+                msg += it->first;
+        }
+*/
+        return "";
 }

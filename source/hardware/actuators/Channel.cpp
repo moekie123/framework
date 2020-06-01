@@ -7,10 +7,20 @@
 //Stl-Headers
 #include <fcntl.h>
 #include <unistd.h>
+#include <sstream>
 #include <string>
 #include <vector>
 
 const std::vector<std::string> labels = { "enable", "period", "duty_cycle" };
+
+const std::string Channel::ToJson() const
+{
+        std::stringstream ss;
+
+        ss.str( "{\"state\":\"Ok\"}" );
+
+        return ss.str();
+}
 
 bool Channel::Update( const IMosquitto& _mqtt, const rapidjson::Document& _jpackage )
 {
@@ -26,7 +36,6 @@ bool Channel::Update( const IMosquitto& _mqtt, const rapidjson::Document& _jpack
 
                         spdlog::info( "{} : [{}]", label, msg );
                         write( mFds[label.c_str()], msg.c_str(), strlen( msg.c_str() ) );
-
                 }
         }
 
@@ -49,6 +58,9 @@ Channel::Channel( const IConfigurator* _config, std::string _name )
         // Get the id of the channel
         _config->GetProperty( "Channel", mName, "id", mId );
 
+        // TODO Set Properties (copy from parameters)
+
+        // Set File Descriptors
         for ( auto label : labels )
                 mFds[label] = -1;
 }
