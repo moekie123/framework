@@ -3,34 +3,36 @@
 USERNAME="rsalm"
 PASSWORD="rsalm"
 
-RPIENV= $(pwd)
-FORCE= --allow-unauthenticated --allow-downgrades --allow-remove-essential --allow-change-held-packages
+RPIENV=$(pwd)
+FORCE='--yes --allow-unauthenticated --allow-downgrades --allow-remove-essential --allow-change-held-packages'
 
 echo "Start Setup Development Environment Script"
 	cd $HOME
 
+
 echo "Modify users"
+	# Assuming this script is executed as root	
 
 	# Change Root Password	
-	echo  $PASSWORD":root" | sudo chpasswd
+	echo  $PASSWORD":root" | chpasswd
 
-	id -u $USERNAME
-	if [ $? -eq 0 ]; then
+	id -u $USERNAME &> /dev/null
+	if [ $? -ne 0 ]; then
 		# Create new user
-		sudo adduser $USERNAME --gecos "-,-,-,-" --disabled-password
-		echo $PASSWORD":"$USERNAME | sudo chpasswd
+		adduser $USERNAME --gecos "-,-,-,-" --disabled-password
+		echo $PASSWORD":"$USERNAME | chpasswd
 	fi
 
-	id -u pi
-	if [ $? -eq 0 ]; then
+	id -u pi &> /dev/null
+	if [ $? -ne 1 ]; then
 		# Remote Default User
 		userdel pi
 	fi
 
 echo "Update Dependencies"
-	apt-get update
-	apt-get upgrade
-
+	DEBIAN_FRONTEND=noninteractive apt-get -y update
+	DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
+	
 echo "Install Development Toolkit"
 	apt-get install gcc g++ cmake git vim python universal-ctags $FORCE
 
@@ -71,6 +73,7 @@ echo "MQTT-broker"
 	apt-get install mosquitto mosquitto-clients $FORCE
 
 	# secure broker
+	mosquitto_passwd -c /etc/mosquitto/passwd $USERNAME
 	mosquitto_passwd -b /etc/mosquitto/passwd $USERNAME $PASSWORD
 	
 	# copy configuration files
@@ -82,11 +85,11 @@ echo "MQTT-broker"
 	systemctl enable mosquitto.service
 
 echo "HomeBridge"
-	# setup repo
-	curl -sL https://deb.nodesource.com/setup_12.x | sudo bash -
-
 	# install Node.js
-	apt-get install -y nodejs gcc g++ make python $FORCE
+	apt-get install -y npm curl nodejs gcc g++ make python $FORCE
+
+	# setup repo
+	curl -sL https://deb.nodesource.com/setup_12.x | bash -
 
 	# test node is working
 	node -v
@@ -129,7 +132,7 @@ echo "Install TDD Framework (GTest)"
 #	ldconfig -v |grep gtest
 
 echo "Install BDD Framework (Cucumber)"
-	apt-get install cucumber
+	apt-get install cucumber $FORCE
 	
 	# Checkout Repository
 	git clone https://github.com/cucumber/cucumber-cpp.git
@@ -138,7 +141,7 @@ echo "Install BDD Framework (Cucumber)"
 	# Build Cucumber Framework
 	cmake -E make_directory build
 
-	cmake -E chdir build cmake -DBUILD_SHARED_LIBS -DCUKE_ENABLE_EXAMPLES=on -DCMAKE_INSTALL_PREFIX=${prefix} ..
+	cmake -E chdir build cmake -DBUILD_SHARED_LIBS=on -DCUKE_ENABLE_EXAMPLES=on -DCMAKE_INSTALL_PREFIX=${prefix} ..
 
 	cmake --build build
 	
@@ -152,12 +155,8 @@ echo "Install BDD Framework (Cucumber)"
 	cp -r build/src/*.so /usr/lib/
 	
 echo "Install Kernel Enviroment"
-	cd /usr/src/
-
 	# Checkouot Repository
-	git clone --depth=1 https://github.com/raspberrypi/linux	
-	
-	cd /usr/src/linux
-	cp $RPIENV/linux/* .
+	git clone --depth=1 https://github.com/raspberrypi/linux /usr/src/
+	cp -r linux /usr/src/linux
 
 echo "Finished Setup Development Environment Script"
