@@ -34,20 +34,26 @@ echo "Update Dependencies"
 	DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
 	
 echo "Install Development Toolkit"
-	apt-get install gcc g++ cmake git vim python universal-ctags $FORCE
+	apt-get install gcc g++ cmake vim python universal-ctags $FORCE
 
 echo "Install Kernel Toolkit"
-	apt-get install git bc bison flex libssl-dev $FORCE
+	apt-get install bc bison flex libssl-dev $FORCE
 	apt-get install libncurses5-dev $FORCE
 
 echo "Install I2C Toolkit"
-	apt-get install -y i2c-tools $FORCE
+	apt-get install i2c-tools $FORCE
 
 echo "Install Documentation Utilities"
 	apt-get install gcc g++ doxygen graphviz apache2 $FORCE
 
 echo "Install Boost"
 	apt-get install libboost-all-dev --fix-missing $FORCE
+
+echo "Install Git"
+	apt-get install git $FORCE
+	git config --global user.name "$USERNAME"
+	git config --global core.editor "vim"
+
 
 echo "Configure Enviroment"
 
@@ -160,3 +166,4 @@ echo "Install Kernel Enviroment"
 	cp -r linux /usr/src/linux
 
 echo "Finished Setup Development Environment Script"
+
