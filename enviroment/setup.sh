@@ -163,7 +163,7 @@ echo "Install BDD Framework (Cucumber)"
 echo "Install Kernel Enviroment"
 	# Checkouot Repository
 	git clone --depth=1 https://github.com/raspberrypi/linux /usr/src/
-	cp -r linux /usr/src/linux
+	cp -r linux /usr/src/
 
 echo "Finished Setup Development Environment Script"
 
