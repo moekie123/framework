@@ -17,8 +17,6 @@ function error
 }
 
 info "Start Setup Development Environment Script"
-	# cd $HOME
-
 
 info "Modify users"
 	# Assuming this script is executed as root	
@@ -146,49 +144,71 @@ info "Install Kernel Enviroment"
 	cp -r $RPIENV/linux $KERNEL_DEST
 
 info "MQTT-broker"
-	echo "Mosquitto will be installed with the Framework"
+	BUILD_DIR=/tmp/mosquitto
 
-	# install mosquitto broker, sub & pub
-#	$INSTALL mosquitto mosquitto-clients 
+	# Checkout Repository
+	git clone https://github.com/eclipse/mosquitto.git $BUILD_DIR
+
+	# Build Cucumber Framework
+	cmake -S$BUILD_DIR -B$BUILD_DIR/build -DDOCUMENTATION=OFF -DBUILD_SHARED_LIBS=ON
+
+	make -C $BUILD_DIR/build install
+
+info "MQTT-broker"
+	BUILD_DIR=/tmp/mosquitto
+
+	# Checkout Repository
+	git clone https://github.com/eclipse/mosquitto.git $BUILD_DIR
+
+	# Build Cucumber Framework
+	cmake -S$BUILD_DIR -B$BUILD_DIR/build -DDOCUMENTATION=OFF -DBUILD_SHARED_LIBS=ON
+
+	make -C $BUILD_DIR/build install
+	
+	ldconfig
 
 	# secure broker
 #	mosquitto_passwd -c /etc/mosquitto/passwd $USERNAME
 #	mosquitto_passwd -b /etc/mosquitto/passwd $USERNAME $PASSWORD
 	
 	# copy configuration files
-#	cp config/etc/mosquitto/mosquitto.conf /etc/mosquitto/
-#	cp config/etc/mosquitto/conf.d/default.conf /etc/mosquitto/conf.d/
+	cp config/etc/mosquitto/mosquitto.conf /usr/local/etc/mosquitto/
+	
+	if [ ! -f /usr/local/etc/mosquitto/conf.d ]; then
+		mkdir /usr/local/etc/mosquitto/conf.d
+	fi
+	cp config/etc/mosquitto/conf.d/default.conf /usr/local/etc/mosquitto/conf.d/
 
 	# configure start on boot service
-#	systemctl daemon-reload
-#	systemctl enable mosquitto.service
+	systemctl daemon-reload
+	systemctl enable mosquitto.service
 
-info "HomeBridge"
-	echo "Homebridge should be optional"
 
-	# install Node.js
-#	$INSTALL -y npm curl nodejs gcc g++ make python 
+info "MQTT-broker"
+	BUILD_DIR=/tmp/mosquitto
 
-	# setup repo
-#	curl -sL https://deb.nodesource.com/setup_12.x | bash -
+	# Checkout Repository
+	git clone https://github.com/eclipse/mosquitto.git $BUILD_DIR
 
-	# test node is working
-#	node -v
+	# Build Cucumber Framework
+	cmake -S$BUILD_DIR -B$BUILD_DIR/build -DDOCUMENTATION=OFF -DBUILD_SHARED_LIBS=ON
 
-	# upgrade npm (version 6.13.4 has issues with git dependencies)
-#	npm install -g npm
-
-	# instasl homebridge
-#	npm install -g --unsafe-perm homebridge
+	make -C $BUILD_DIR/build install
+	
+	ldconfig
 
 	# copy configuration files
-#	cp config/var/lib/homebridge/config.json /var/lib/homebridge/
-#	cp config/etc/default/homebridge /etc/default/
-#	cp config/etc/systemd/system/homebridge.service /etc/systemd/system/
-	
+	cp config/etc/mosquitto/mosquitto.conf /usr/local/etc/mosquitto/
+
+	# Create mosquitto user
+	id -u mosquitto &> /dev/null
+	if [ $? -ne 0 ]; then
+		adduser mosquitto --gecos "-,-,-,-" --disabled-password -r -M
+	fi
+
 	# configure start on boot service
-#	systemctl daemon-reload
-#	systemctl enable homebridge.service
+	systemctl daemon-reload
+	systemctl enable mosquitto.service
 
 info "Finished Setup Development Environment Script"
 
