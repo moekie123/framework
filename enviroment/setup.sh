@@ -4,123 +4,149 @@ USERNAME="rsalm"
 PASSWORD="rsalm"
 
 RPIENV=$(pwd)
-FORCE='--yes --allow-unauthenticated --allow-downgrades --allow-remove-essential --allow-change-held-packages'
+INSTALL='apt-get install --yes --allow-unauthenticated --allow-downgrades --allow-remove-essential --allow-change-held-packages'
 
-echo "Start Setup Development Environment Script"
-	cd $HOME
+function info
+{
+	echo -e "\e[34mBlue $1 \e[0m"
+}
 
+function error
+{
+	echo -e "\e[31mRed $1 \e[0m"
+}
 
-echo "Modify users"
+info "Start Setup Development Environment Script"
+	# cd $HOME
+
+info "Modify users"
 	# Assuming this script is executed as root	
 
 	# Change Root Password	
 	echo  $PASSWORD":root" | chpasswd
 
+	# Create new user
 	id -u $USERNAME &> /dev/null
 	if [ $? -ne 0 ]; then
-		# Create new user
 		adduser $USERNAME --gecos "-,-,-,-" --disabled-password
-		echo $PASSWORD":"$USERNAME | chpasswd
+		echo "$PASSWORD:$USERNAME" | chpasswd
 	fi
 
+	# Remove default user
 	id -u pi &> /dev/null
 	if [ $? -ne 1 ]; then
-		# Remote Default User
 		userdel pi
 	fi
 
-echo "Update Dependencies"
-	DEBIAN_FRONTEND=noninteractive apt-get -y update
-	DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
+info "Update Dependencies"
+	DEBIAN_FRONTEND=noninteractive apt-get update 
+	DEBIAN_FRONTEND=noninteractive apt-get upgrade 
 	
-echo "Install Development Toolkit"
-	apt-get install gcc g++ cmake vim python universal-ctags $FORCE
+info "Install Development Toolkit"
+	$INSTALL gcc g++ vim python universal-ctags 
 
-echo "Install Kernel Toolkit"
-	apt-get install bc bison flex libssl-dev $FORCE
-	apt-get install libncurses5-dev $FORCE
+info "Install Kernel Toolkit"
+	$INSTALL bc bison flex libssl-dev 
+	$INSTALL libncurses5-dev 
 
-echo "Install I2C Toolkit"
-	apt-get install i2c-tools $FORCE
+info "Install I2C Toolkit"
+	$INSTALL i2c-tools 
 
-echo "Install Documentation Utilities"
-	apt-get install gcc g++ doxygen graphviz apache2 $FORCE
+info "Install Documentation Utilities"
+	$INSTALL doxygen graphviz apache2 
 
-echo "Install Boost"
-	apt-get install libboost-all-dev --fix-missing $FORCE
+info "Install Boost"
+	$INSTALL libboost-all-dev --fix-missing 
 
-echo "Install Git"
-	apt-get install git $FORCE
+info "Install Git"
+	$INSTALL git 
 	git config --global user.name "$USERNAME"
+	git config --global user.email "$USERNAME"
 	git config --global core.editor "vim"
 
+info "Install CMake"
+	git clone https://github.com/Kitware/CMake.git /tmp/CMake
+	./tmp/CMake/bootstrap
+  	make install -C /tmp/CMake
 
-echo "Configure Enviroment"
+info "Add library directory"
+ldconfig /usr/local/lib
+
+info "Configure Enviroment"
 
 files=( ".bash_profile" ".vimrc" ".gdbinit" )
 
 for FILE in "${files[@]}"
 do
 	ABS="$HOME/"$FILE
-	
+	echo $ABS
+
 	if [ -f $ABS ]; then
-		echo -e "\e[31m $FILE already exist \e[0m"
+		error "- $FILE already exist"
 	else
-		echo "Copy $FILE to home directory"
-		ln -s $(pwd)/$FILE $ABS
+		echo "- Copy $FILE to home directory"
+		ln -s $RPIENV/$FILE $ABS
 	fi
 done
 
-echo "Link Vim-plugings"
-ln -s $(pwd)/vim-plugin/pack ~/.vim/pack 
+info "Link Vim-plugings"
 
-echo "MQTT-broker"
+if [ ! -f ~/.vim ]; then
+	mkdir ~/.vim
+fi
+ln -s $RPIENV/vim-plugin/pack ~/.vim/pack 
+
+info "MQTT-broker"
+	echo "Mosquitto will be installed with the Framework"
+
 	# install mosquitto broker, sub & pub
-	apt-get install mosquitto mosquitto-clients $FORCE
+#	$INSTALL mosquitto mosquitto-clients 
 
 	# secure broker
-	mosquitto_passwd -c /etc/mosquitto/passwd $USERNAME
-	mosquitto_passwd -b /etc/mosquitto/passwd $USERNAME $PASSWORD
+#	mosquitto_passwd -c /etc/mosquitto/passwd $USERNAME
+#	mosquitto_passwd -b /etc/mosquitto/passwd $USERNAME $PASSWORD
 	
 	# copy configuration files
-	cp config/etc/mosquitto/mosquitto.conf /etc/mosquitto/
-	cp config/etc/mosquitto/conf.d/default.conf /etc/mosquitto/conf.d/
+#	cp config/etc/mosquitto/mosquitto.conf /etc/mosquitto/
+#	cp config/etc/mosquitto/conf.d/default.conf /etc/mosquitto/conf.d/
 
 	# configure start on boot service
-	systemctl daemon-reload
-	systemctl enable mosquitto.service
+#	systemctl daemon-reload
+#	systemctl enable mosquitto.service
 
-echo "HomeBridge"
+info "HomeBridge"
+	echo "Homebridge should be optional"
+
 	# install Node.js
-	apt-get install -y npm curl nodejs gcc g++ make python $FORCE
+#	$INSTALL -y npm curl nodejs gcc g++ make python 
 
 	# setup repo
-	curl -sL https://deb.nodesource.com/setup_12.x | bash -
+#	curl -sL https://deb.nodesource.com/setup_12.x | bash -
 
 	# test node is working
-	node -v
+#	node -v
 
 	# upgrade npm (version 6.13.4 has issues with git dependencies)
-	npm install -g npm
+#	npm install -g npm
 
 	# instasl homebridge
-	npm install -g --unsafe-perm homebridge
+#	npm install -g --unsafe-perm homebridge
 
 	# copy configuration files
-	cp config/var/lib/homebridge/config.json /var/lib/homebridge/
-	cp config/etc/default/homebridge /etc/default/
-	cp config/etc/systemd/system/homebridge.service /etc/systemd/system/
+#	cp config/var/lib/homebridge/config.json /var/lib/homebridge/
+#	cp config/etc/default/homebridge /etc/default/
+#	cp config/etc/systemd/system/homebridge.service /etc/systemd/system/
 	
 	# configure start on boot service
-	systemctl daemon-reload
-	systemctl enable homebridge.service
+#	systemctl daemon-reload
+#	systemctl enable homebridge.service
 
-echo "Install Code Validator"
-	apt-get install cppcheck $FORCE
+info "Install Code Validator"
+	$INSTALL cppcheck 
 
-echo "Install TDD Framework (GTest)"
+info "Install TDD Framework (GTest)"
+	echo "GTest will be installed with the Framework"
 
-	echo "GTest will be installed through CMake"
 	# Checkout Repository
 #	git clone https://github.com/google/googletest.git
 #	cd googletest
@@ -137,33 +163,37 @@ echo "Install TDD Framework (GTest)"
 	# Verify gtest is installed
 #	ldconfig -v |grep gtest
 
-echo "Install BDD Framework (Cucumber)"
-	apt-get install cucumber $FORCE
+info "Install BDD Framework (Cucumber)"
+	$INSTALL cucumber 
 	
 	# Checkout Repository
-	git clone https://github.com/cucumber/cucumber-cpp.git
-	cd cucumber-cpp
+#	git clone https://github.com/cucumber/cucumber-cpp.git
+#	cd cucumber-cpp
 
 	# Build Cucumber Framework
-	cmake -E make_directory build
+#	cmake -E make_directory build
 
-	cmake -E chdir build cmake -DBUILD_SHARED_LIBS=on -DCUKE_ENABLE_EXAMPLES=on -DCMAKE_INSTALL_PREFIX=${prefix} ..
+#	cmake -E chdir build cmake -DBUILD_SHARED_LIBS=on -DCUKE_ENABLE_EXAMPLES=on -DCMAKE_INSTALL_PREFIX=${prefix} ..
 
-	cmake --build build
+#	cmake --build build
 	
 	#cmake --build build --target test
 
-	cmake --build build --target install
+#	cmake --build build --target install
 	
 	# Copy the files to the shared directories
-	cp -r include /usr/include/
-	cp -r build/src/cucumber-cpp/ /usr/include/
-	cp -r build/src/*.so /usr/lib/
+#	cp -r include /usr/include/
+#	cp -r build/src/cucumber-cpp/ /usr/include/
+#	cp -r build/src/*.so /usr/lib/
 	
-echo "Install Kernel Enviroment"
-	# Checkouot Repository
-	git clone --depth=1 https://github.com/raspberrypi/linux /usr/src/
-	cp -r linux /usr/src/
+info "Install Kernel Enviroment"
+	KERNEL_DEST=/usr/src/
+	# Checkout Repository
+	if [ -f $KERNEL_DEST  ]; then
+		git clone --depth=1 https://github.com/raspberrypi/linux $KERNEL_DEST
+	fi
 
-echo "Finished Setup Development Environment Script"
+	cp -r $RPIENV/linux $KERNEL_DEST
+
+info "Finished Setup Development Environment Script"
 
