@@ -43,7 +43,7 @@ info "Update Dependencies"
 	DEBIAN_FRONTEND=noninteractive apt-get upgrade 
 	
 info "Install Development Toolkit"
-	$INSTALL gcc g++ vim python universal-ctags 
+	$INSTALL gcc g++ vim python universal-ctags build-essential 
 
 info "Install Kernel Toolkit"
 	$INSTALL bc bison flex libssl-dev 
@@ -66,8 +66,10 @@ info "Install Git"
 
 info "Install CMake"
 	git clone https://github.com/Kitware/CMake.git /tmp/CMake
-	./tmp/CMake/bootstrap
-  	make install -C /tmp/CMake
+	cd /tmp/CMake
+		./bootstrap
+  		make install
+	cd $RPIENV	
 
 info "Add library directory"
 ldconfig /usr/local/lib
@@ -91,55 +93,13 @@ done
 
 info "Link Vim-plugings"
 
-if [ ! -f ~/.vim ]; then
+if [ ! -f ~/.vim/ ]; then
 	mkdir ~/.vim
 fi
-ln -s $RPIENV/vim-plugin/pack ~/.vim/pack 
 
-info "MQTT-broker"
-	echo "Mosquitto will be installed with the Framework"
-
-	# install mosquitto broker, sub & pub
-#	$INSTALL mosquitto mosquitto-clients 
-
-	# secure broker
-#	mosquitto_passwd -c /etc/mosquitto/passwd $USERNAME
-#	mosquitto_passwd -b /etc/mosquitto/passwd $USERNAME $PASSWORD
-	
-	# copy configuration files
-#	cp config/etc/mosquitto/mosquitto.conf /etc/mosquitto/
-#	cp config/etc/mosquitto/conf.d/default.conf /etc/mosquitto/conf.d/
-
-	# configure start on boot service
-#	systemctl daemon-reload
-#	systemctl enable mosquitto.service
-
-info "HomeBridge"
-	echo "Homebridge should be optional"
-
-	# install Node.js
-#	$INSTALL -y npm curl nodejs gcc g++ make python 
-
-	# setup repo
-#	curl -sL https://deb.nodesource.com/setup_12.x | bash -
-
-	# test node is working
-#	node -v
-
-	# upgrade npm (version 6.13.4 has issues with git dependencies)
-#	npm install -g npm
-
-	# instasl homebridge
-#	npm install -g --unsafe-perm homebridge
-
-	# copy configuration files
-#	cp config/var/lib/homebridge/config.json /var/lib/homebridge/
-#	cp config/etc/default/homebridge /etc/default/
-#	cp config/etc/systemd/system/homebridge.service /etc/systemd/system/
-	
-	# configure start on boot service
-#	systemctl daemon-reload
-#	systemctl enable homebridge.service
+if [ ! -f ~/.vim/pack ]; then
+	ln -s $RPIENV/vim-plugin/pack ~/.vim/pack 
+fi
 
 info "Install Code Validator"
 	$INSTALL cppcheck 
@@ -194,6 +154,51 @@ info "Install Kernel Enviroment"
 	fi
 
 	cp -r $RPIENV/linux $KERNEL_DEST
+
+info "MQTT-broker"
+	echo "Mosquitto will be installed with the Framework"
+
+	# install mosquitto broker, sub & pub
+#	$INSTALL mosquitto mosquitto-clients 
+
+	# secure broker
+#	mosquitto_passwd -c /etc/mosquitto/passwd $USERNAME
+#	mosquitto_passwd -b /etc/mosquitto/passwd $USERNAME $PASSWORD
+	
+	# copy configuration files
+#	cp config/etc/mosquitto/mosquitto.conf /etc/mosquitto/
+#	cp config/etc/mosquitto/conf.d/default.conf /etc/mosquitto/conf.d/
+
+	# configure start on boot service
+#	systemctl daemon-reload
+#	systemctl enable mosquitto.service
+
+info "HomeBridge"
+	echo "Homebridge should be optional"
+
+	# install Node.js
+#	$INSTALL -y npm curl nodejs gcc g++ make python 
+
+	# setup repo
+#	curl -sL https://deb.nodesource.com/setup_12.x | bash -
+
+	# test node is working
+#	node -v
+
+	# upgrade npm (version 6.13.4 has issues with git dependencies)
+#	npm install -g npm
+
+	# instasl homebridge
+#	npm install -g --unsafe-perm homebridge
+
+	# copy configuration files
+#	cp config/var/lib/homebridge/config.json /var/lib/homebridge/
+#	cp config/etc/default/homebridge /etc/default/
+#	cp config/etc/systemd/system/homebridge.service /etc/systemd/system/
+	
+	# configure start on boot service
+#	systemctl daemon-reload
+#	systemctl enable homebridge.service
 
 info "Finished Setup Development Environment Script"
 
