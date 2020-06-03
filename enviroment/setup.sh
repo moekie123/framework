@@ -19,6 +19,7 @@ function error
 info "Start Setup Development Environment Script"
 	# cd $HOME
 
+
 info "Modify users"
 	# Assuming this script is executed as root	
 
@@ -65,87 +66,76 @@ info "Install Git"
 	git config --global core.editor "vim"
 
 info "Install CMake"
-	git clone https://github.com/Kitware/CMake.git /tmp/CMake
-	cd /tmp/CMake
+	BUILD_DIR=/tmp/cmake
+
+	git clone https://github.com/Kitware/CMake.git $BUILD_DIR
+	cd $BUILD_DIR
 		./bootstrap
-  		make install
 	cd $RPIENV	
 
+	make -C $BUILD_DIR install
+
 info "Add library directory"
-ldconfig /usr/local/lib
+	ldconfig /usr/local/lib
 
 info "Configure Enviroment"
+	files=( ".bash_profile" ".vimrc" ".gdbinit" )
 
-files=( ".bash_profile" ".vimrc" ".gdbinit" )
+	for FILE in "${files[@]}"
+	do
+		ABS="$HOME/"$FILE
+		echo $ABS
 
-for FILE in "${files[@]}"
-do
-	ABS="$HOME/"$FILE
-	echo $ABS
-
-	if [ -f $ABS ]; then
-		error "- $FILE already exist"
-	else
-		echo "- Copy $FILE to home directory"
-		ln -s $RPIENV/$FILE $ABS
-	fi
-done
+		if [ -f $ABS ]; then
+			error "- $FILE already exist"
+		else
+			echo "- Copy $FILE to home directory"
+			ln -s $RPIENV/$FILE $ABS
+		fi
+	done
 
 info "Link Vim-plugings"
+	if [ ! -f ~/.vim/ ]; then
+		mkdir ~/.vim
+	fi
 
-if [ ! -f ~/.vim/ ]; then
-	mkdir ~/.vim
-fi
-
-if [ ! -f ~/.vim/pack ]; then
-	ln -s $RPIENV/vim-plugin/pack ~/.vim/pack 
-fi
+	if [ ! -f ~/.vim/pack ]; then
+		ln -s $RPIENV/vim-plugin/pack ~/.vim/pack 
+	fi
 
 info "Install Code Validator"
 	$INSTALL cppcheck 
 
 info "Install TDD Framework (GTest)"
-	echo "GTest will be installed with the Framework"
+	BUILD_DIR=/tmp/gtest
 
 	# Checkout Repository
-#	git clone https://github.com/google/googletest.git
-#	cd googletest
+	git clone https://github.com/google/googletest.git $BUILD_DIR
 
 	# Build Gtest Framework
-#	cmake -DBUILD_SHARED_LIBS=ON .
-#	make
+	cmake -S$BUILD_DIR -B$BUILD_DIR/build -DBUILD_SHARED_LIBS=ON
+	
+	make -C $BUILD_DIR/build install
 
 	# Copy the files to the shared directories
-#	cp -r googlemock/include/gmock/ /usr/include/
-#	cp -r googletest/include/gtest/ /usr/include/
-#	cp lib/libg* /usr/lib/
-		
-	# Verify gtest is installed
-#	ldconfig -v |grep gtest
+	cp -r $BUILD_DIR/googlemock/include/gmock/ /usr/local/include/
+	cp -r $BUILD_DIR/googletest/include/gtest/ /usr/local/include/
+	cp $BUILD_DIR/build/lib/libg* /usr/local/lib/
+
+	# Update Library		
+	ldconfig
 
 info "Install BDD Framework (Cucumber)"
-	$INSTALL cucumber 
-	
+	BUILD_DIR=/tmp/cucumber
+
 	# Checkout Repository
-#	git clone https://github.com/cucumber/cucumber-cpp.git
-#	cd cucumber-cpp
+	git clone https://github.com/cucumber/cucumber-cpp.git $BUILD_DIR
 
 	# Build Cucumber Framework
-#	cmake -E make_directory build
+	cmake -S$BUILD_DIR -B$BUILD_DIR/build -DBUILD_SHARED_LIBS=ON
 
-#	cmake -E chdir build cmake -DBUILD_SHARED_LIBS=on -DCUKE_ENABLE_EXAMPLES=on -DCMAKE_INSTALL_PREFIX=${prefix} ..
+	make -C $BUILD_DIR/build install
 
-#	cmake --build build
-	
-	#cmake --build build --target test
-
-#	cmake --build build --target install
-	
-	# Copy the files to the shared directories
-#	cp -r include /usr/include/
-#	cp -r build/src/cucumber-cpp/ /usr/include/
-#	cp -r build/src/*.so /usr/lib/
-	
 info "Install Kernel Enviroment"
 	KERNEL_DEST=/usr/src/
 	# Checkout Repository
