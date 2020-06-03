@@ -199,6 +199,7 @@ info "MQTT-broker"
 
 	# copy configuration files
 	cp config/etc/mosquitto/mosquitto.conf /usr/local/etc/mosquitto/
+	cp config/etc/systemd/system/mosquitto.servive /etc/systemd/system
 
 	# Create mosquitto user
 	id -u mosquitto &> /dev/null
