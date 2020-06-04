@@ -102,7 +102,7 @@ info "Link Vim-plugings"
 	fi
 
 	if [ ! -f ~/.vim/pack ]; then
-		ln -s $RPIENV/vim-plugin/pack ~/.vim/pack 
+		ln -s $RPIENV/vim-plugin/pack ~/.vim/ 
 	fi
 
 info "Install Code Validator"
