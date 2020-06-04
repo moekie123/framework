@@ -1,5 +1,61 @@
 #!/bin/bash
 
+INSTALLATION=()
+
+while getopts ":fuidbgcetkmh" opt; do
+	case ${opt} in
+		f)
+			INSTALLATION+=('INSTALL_USERS')	;;
+		u)
+			INSTALLATION+=('INSTALL_DEPENDENCIES')	;;
+		i)
+			INSTALLATION+=('INSTALL_TOOLKIT') ;;
+		d)
+			INSTALLATION+=('INSTALL_DOCUMENTATION') ;;
+		b)
+			INSTALLATION+=('INSTALL_BOOST') ;;
+		g)
+			INSTALLATION+=('INSTALL_GIT') ;;
+		c)
+			INSTALLATION+=('INSTALL_CMAKE') ;;
+		e)
+			INSTALLATION+=('INSTALL_BASH') ;;
+		t)
+			INSTALLATION+=('INSTALL_TEST') 
+			INSTALLATION+=('INSTALL_LIBRARY')
+			;; 
+		k)
+			INSTALLATION+=('INSTALL_KERNEL') ;;
+		m)
+			INSTALLATION+=('INSTALL_MQTT')
+			INSTALLATION+=('INSTALL_LIBRARY') 
+			;;
+		h )
+			echo "Usage:"
+			echo "    setup -f		Install and configure the users"
+			echo "    setup -u		Update and Upgrade enviroment"
+			echo "    setup -i		Install toolkit"
+			echo "    setup -d		Install Documentation tools"
+			echo "    setup -b		Install Boost"
+			echo "    setup -g		Install and configure Git"
+			echo "    setup -c		Install CMake"
+			echo "    setup -e		Install Enviroment Bash-scripts"
+			echo "    setup -t		Install Test Enviroment (gtest, cucumber, ccpcheck)"
+			echo "    setup -k		Install (RPI-) Kernel Enviroment"
+			echo "    setup -m		Install Mosquitto"
+			exit 0
+			;;
+		\? )
+			echo "Invalid Option: -$OPTARG" 1>&2
+			exit 1
+			;;
+  	esac
+done
+
+if [ "$#" -ne 0 ] ; then
+	printf '%s\n' "${INSTALLATION[@]}"
+fi
+
 USERNAME="rsalm"
 PASSWORD="rsalm"
 
@@ -8,16 +64,17 @@ INSTALL='apt-get install --yes --allow-unauthenticated --allow-downgrades --allo
 
 function info
 {
-	echo -e "\e[34mBlue $1 \e[0m"
+	echo -e "\e[34m $1 \e[0m"
 }
 
 function error
 {
-	echo -e "\e[31mRed $1 \e[0m"
+	echo -e "\e[31m $1 \e[0m"
 }
 
 info "Start Setup Development Environment Script"
 
+if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_USERS" ]]; then
 info "Modify users"
 	# Assuming this script is executed as root	
 
@@ -36,33 +93,44 @@ info "Modify users"
 	if [ $? -ne 1 ]; then
 		userdel pi
 	fi
+fi
 
+# Update Platfrom Enviroment
+if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_DEPENDENCIES" ]]; then
 info "Update Dependencies"
 	DEBIAN_FRONTEND=noninteractive apt-get update 
 	DEBIAN_FRONTEND=noninteractive apt-get upgrade 
-	
+fi
+
+if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_TOOLKIT" ]]; then
+# Platfrom independend toolkit
 info "Install Development Toolkit"
 	$INSTALL gcc g++ vim python universal-ctags build-essential 
 
-info "Install Kernel Toolkit"
-	$INSTALL bc bison flex libssl-dev 
-	$INSTALL libncurses5-dev 
-
+# Raspberry pi specifics
 info "Install I2C Toolkit"
 	$INSTALL i2c-tools 
+fi
 
+if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_DOCUMENTATION" ]]; then
 info "Install Documentation Utilities"
 	$INSTALL doxygen graphviz apache2 
+fi
 
+if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_BOOST" ]]; then
 info "Install Boost"
 	$INSTALL libboost-all-dev --fix-missing 
+fi
 
+if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_GIT" ]]; then
 info "Install Git"
 	$INSTALL git 
 	git config --global user.name "$USERNAME"
 	git config --global user.email "$USERNAME"
 	git config --global core.editor "vim"
+fi
 
+if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_CMAKE" ]]; then
 info "Install CMake"
 	BUILD_DIR=/tmp/cmake
 
@@ -76,11 +144,12 @@ info "Install CMake"
 	cmake -S$BUILD_DIR -B$BUILD_DIR/build -DBUILD_SHARED_LIBS=ON
 
 	make -C $BUILD_DIR/build install -j4
+fi
 
-info "Add library directory"
-	ldconfig /usr/local/lib
 
+if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_BASH" ]]; then
 info "Configure Enviroment"
+	# Copy the following files to the Home-dir
 	files=( ".bash_profile" ".vimrc" ".gdbinit" )
 
 	for FILE in "${files[@]}"
@@ -97,14 +166,16 @@ info "Configure Enviroment"
 	done
 
 info "Link Vim-plugings"
-	if [ ! -f ~/.vim/ ]; then
+	if [ ! -d ~/.vim/ ]; then
 		mkdir ~/.vim
 	fi
 
-	if [ ! -f ~/.vim/pack ]; then
+	if [ ! -d ~/.vim/pack ]; then
 		ln -s $RPIENV/vim-plugin/pack ~/.vim/ 
 	fi
+fi
 
+if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_TEST" ]]; then
 info "Install Code Validator"
 	$INSTALL cppcheck 
 
@@ -137,16 +208,9 @@ info "Install BDD Framework (Cucumber)"
 	cmake -S$BUILD_DIR -B$BUILD_DIR/build -DBUILD_SHARED_LIBS=ON
 
 	make -C $BUILD_DIR/build install -j4
+fi
 
-info "Install Kernel Enviroment"
-	KERNEL_DEST=/usr/src/
-	# Checkout Repository
-	if [ -f $KERNEL_DEST  ]; then
-		git clone --depth=1 https://github.com/raspberrypi/linux $KERNEL_DEST
-	fi
-
-	cp -r $RPIENV/linux $KERNEL_DEST
-
+if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_MQTT" ]]; then
 info "MQTT-broker"
 	BUILD_DIR=/tmp/mosquitto
 
@@ -167,6 +231,28 @@ info "MQTT-broker"
 	# configure start on boot service
 	systemctl daemon-reload
 	systemctl enable mosquitto.service
+fi
+
+if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_LIBRARY" ]]; then
+info "Add library directory"
+	ldconfig /usr/local/lib
+fi
+
+if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_KERNEL" ]]; then
+info "Install Kernel Toolkit"
+	$INSTALL bc bison flex libssl-dev 
+	$INSTALL libncurses5-dev 
+
+info "Install Kernel Enviroment"
+	KERNEL_DEST=/usr/src/
+	# Checkout Repository
+	if [ -f $KERNEL_DEST  ]; then
+		git clone --depth=1 https://github.com/raspberrypi/linux $KERNEL_DEST
+	fi
+
+	# Copy Shortcut script to kernel enviroment
+	cp -r $RPIENV/linux $KERNEL_DEST
+fi
 
 info "Finished Setup Development Environment Script"
 
