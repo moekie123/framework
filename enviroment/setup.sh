@@ -66,12 +66,16 @@ info "Install Git"
 info "Install CMake"
 	BUILD_DIR=/tmp/cmake
 
-	git clone https://github.com/Kitware/CMake.git $BUILD_DIR
-	cd $BUILD_DIR
-		./bootstrap
-	cd $RPIENV	
+	# Use CMake to install CMake (instead of bootstrap)
+	$INSTALL cmake 
 
-	make -C $BUILD_DIR install
+	# Checkout Repository
+	git clone https://github.com/Kitware/CMake.git $BUILD_DIR
+
+	# Build Cucumber Framework
+	cmake -S$BUILD_DIR -B$BUILD_DIR/build -DBUILD_SHARED_LIBS=ON
+
+	make -C $BUILD_DIR/build install -j4
 
 info "Add library directory"
 	ldconfig /usr/local/lib
@@ -113,7 +117,7 @@ info "Install TDD Framework (GTest)"
 	# Build Gtest Framework
 	cmake -S$BUILD_DIR -B$BUILD_DIR/build -DBUILD_SHARED_LIBS=ON
 	
-	make -C $BUILD_DIR/build install
+	make -C $BUILD_DIR/build install -j4
 
 	# Copy the files to the shared directories
 	cp -r $BUILD_DIR/googlemock/include/gmock/ /usr/local/include/
@@ -132,7 +136,7 @@ info "Install BDD Framework (Cucumber)"
 	# Build Cucumber Framework
 	cmake -S$BUILD_DIR -B$BUILD_DIR/build -DBUILD_SHARED_LIBS=ON
 
-	make -C $BUILD_DIR/build install
+	make -C $BUILD_DIR/build install -j4
 
 info "Install Kernel Enviroment"
 	KERNEL_DEST=/usr/src/
@@ -152,60 +156,13 @@ info "MQTT-broker"
 	# Build Cucumber Framework
 	cmake -S$BUILD_DIR -B$BUILD_DIR/build -DDOCUMENTATION=OFF -DBUILD_SHARED_LIBS=ON
 
-	make -C $BUILD_DIR/build install
+	make -C $BUILD_DIR/build install -j4
 
-info "MQTT-broker"
-	BUILD_DIR=/tmp/mosquitto
-
-	# Checkout Repository
-	git clone https://github.com/eclipse/mosquitto.git $BUILD_DIR
-
-	# Build Cucumber Framework
-	cmake -S$BUILD_DIR -B$BUILD_DIR/build -DDOCUMENTATION=OFF -DBUILD_SHARED_LIBS=ON
-
-	make -C $BUILD_DIR/build install
-	
-	ldconfig
-
-	# secure broker
-#	mosquitto_passwd -c /etc/mosquitto/passwd $USERNAME
-#	mosquitto_passwd -b /etc/mosquitto/passwd $USERNAME $PASSWORD
-	
-	# copy configuration files
-	cp config/etc/mosquitto/mosquitto.conf /usr/local/etc/mosquitto/
-	
-	if [ ! -f /usr/local/etc/mosquitto/conf.d ]; then
-		mkdir /usr/local/etc/mosquitto/conf.d
-	fi
-	cp config/etc/mosquitto/conf.d/default.conf /usr/local/etc/mosquitto/conf.d/
-
-	# configure start on boot service
-	systemctl daemon-reload
-	systemctl enable mosquitto.service
-
-
-info "MQTT-broker"
-	BUILD_DIR=/tmp/mosquitto
-
-	# Checkout Repository
-	git clone https://github.com/eclipse/mosquitto.git $BUILD_DIR
-
-	# Build Cucumber Framework
-	cmake -S$BUILD_DIR -B$BUILD_DIR/build -DDOCUMENTATION=OFF -DBUILD_SHARED_LIBS=ON
-
-	make -C $BUILD_DIR/build install
-	
 	ldconfig
 
 	# copy configuration files
 	cp config/etc/mosquitto/mosquitto.conf /usr/local/etc/mosquitto/
-	cp config/etc/systemd/system/mosquitto.servive /etc/systemd/system
-
-	# Create mosquitto user
-	id -u mosquitto &> /dev/null
-	if [ $? -ne 0 ]; then
-		adduser mosquitto --gecos "-,-,-,-" --disabled-password -r -M
-	fi
+	cp config/etc/systemd/system/mosquitto.service /etc/systemd/system
 
 	# configure start on boot service
 	systemctl daemon-reload
