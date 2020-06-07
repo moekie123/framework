@@ -148,9 +148,26 @@ info "Install Development Toolkit"
 	$INSTALL gcc g++ python universal-ctags build-essential cmake 
 
 # Raspberry pi specifics
-info "Install I2C Toolkit"
-	$INSTALL i2c-tools 
+#info "Install I2C Toolkit"
+#	$INSTALL i2c-tools 
 fi
+
+if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_CMAKE" ]]; then
+info "Install CMake"
+	BUILD_DIR=/tmp/cmake
+
+	# Checkout Repository
+	git clone https://github.com/Kitware/CMake.git $BUILD_DIR
+
+	# Build Cucumber Framework
+	cmake -S$BUILD_DIR -B$BUILD_DIR/build -DCMAKE_USE_OPENSSL=OFF
+
+	make --no-print-directory -C $BUILD_DIR/build install -j4
+
+	hash -r 
+	source ~/.bashrc
+fi
+
 
 if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_DOCUMENTATION" ]]; then
 info "Install Documentation Utilities"
@@ -231,27 +248,6 @@ fi
 if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_LIBRARY" ]]; then
 info "Add library directory"
 	ldconfig /usr/local/lib
-fi
-
-if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_CMAKE" ]]; then
-info "Install CMake"
-	BUILD_DIR=/tmp/cmake
-
-	# Checkout Repository
-	git clone https://github.com/Kitware/CMake.git $BUILD_DIR
-
-	# Build Cucumber Framework
-	cmake -S$BUILD_DIR -B$BUILD_DIR/build -DCMAKE_USE_OPENSSL=OFF
-
-	make --no-print-directory -C $BUILD_DIR/build install -j4
-
-	hash -r 
-	source ~/.bashrc
-
-	echo $(which cmake)
-	echo $(cmake version)
-
-
 fi
 
 if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_KERNEL" ]]; then
