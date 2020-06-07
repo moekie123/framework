@@ -95,58 +95,7 @@ info "Modify users"
 	fi
 fi
 
-# Update Platfrom Enviroment
-if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_DEPENDENCIES" ]]; then
-info "Update Dependencies"
-	DEBIAN_FRONTEND=noninteractive apt-get update 
-	DEBIAN_FRONTEND=noninteractive apt-get upgrade 
-fi
-
-if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_TOOLKIT" ]]; then
-# Platfrom independend toolkit
-info "Install Development Toolkit"
-	$INSTALL gcc g++ python universal-ctags build-essential 
-
-# Raspberry pi specifics
-info "Install I2C Toolkit"
-	$INSTALL i2c-tools 
-fi
-
-if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_DOCUMENTATION" ]]; then
-info "Install Documentation Utilities"
-	$INSTALL doxygen graphviz apache2 
-fi
-
-if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_BOOST" ]]; then
-info "Install Boost"
-	$INSTALL libboost-all-dev --fix-missing 
-fi
-
-if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_GIT" ]]; then
-info "Install Git"
-	$INSTALL git 
-	git config --global user.name "$USERNAME"
-	git config --global user.email "$USERNAME"
-	git config --global core.editor "vim"
-fi
-
-if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_CMAKE" ]]; then
-info "Install CMake"
-	BUILD_DIR=/tmp/cmake
-
-	# Use CMake to install CMake (instead of bootstrap)
-	$INSTALL cmake 
-
-	# Checkout Repository
-	git clone https://github.com/Kitware/CMake.git $BUILD_DIR
-
-	# Build Cucumber Framework
-	cmake -S$BUILD_DIR -B$BUILD_DIR/build -DCMAKE_USE_OPENSSL=OFF
-
-	make --no-print-directory -C $BUILD_DIR/build install -j4
-fi
-
-
+# Install Bash Enviroment
 if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_BASH" ]]; then
 info "Configure Enviroment"
 	# Copy the following files to the Home-dir
@@ -176,6 +125,41 @@ info "Link Vim-plugings"
 	if [ ! -d ~/.vim/pack ]; then
 		ln -s $RPIENV/vim-plugin/pack ~/.vim/ 
 	fi
+fi
+
+# Update Platfrom Enviroment
+if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_DEPENDENCIES" ]]; then
+info "Update Dependencies"
+	DEBIAN_FRONTEND=noninteractive apt-get update 
+	DEBIAN_FRONTEND=noninteractive apt-get upgrade 
+fi
+
+if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_TOOLKIT" ]]; then
+# Platfrom independend toolkit
+info "Install Development Toolkit"
+	$INSTALL gcc g++ python universal-ctags build-essential cmake 
+
+# Raspberry pi specifics
+info "Install I2C Toolkit"
+	$INSTALL i2c-tools 
+fi
+
+if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_DOCUMENTATION" ]]; then
+info "Install Documentation Utilities"
+	$INSTALL doxygen graphviz apache2 
+fi
+
+if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_BOOST" ]]; then
+info "Install Boost"
+	$INSTALL libboost-all-dev --fix-missing 
+fi
+
+if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_GIT" ]]; then
+info "Install Git"
+	$INSTALL git 
+	git config --global user.name "$USERNAME"
+	git config --global user.email "$USERNAME"
+	git config --global core.editor "vim"
 fi
 
 if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_TEST" ]]; then
@@ -245,6 +229,19 @@ if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_KERNEL" ]]; then
 info "Install Kernel Toolkit"
 	$INSTALL bc bison flex libssl-dev 
 	$INSTALL libncurses5-dev 
+
+if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_CMAKE" ]]; then
+info "Install CMake"
+	BUILD_DIR=/tmp/cmake
+
+	# Checkout Repository
+	git clone https://github.com/Kitware/CMake.git $BUILD_DIR
+
+	# Build Cucumber Framework
+	cmake -S$BUILD_DIR -B$BUILD_DIR/build -DCMAKE_USE_OPENSSL=OFF
+
+	make --no-print-directory -C $BUILD_DIR/build install -j4
+fi
 
 info "Install Kernel Enviroment"
 	KERNEL_DEST=/usr/src/
