@@ -105,7 +105,7 @@ fi
 if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_TOOLKIT" ]]; then
 # Platfrom independend toolkit
 info "Install Development Toolkit"
-	$INSTALL gcc g++ vim python universal-ctags build-essential 
+	$INSTALL gcc g++ python universal-ctags build-essential 
 
 # Raspberry pi specifics
 info "Install I2C Toolkit"
@@ -141,9 +141,9 @@ info "Install CMake"
 	git clone https://github.com/Kitware/CMake.git $BUILD_DIR
 
 	# Build Cucumber Framework
-	cmake -S$BUILD_DIR -B$BUILD_DIR/build -DBUILD_SHARED_LIBS=ON
+	cmake -S$BUILD_DIR -B$BUILD_DIR/build -DCMAKE_USE_OPENSSL=OFF
 
-	make -C $BUILD_DIR/build install -j4
+	make --no-print-directory -C $BUILD_DIR/build install -j4
 fi
 
 
@@ -166,6 +166,9 @@ info "Configure Enviroment"
 	done
 
 info "Link Vim-plugings"
+	# Use CMake to install CMake (instead of bootstrap)
+	$INSTALL vim 
+
 	if [ ! -d ~/.vim/ ]; then
 		mkdir ~/.vim
 	fi
@@ -188,7 +191,7 @@ info "Install TDD Framework (GTest)"
 	# Build Gtest Framework
 	cmake -S$BUILD_DIR -B$BUILD_DIR/build -DBUILD_SHARED_LIBS=ON
 	
-	make -C $BUILD_DIR/build install -j4
+	make  --no-print-directory -C $BUILD_DIR/build install -j4
 
 	# Copy the files to the shared directories
 	cp -r $BUILD_DIR/googlemock/include/gmock/ /usr/local/include/
@@ -207,7 +210,7 @@ info "Install BDD Framework (Cucumber)"
 	# Build Cucumber Framework
 	cmake -S$BUILD_DIR -B$BUILD_DIR/build -DBUILD_SHARED_LIBS=ON
 
-	make -C $BUILD_DIR/build install -j4
+	make  --no-print-directory -C $BUILD_DIR/build install -j4
 fi
 
 if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_MQTT" ]]; then
@@ -220,7 +223,7 @@ info "MQTT-broker"
 	# Build Cucumber Framework
 	cmake -S$BUILD_DIR -B$BUILD_DIR/build -DDOCUMENTATION=OFF -DBUILD_SHARED_LIBS=ON
 
-	make -C $BUILD_DIR/build install -j4
+	make  --no-print-directory -C $BUILD_DIR/build install -j4
 
 	ldconfig
 
@@ -245,9 +248,10 @@ info "Install Kernel Toolkit"
 
 info "Install Kernel Enviroment"
 	KERNEL_DEST=/usr/src/
+
 	# Checkout Repository
-	if [ -f $KERNEL_DEST  ]; then
-		git clone --depth=1 https://github.com/raspberrypi/linux $KERNEL_DEST
+	if [ -d $KERNEL_DEST  ]; then
+		git clone --depth=1 https://github.com/raspberrypi/linux $KERNEL_DEST/linux
 	fi
 
 	# Copy Shortcut script to kernel enviroment
