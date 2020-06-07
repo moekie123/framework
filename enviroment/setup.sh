@@ -130,8 +130,8 @@ fi
 # Update Platfrom Enviroment
 if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_DEPENDENCIES" ]]; then
 info "Update Dependencies"
-	DEBIAN_FRONTEND=noninteractive apt-get update 
-	DEBIAN_FRONTEND=noninteractive apt-get upgrade 
+	DEBIAN_FRONTEND=noninteractive apt-get update -y 
+	DEBIAN_FRONTEND=noninteractive apt-get upgrade -y
 fi
 
 if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_TOOLKIT" ]]; then
