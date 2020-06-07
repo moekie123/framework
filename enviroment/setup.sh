@@ -245,8 +245,12 @@ info "Install CMake"
 
 	make --no-print-directory -C $BUILD_DIR/build install -j4
 
+	hash -r 
 	source ~/.bashrc
+
 	echo $(which cmake)
+	echo $(cmake version)
+
 
 fi
 
