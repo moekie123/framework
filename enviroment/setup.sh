@@ -8,6 +8,8 @@ while getopts ":fuidbgcetkmh" opt; do
 			INSTALLATION+=('INSTALL_USERS')	;;
 		u)
 			INSTALLATION+=('INSTALL_DEPENDENCIES')	;;
+		e)
+			INSTALLATION+=('INSTALL_BASH') ;;
 		i)
 			INSTALLATION+=('INSTALL_TOOLKIT') ;;
 		d)
@@ -16,17 +18,23 @@ while getopts ":fuidbgcetkmh" opt; do
 			INSTALLATION+=('INSTALL_BOOST') ;;
 		g)
 			INSTALLATION+=('INSTALL_GIT') ;;
+		k)
+			INSTALLATION+=('INSTALL_KERNEL') ;;
 		c)
-			INSTALLATION+=('INSTALL_CMAKE') ;;
-		e)
-			INSTALLATION+=('INSTALL_BASH') ;;
+			INSTALLATION+=('INSTALL_DEPENDENCIES')
+			INSTALLATION+=('INSTALL_TOOLKIT')
+			INSTALLATION+=('INSTALL_CMAKE')
+			;;
 		t)
+			INSTALLATION+=('INSTALL_DEPENDENCIES')
+			INSTALLATION+=('INSTALL_TOOLKIT')
 			INSTALLATION+=('INSTALL_TEST') 
 			INSTALLATION+=('INSTALL_LIBRARY')
 			;; 
-		k)
-			INSTALLATION+=('INSTALL_KERNEL') ;;
 		m)
+			INSTALLATION+=('INSTALL_DEPENDENCIES')
+			INSTALLATION+=('INSTALL_TOOLKIT')
+			
 			INSTALLATION+=('INSTALL_MQTT')
 			INSTALLATION+=('INSTALL_LIBRARY') 
 			;;
@@ -225,11 +233,6 @@ info "Add library directory"
 	ldconfig /usr/local/lib
 fi
 
-if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_KERNEL" ]]; then
-info "Install Kernel Toolkit"
-	$INSTALL bc bison flex libssl-dev 
-	$INSTALL libncurses5-dev 
-
 if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_CMAKE" ]]; then
 info "Install CMake"
 	BUILD_DIR=/tmp/cmake
@@ -241,7 +244,16 @@ info "Install CMake"
 	cmake -S$BUILD_DIR -B$BUILD_DIR/build -DCMAKE_USE_OPENSSL=OFF
 
 	make --no-print-directory -C $BUILD_DIR/build install -j4
+
+	source ~/.bashrc
+	echo $(which cmake)
+
 fi
+
+if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_KERNEL" ]]; then
+info "Install Kernel Toolkit"
+	$INSTALL bc bison flex libssl-dev 
+	$INSTALL libncurses5-dev 
 
 info "Install Kernel Enviroment"
 	KERNEL_DEST=/usr/src/
