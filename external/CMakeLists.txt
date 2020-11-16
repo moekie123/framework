@@ -38,13 +38,13 @@ include(ExternalProject)
                 GIT_TAG master
                 GIT_PROGRESS ON
 
-                UPDATE_DISCONNECTED ON
+                UPDATE_DISCONNECTED OFF
+
+		INSTALL_COMMAND cmake -E copy ${CMAKE_SOURCE_DIR}/config/mosquitto.conf /usr/local/etc/mosquitto
 
                 DOWNLOAD_DIR    "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
                 SOURCE_DIR      "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
                 BINARY_DIR      "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
-
-# COPY THE CORRECT CONFIG FILES #
                 INSTALL_DIR     "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
 
                 TMP_DIR         "${EXTERNAL_TMP_DIR}/${EXTERNAL_PROJECT_NAME}"
@@ -55,7 +55,7 @@ include(ExternalProject)
         )
 
 	ExternalProject_Add_Step( ${EXTERNAL_PROJECT_NAME} link
-                ALWAYS FALSE
+                ALWAYS TRUE
                 DEPENDEES "install"
                 COMMENT "Link Dynamic Libraries"
                 COMMAND ldconfig )
@@ -120,7 +120,7 @@ include(ExternalProject)
 		GIT_REPOSITORY https://github.com/digint/tinyfsm
 		GIT_TAG master
 
-                UPDATE_DISCONNECTED OFF
+                UPDATE_DISCONNECTED ON
 
 		UPDATE_COMMAND ""
 		CONFIGURE_COMMAND ""
@@ -152,7 +152,7 @@ include(ExternalProject)
 		GIT_TAG "v1.6.0"
                 GIT_PROGRESS ON
 
-                UPDATE_DISCONNECTED OFF
+                UPDATE_DISCONNECTED ON
 
                 DOWNLOAD_DIR    "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
                 SOURCE_DIR      "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
