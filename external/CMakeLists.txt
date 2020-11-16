@@ -38,7 +38,7 @@ include(ExternalProject)
                 GIT_TAG master
                 GIT_PROGRESS ON
 
-                UPDATE_DISCONNECTED OFF
+                UPDATE_DISCONNECTED ON
 
 		INSTALL_COMMAND cmake -E copy ${CMAKE_SOURCE_DIR}/config/mosquitto.conf /usr/local/etc/mosquitto
 
