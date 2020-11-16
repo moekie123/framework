@@ -24,6 +24,9 @@ else()
         message( STATUS "Project Build as Cross Compiler" )
 endif()
 
+###############################################################################
+###                         Configure the Compiler                          ###
+###############################################################################
 
 # Setup Enviroment
 message( "Configure Compiler" )
@@ -39,7 +42,9 @@ set( CMAKE_INSTALL_OUTPUT_DIRECTORY /opt/framework/ )
 SET( CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -g3 -Wno-psabi" )
 set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CMAKE_COMMAND} -E time")
 
-return()
+###############################################################################
+###                       Download External Projects                        ###
+###############################################################################
 
 # Include external dependencies
 set( ALL_EXTERNALS_BUILD OFF )
@@ -48,12 +53,26 @@ if( NOT ${ALL_EXTERNALS_BUILD} )
 	return()
 endif()
 
+return()
+
+###############################################################################
+###                         Configure Coding Tools                          ###
+###############################################################################
+
+# Validate Source
+message( "Check source code" )
+#set(CMAKE_CXX_CPPCHECK "cppcheck")
+
 # Setup CTags
 message( "Configure CTags" )
 set_source_files_properties( tags PROPERTIES GENERATED true)
 add_custom_target ( tags ALL
 	COMMAND ctags -f tags -R --c++-kinds=+p --fields=+iaS --extras=+q ${CMAKE_CURRENT_SOURCE_DIR} 
     	WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} )
+
+###############################################################################
+###                      Configure Test Enviroment                          ###
+###############################################################################
 
 # Build Test Enviroment
 message( "Configure Test Enviroment" )
@@ -66,9 +85,9 @@ function( gsetup gtest-name )
 endfunction()
 include( CTest )
 
-# Validate Source
-message( "Check source code" )
-#set(CMAKE_CXX_CPPCHECK "cppcheck")
+###############################################################################
+###                           Build the Framework                           ###
+###############################################################################
 
 # Build Enviroment
 message( "Setup the directory tree" )
@@ -79,10 +98,17 @@ add_subdirectory( prototype )
 # Include drivers
 add_subdirectory( drivers )
 
+###############################################################################
+###                         Build Behaviour Test                            ###
+###############################################################################
+
 message( "Configure Cucumber Enviroment" )
 add_subdirectory( features )
 
-# Build Project
+###############################################################################
+###                         Build Application                               ###
+###############################################################################
+
 message( "Building Application" )
 
 # Collect Framework sources
@@ -100,6 +126,8 @@ add_dependencies( Application version )
 
 install( TARGETS Application DESTINATION ${CMAKE_INSTALL_OUTPUT_DIRECTORY} )
 
-# Documentation
+###############################################################################
+###                         Generate Documentation                          ###
+###############################################################################
 message( "Configure Documentation" )
 add_subdirectory( documentation )
