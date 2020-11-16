@@ -28,7 +28,6 @@ endif()
 ###                         Configure the Compiler                          ###
 ###############################################################################
 
-# Setup Enviroment
 message( "Configure Compiler" )
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -45,15 +44,7 @@ set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CMAKE_COMMAND} -E time")
 ###############################################################################
 ###                       Download External Projects                        ###
 ###############################################################################
-
-# Include external dependencies
-set( ALL_EXTERNALS_BUILD OFF )
 add_subdirectory( external )
-if( NOT ${ALL_EXTERNALS_BUILD} )
-	return()
-endif()
-
-return()
 
 ###############################################################################
 ###                         Configure Coding Tools                          ###

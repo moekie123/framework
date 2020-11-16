@@ -1,19 +1,8 @@
 message( "Download External Dependencies" )
 
-find_package(PkgConfig)
 include(ExternalProject)
 
-set( ALL_EXTERNALS_BUILD ON PARENT_SCOPE )
-
-add_subdirectory( tmp )
-# CMake trick, modify the CMakeLists.txt to force a project rebuild
-add_custom_target( REBUILD
-	COMMENT "----------------- [Force a rebuild after download ] ---------------------"
-	COMMAND echo "" >> ${CMAKE_CURRENT_SOURCE_DIR}/tmp/CMakeLists.txt )
-
 # Instal the Google Test Framework
-pkg_search_module( GTEST gtest_main )
-if( NOT GTEST_FOUND )
 	set( ALL_EXTERNALS_BUILD OFF PARENT_SCOPE )
 
 	#Install the googletest framework
@@ -29,14 +18,7 @@ if( NOT GTEST_FOUND )
 		COMMENT "refresh shared library cache" 
 		COMMAND ldconfig )
 
-	add_dependencies( EXTERNAL_GTEST  REBUILD )
-else()
-	message( STATUS "Google Test [${GTEST_VERSION}] already installed" )
-endif()
-
 # Install the mosquitto library
-pkg_search_module( MOSQUITTO REQUIRED libmosquitto )
-if( NOT MOSQUITTO_FOUND )
 	set( ALL_EXTERNALS_BUILD OFF PARENT_SCOPE )
 
 	ExternalProject_Add( EXTERNAL_MQTT
@@ -51,14 +33,7 @@ if( NOT MOSQUITTO_FOUND )
 		COMMENT "refresh shared library cache" 
 		COMMAND ldconfig )
 
-	add_dependencies( EXTERNAL_MQTT REBUILD )
-else()
-	message( STATUS "Mosquitto [${MOSQUITTO_VERSION}] already installed" )
-endif()
-
 # Install the tinyxml library
-pkg_search_module( TINYXML2 REQUIRED tinyxml2 )
-if( NOT TINYXML2_FOUND )
 	set( ALL_EXTERNALS_BUILD OFF PARENT_SCOPE )
 
 	ExternalProject_Add( EXTERNAL_XML
@@ -72,14 +47,7 @@ if( NOT TINYXML2_FOUND )
 		COMMENT "refresh shared library cache" 
 		COMMAND ldconfig )
 
-	add_dependencies( EXTERNAL_XML REBUILD )
-else()
-	message( STATUS "TinyXml2 [${TINYXML2_VERSION}] already installed" )
-endif()
-
 # Install the rapid json library
-pkg_search_module( RAPIDJSON REQUIRED RapidJSON )
-if( NOT RAPIDJSON_FOUND )
 	set( ALL_EXTERNALS_BUILD OFF PARENT_SCOPE )
 
 	ExternalProject_Add( EXTERNAL_JSON
@@ -93,18 +61,13 @@ if( NOT RAPIDJSON_FOUND )
 		COMMENT "refresh shared library cache" 
 		COMMAND ldconfig )
 
-	add_dependencies( EXTERNAL_JSON REBUILD )
-else()
-	message( STATUS "RapidJson [${RAPIDJSON_VERSION}] already installed" )
-endif()
-
 # Install the tinyfsm library
-IF( NOT EXISTS ${CMAKE_SOURCE_DIR}/external/tinyfsm )
-	set( ALL_EXTERNALS_BUILD OFF PARENT_SCOPE )
-
 	ExternalProject_Add( EXTERNAL_FSM
 		PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/tinyfsm
+	
 		GIT_REPOSITORY https://github.com/digint/tinyfsm
+		GIT_TAG master
+
 		UPDATE_COMMAND ""
 		CONFIGURE_COMMAND ""
 		BUILD_COMMAND ""
@@ -128,18 +91,13 @@ IF( NOT EXISTS ${CMAKE_SOURCE_DIR}/external/tinyfsm )
     		INSTALL_DESTINATION lib/cmake/tinyfsm
 	)
 
+	message( STATUS "CATCH 22 - INSTAL REQUIRED !!!!!!! , but build fails before, because it is missing the install" )
 	# Copy the files to the installion directories
-	install(FILES "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/cmake/tinyfsm.cmake" DESTINATION /lib/cmake/tinyfsm )
-	install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tinyfsm/src/EXTERNAL_FSM/include/  DESTINATION /usr/local/include )
+#	install(FILES "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/cmake/tinyfsm.cmake" DESTINATION /lib/cmake/tinyfsm )
+	install( DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tinyfsm/src/EXTERNAL_FSM/include/  DESTINATION /usr/local/include )
 
-	add_dependencies( EXTERNAL_FSM REBUILD )
-else()
-	message( STATUS "TinyFsm already installed" )
-endif()
 
 # Instal Speed Logger
-pkg_search_module( LOGGER spdlog )
-if( NOT LOGGER_FOUND )
 	set( ALL_EXTERNALS_BUILD OFF PARENT_SCOPE )
 
 	#Install speed logger 
@@ -156,10 +114,7 @@ if( NOT LOGGER_FOUND )
 		COMMENT "refresh shared library cache" 
 		COMMAND ldconfig )
 
-	add_dependencies( EXTERNAL_LOGGER REBUILD )
-else()
-	message( STATUS "Speed Logger [${LOGGER_VERSION}] already installed" )
-endif()
+message( FATAL "Version Generator Can not be build anymore" )
 
 # Instal Version Generator
 IF( NOT EXISTS ${CMAKE_SOURCE_DIR}/external/version/generate.c )
