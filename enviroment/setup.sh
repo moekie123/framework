@@ -107,7 +107,7 @@ fi
 if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_BASH" ]]; then
 info "Configure Enviroment"
 	# Copy the following files to the Home-dir
-	files=( ".bash_profile" ".vimrc" ".gdbinit" )
+	files=( ".bash_profile" ".vimrc" ".gdbinit" ".git.template" )
 
 	for FILE in "${files[@]}"
 	do
@@ -185,6 +185,8 @@ info "Install Git"
 	git config --global user.name "$USERNAME"
 	git config --global user.email "$USERNAME"
 	git config --global core.editor "vim"
+
+        git config commit.template ~/.git.template
 fi
 
 if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_TEST" ]]; then
