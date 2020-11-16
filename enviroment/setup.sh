@@ -1,172 +1,271 @@
 #!/bin/bash
 
+INSTALLATION=()
+
+while getopts ":fuidbgcetkmh" opt; do
+	case ${opt} in
+		f)
+			INSTALLATION+=('INSTALL_USERS')	;;
+		u)
+			INSTALLATION+=('INSTALL_DEPENDENCIES')	;;
+		e)
+			INSTALLATION+=('INSTALL_BASH') ;;
+		i)
+			INSTALLATION+=('INSTALL_TOOLKIT') ;;
+		d)
+			INSTALLATION+=('INSTALL_DOCUMENTATION') ;;
+		b)
+			INSTALLATION+=('INSTALL_BOOST') ;;
+		g)
+			INSTALLATION+=('INSTALL_GIT') ;;
+		k)
+			INSTALLATION+=('INSTALL_KERNEL') ;;
+		c)
+			INSTALLATION+=('INSTALL_DEPENDENCIES')
+			INSTALLATION+=('INSTALL_TOOLKIT')
+			INSTALLATION+=('INSTALL_CMAKE')
+			;;
+		t)
+			INSTALLATION+=('INSTALL_DEPENDENCIES')
+			INSTALLATION+=('INSTALL_TOOLKIT')
+			INSTALLATION+=('INSTALL_TEST') 
+			INSTALLATION+=('INSTALL_LIBRARY')
+			;; 
+		m)
+			INSTALLATION+=('INSTALL_DEPENDENCIES')
+			INSTALLATION+=('INSTALL_TOOLKIT')
+			
+			INSTALLATION+=('INSTALL_MQTT')
+			INSTALLATION+=('INSTALL_LIBRARY') 
+			;;
+		h )
+			echo "Usage:"
+			echo "    setup -f		Install and configure the users"
+			echo "    setup -u		Update and Upgrade enviroment"
+			echo "    setup -i		Install toolkit"
+			echo "    setup -d		Install Documentation tools"
+			echo "    setup -b		Install Boost"
+			echo "    setup -g		Install and configure Git"
+			echo "    setup -c		Install CMake"
+			echo "    setup -e		Install Enviroment Bash-scripts"
+			echo "    setup -t		Install Test Enviroment (gtest, cucumber, ccpcheck)"
+			echo "    setup -k		Install (RPI-) Kernel Enviroment"
+			echo "    setup -m		Install Mosquitto"
+			exit 0
+			;;
+		\? )
+			echo "Invalid Option: -$OPTARG" 1>&2
+			exit 1
+			;;
+  	esac
+done
+
+if [ "$#" -ne 0 ] ; then
+	printf '%s\n' "${INSTALLATION[@]}"
+fi
+
 USERNAME="rsalm"
 PASSWORD="rsalm"
 
-RPIENV= $(pwd)
-FORCE= --allow-unauthenticated --allow-downgrades --allow-remove-essential --allow-change-held-packages
+RPIENV=$(pwd)
+INSTALL='apt-get install --yes --allow-unauthenticated --allow-downgrades --allow-remove-essential --allow-change-held-packages'
 
-echo "Start Setup Development Environment Script"
-	cd $HOME
+function info
+{
+	echo -e "\e[34m $1 \e[0m"
+}
 
-echo "Modify users"
+function error
+{
+	echo -e "\e[31m $1 \e[0m"
+}
+
+info "Start Setup Development Environment Script"
+
+if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_USERS" ]]; then
+info "Modify users"
+	# Assuming this script is executed as root	
 
 	# Change Root Password	
-	echo  $PASSWORD":root" | sudo chpasswd
+	echo  $PASSWORD":root" | chpasswd
 
-	id -u $USERNAME
-	if [ $? -eq 0 ]; then
-		# Create new user
-		sudo adduser $USERNAME --gecos "-,-,-,-" --disabled-password
-		echo $PASSWORD":"$USERNAME | sudo chpasswd
+	# Create new user
+	id -u $USERNAME &> /dev/null
+	if [ $? -ne 0 ]; then
+		adduser $USERNAME --gecos "-,-,-,-" --disabled-password
+		echo "$PASSWORD:$USERNAME" | chpasswd
 	fi
 
-	id -u pi
-	if [ $? -eq 0 ]; then
-		# Remote Default User
+	# Remove default user
+	id -u pi &> /dev/null
+	if [ $? -ne 1 ]; then
 		userdel pi
 	fi
+fi
 
-echo "Update Dependencies"
-	apt-get update
-	apt-get upgrade
+# Install Bash Enviroment
+if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_BASH" ]]; then
+info "Configure Enviroment"
+	# Copy the following files to the Home-dir
+	files=( ".bash_profile" ".vimrc" ".gdbinit" )
 
-echo "Install Development Toolkit"
-	apt-get install gcc g++ cmake git vim python universal-ctags $FORCE
+	for FILE in "${files[@]}"
+	do
+		ABS="$HOME/"$FILE
+		echo $ABS
 
-echo "Install Git"
-	apt-get install git $FORCE
+		if [ -f $ABS ]; then
+			error "- $FILE already exist"
+		else
+			echo "- Copy $FILE to home directory"
+			ln -s $RPIENV/$FILE $ABS
+		fi
+	done
 
-	git config --global user.name $USERNAME
-	git config --global core.editor vim
+info "Link Vim-plugings"
+	# Use CMake to install CMake (instead of bootstrap)
+	$INSTALL vim 
 
-	git config commit.template $(pwd)/git-template
-
-echo "Install Kernel Toolkit"
-	apt-get install git bc bison flex libssl-dev $FORCE
-	apt-get install libncurses5-dev $FORCE
-
-echo "Install I2C Toolkit"
-	apt-get install -y i2c-tools $FORCE
-
-echo "Install Documentation Utilities"
-	apt-get install gcc g++ doxygen graphviz apache2 $FORCE
-	apt-get install clang-format $FORCE
-
-echo "Install Boost"
-	apt-get install libboost-all-dev --fix-missing $FORCE
-
-echo "Configure Enviroment"
-
-files=( ".bash_profile" ".vimrc", ".clang-format" )
-
-for FILE in "${files[@]}"
-do
-	ABS="$HOME/"$FILE
-	
-	if [ -f $ABS ]; then
-		echo -e "\e[31m $FILE already exist \e[0m"
-	else
-		echo "Copy $FILE to home directory"
-		ln -s $(pwd)/$FILE $ABS
+	if [ ! -d ~/.vim/ ]; then
+		mkdir ~/.vim
 	fi
-done
 
-echo "Link Vim-plugings"
-ln -s $(pwd)/vim-plugin/pack ~/.vim/pack 
+	if [ ! -d ~/.vim/pack ]; then
+		ln -s $RPIENV/vim-plugin/pack ~/.vim/ 
+	fi
+fi
 
-echo "MQTT-broker"
-	# install mosquitto broker, sub & pub
-	apt-get install mosquitto mosquitto-clients $FORCE
+# Update Platfrom Enviroment
+if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_DEPENDENCIES" ]]; then
+info "Update Dependencies"
+	DEBIAN_FRONTEND=noninteractive apt-get update -y 
+	DEBIAN_FRONTEND=noninteractive apt-get upgrade -y
+fi
 
-	# secure broker
-	mosquitto_passwd -b /etc/mosquitto/passwd $USERNAME $PASSWORD
+if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_TOOLKIT" ]]; then
+# Platfrom independend toolkit
+info "Install Development Toolkit"
+	$INSTALL gcc g++ python universal-ctags build-essential cmake 
+
+# Raspberry pi specifics
+#info "Install I2C Toolkit"
+#	$INSTALL i2c-tools 
+fi
+
+if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_CMAKE" ]]; then
+info "Install CMake"
+	BUILD_DIR=/tmp/cmake
+
+	# Checkout Repository
+	git clone https://github.com/Kitware/CMake.git $BUILD_DIR
+
+	# Build Cucumber Framework
+	cmake -S$BUILD_DIR -B$BUILD_DIR/build -DCMAKE_USE_OPENSSL=OFF
+
+	make --no-print-directory -C $BUILD_DIR/build install -j4
+
+	hash -r 
+	source ~/.bashrc
+fi
+
+
+if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_DOCUMENTATION" ]]; then
+info "Install Documentation Utilities"
+	$INSTALL doxygen graphviz apache2 
+fi
+
+if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_BOOST" ]]; then
+info "Install Boost"
+	$INSTALL libboost-all-dev --fix-missing 
+fi
+
+if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_GIT" ]]; then
+info "Install Git"
+	$INSTALL git 
+	git config --global user.name "$USERNAME"
+	git config --global user.email "$USERNAME"
+	git config --global core.editor "vim"
+fi
+
+if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_TEST" ]]; then
+info "Install Code Validator"
+	$INSTALL cppcheck 
+
+info "Install TDD Framework (GTest)"
+	BUILD_DIR=/tmp/gtest
+
+	# Checkout Repository
+	git clone https://github.com/google/googletest.git $BUILD_DIR
+
+	# Build Gtest Framework
+	cmake -S$BUILD_DIR -B$BUILD_DIR/build -DBUILD_SHARED_LIBS=ON
 	
+	make  --no-print-directory -C $BUILD_DIR/build install -j4
+
+	# Copy the files to the shared directories
+	cp -r $BUILD_DIR/googlemock/include/gmock/ /usr/local/include/
+	cp -r $BUILD_DIR/googletest/include/gtest/ /usr/local/include/
+	cp $BUILD_DIR/build/lib/libg* /usr/local/lib/
+
+	# Update Library		
+	ldconfig
+
+info "Install BDD Framework (Cucumber)"
+	BUILD_DIR=/tmp/cucumber
+
+	# Checkout Repository
+	git clone https://github.com/cucumber/cucumber-cpp.git $BUILD_DIR
+
+	# Build Cucumber Framework
+	cmake -S$BUILD_DIR -B$BUILD_DIR/build -DBUILD_SHARED_LIBS=ON
+
+	make  --no-print-directory -C $BUILD_DIR/build install -j4
+fi
+
+if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_MQTT" ]]; then
+info "MQTT-broker"
+	BUILD_DIR=/tmp/mosquitto
+
+	# Checkout Repository
+	git clone https://github.com/eclipse/mosquitto.git $BUILD_DIR
+
+	# Build Cucumber Framework
+	cmake -S$BUILD_DIR -B$BUILD_DIR/build -DDOCUMENTATION=OFF -DBUILD_SHARED_LIBS=ON
+
+	make  --no-print-directory -C $BUILD_DIR/build install -j4
+
+	ldconfig
+
 	# copy configuration files
-	cp config/etc/mosquitto/mosquitto.conf /etc/mosquitto/
-	cp config/etc/mosquitto/conf.d/default.conf /etc/mosquitto/conf.d/
+	cp config/etc/mosquitto/mosquitto.conf /usr/local/etc/mosquitto/
+	cp config/etc/systemd/system/mosquitto.service /etc/systemd/system
 
 	# configure start on boot service
 	systemctl daemon-reload
 	systemctl enable mosquitto.service
+fi
 
-echo "HomeBridge"
-	# setup repo
-	curl -sL https://deb.nodesource.com/setup_12.x | sudo bash -
+if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_LIBRARY" ]]; then
+info "Add library directory"
+	ldconfig /usr/local/lib
+fi
 
-	# install Node.js
-	apt-get install -y nodejs gcc g++ make python $FORCE
+if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_KERNEL" ]]; then
+info "Install Kernel Toolkit"
+	$INSTALL bc bison flex libssl-dev 
+	$INSTALL libncurses5-dev 
 
-	# test node is working
-	node -v
+info "Install Kernel Enviroment"
+	KERNEL_DEST=/usr/src/
 
-	# upgrade npm (version 6.13.4 has issues with git dependencies)
-	npm install -g npm
-
-	# instasl homebridge
-	npm install -g --unsafe-perm homebridge
-
-	# copy configuration files
-	cp config/var/lib/homebridge/config.json /var/lib/homebridge/
-	cp config/etc/default/homebridge /etc/default/
-	cp config/etc/systemd/system/homebridge.service /etc/systemd/system/
-	
-	# configure start on boot service
-	systemctl daemon-reload
-	systemctl enable homebridge.service
-
-echo "Install Code Validator"
-	apt-get install cppcheck $FORCE
-
-echo "Install TDD Framework (GTest)"
-
-	echo "GTest will be installed through CMake"
 	# Checkout Repository
-#	git clone https://github.com/google/googletest.git
-#	cd googletest
+	if [ -d $KERNEL_DEST  ]; then
+		git clone --depth=1 https://github.com/raspberrypi/linux $KERNEL_DEST/linux
+	fi
 
-	# Build Gtest Framework
-#	cmake -DBUILD_SHARED_LIBS=ON .
-#	make
+	# Copy Shortcut script to kernel enviroment
+	cp -r $RPIENV/linux $KERNEL_DEST
+fi
 
-	# Copy the files to the shared directories
-#	cp -r googlemock/include/gmock/ /usr/include/
-#	cp -r googletest/include/gtest/ /usr/include/
-#	cp lib/libg* /usr/lib/
-		
-	# Verify gtest is installed
-#	ldconfig -v |grep gtest
+info "Finished Setup Development Environment Script"
 
-echo "Install BDD Framework (Cucumber)"
-	apt-get install cucumber
-	
-	# Checkout Repository
-	git clone https://github.com/cucumber/cucumber-cpp.git
-	cd cucumber-cpp
-
-	# Build Cucumber Framework
-	cmake -E make_directory build
-
-	cmake -E chdir build cmake -DBUILD_SHARED_LIBS -DCUKE_ENABLE_EXAMPLES=on -DCMAKE_INSTALL_PREFIX=${prefix} ..
-
-	cmake --build build
-	
-	#cmake --build build --target test
-
-	cmake --build build --target install
-	
-	# Copy the files to the shared directories
-	cp -r include /usr/include/
-	cp -r build/src/cucumber-cpp/ /usr/include/
-	cp -r build/src/*.so /usr/lib/
-	
-echo "Install Kernel Enviroment"
-	cd /usr/src/
-
-	# Checkouot Repository
-	git clone --depth=1 https://github.com/raspberrypi/linux	
-	
-	cd /usr/src/linux
-	cp $RPIENV/linux/* .
-
-echo "Finished Setup Development Environment Script"
