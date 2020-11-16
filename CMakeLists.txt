@@ -9,6 +9,22 @@ set(VERSION_PATCH   0)
 set(VERSION_META "-alpha")
 mark_as_advanced(VERSION_MAJOR VERSION_MINOR VERSION_PATCH)
 
+###############################################################################
+###                          Verify the Hardware                            ###
+###############################################################################
+set( RPI_HARDWARE FALSE )
+
+if( $ENV{HARDWARE} STREQUAL "RaspberryPi" )
+	set( RPI_HARDWARE TRUE )
+endif()
+
+if( $RPI_HARDWARE )
+        message( STATUS "Project Build as Raspberry Pi Project" )
+else()
+        message( STATUS "Project Build as Cross Compiler" )
+endif()
+
+
 # Setup Enviroment
 message( "Configure Compiler" )
 set(CMAKE_CXX_STANDARD 17)
@@ -22,6 +38,8 @@ set( CMAKE_INSTALL_OUTPUT_DIRECTORY /opt/framework/ )
 # Add addional build flags
 SET( CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -g3 -Wno-psabi" )
 set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CMAKE_COMMAND} -E time")
+
+return()
 
 # Include external dependencies
 set( ALL_EXTERNALS_BUILD OFF )
