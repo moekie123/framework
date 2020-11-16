@@ -3,165 +3,216 @@ message( "Download External Dependencies" )
 include(ExternalProject)
 
 # Instal the Google Test Framework
-	set( ALL_EXTERNALS_BUILD OFF PARENT_SCOPE )
+        set( EXTERNAL_PROJECT_NAME ext_googletest )
 
-	#Install the googletest framework
-	ExternalProject_Add( EXTERNAL_GTEST
-		PREFIX ${CMAKE_SOURCE_DIR}/external/googletest
-		CMAKE_ARGS "-DBUILD_SHARED_LIBS=ON"
-		GIT_REPOSITORY https://github.com/google/googletest
+        ExternalProject_Add( ${EXTERNAL_PROJECT_NAME}
+                GIT_REPOSITORY https://github.com/google/googletest
+                GIT_TAG master
+                GIT_PROGRESS ON
+
+                UPDATE_DISCONNECTED ON
+
+                DOWNLOAD_DIR    "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
+                SOURCE_DIR      "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
+                BINARY_DIR      "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
+                INSTALL_DIR     "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
+
+                TMP_DIR         "${EXTERNAL_TMP_DIR}/${EXTERNAL_PROJECT_NAME}"
+                STAMP_DIR       "${EXTERNAL_STAMP_DIR}/${EXTERNAL_PROJECT_NAME}"
+                LOG_DIR         "${EXTERNAL_LOG_DIR}/${EXTERNAL_PROJECT_NAME}"
+
+                CMAKE_ARGS "-DBUILD_SHARED_LIBS=ON"
+        )
+
+        ExternalProject_Add_Step( ${EXTERNAL_PROJECT_NAME} link
+                ALWAYS FALSE
+                DEPENDEES "install"
+                COMMENT "Link Dynamic Libraries"
+                COMMAND ldconfig )
+
+# Instal the Mosquitto Library
+        set( EXTERNAL_PROJECT_NAME ext_mosquitto )
+
+        ExternalProject_Add( ${EXTERNAL_PROJECT_NAME}
+                GIT_REPOSITORY  https://github.com/eclipse/mosquitto.git
+                GIT_TAG master
+                GIT_PROGRESS ON
+
+                UPDATE_DISCONNECTED ON
+
+                DOWNLOAD_DIR    "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
+                SOURCE_DIR      "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
+                BINARY_DIR      "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
+
+# COPY THE CORRECT CONFIG FILES #
+                INSTALL_DIR     "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
+
+                TMP_DIR         "${EXTERNAL_TMP_DIR}/${EXTERNAL_PROJECT_NAME}"
+                STAMP_DIR       "${EXTERNAL_STAMP_DIR}/${EXTERNAL_PROJECT_NAME}"
+                LOG_DIR         "${EXTERNAL_LOG_DIR}/${EXTERNAL_PROJECT_NAME}"
+
+                CMAKE_ARGS "-DDOCUMENTATION=OFF"
+        )
+
+	ExternalProject_Add_Step( ${EXTERNAL_PROJECT_NAME} link
+                ALWAYS FALSE
+                DEPENDEES "install"
+                COMMENT "Link Dynamic Libraries"
+                COMMAND ldconfig )
+
+
+# Instal the TinyXML Library
+        set( EXTERNAL_PROJECT_NAME ext_tinyxml2 )
+
+        ExternalProject_Add( ${EXTERNAL_PROJECT_NAME}
+                GIT_REPOSITORY  https://github.com/leethomason/tinyxml2.git
+                GIT_TAG master
+                GIT_PROGRESS ON
+
+                UPDATE_DISCONNECTED ON
+
+                DOWNLOAD_DIR    "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
+                SOURCE_DIR      "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
+                BINARY_DIR      "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
+                INSTALL_DIR     "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
+
+                TMP_DIR         "${EXTERNAL_TMP_DIR}/${EXTERNAL_PROJECT_NAME}"
+                STAMP_DIR       "${EXTERNAL_STAMP_DIR}/${EXTERNAL_PROJECT_NAME}"
+                LOG_DIR         "${EXTERNAL_LOG_DIR}/${EXTERNAL_PROJECT_NAME}"
 	)
 
-	ExternalProject_Add_Step( EXTERNAL_GTEST refresh
-		ALWAYS TRUE
-		DEPENDEES "install"
-		COMMENT "refresh shared library cache" 
-		COMMAND ldconfig )
+	ExternalProject_Add_Step( ${EXTERNAL_PROJECT_NAME} link
+                ALWAYS FALSE
+                DEPENDEES "install"
+                COMMENT "Link Dynamic Libraries"
+                COMMAND ldconfig )
 
-# Install the mosquitto library
-	set( ALL_EXTERNALS_BUILD OFF PARENT_SCOPE )
+# Instal the RapidJson Library
+        set( EXTERNAL_PROJECT_NAME ext_rapidjson )
 
-	ExternalProject_Add( EXTERNAL_MQTT
-		PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/mosquitto
-		CMAKE_ARGS "-DDOCUMENTATION=OFF"
-		GIT_REPOSITORY  https://github.com/eclipse/mosquitto.git
-	)
+        ExternalProject_Add( ${EXTERNAL_PROJECT_NAME}
+                GIT_REPOSITORY https://github.com/Tencent/rapidjson.git
+                GIT_TAG master
+                GIT_PROGRESS ON
 
-	ExternalProject_Add_Step( EXTERNAL_MQTT refresh
-		ALWAYS TRUE
-		DEPENDEES "install"
-		COMMENT "refresh shared library cache" 
-		COMMAND ldconfig )
+                UPDATE_DISCONNECTED ON
 
-# Install the tinyxml library
-	set( ALL_EXTERNALS_BUILD OFF PARENT_SCOPE )
+                DOWNLOAD_DIR    "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
+                SOURCE_DIR      "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
+                BINARY_DIR      "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
+                INSTALL_DIR     "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
 
-	ExternalProject_Add( EXTERNAL_XML
-		PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/tinyxml2
-		GIT_REPOSITORY  https://github.com/leethomason/tinyxml2.git
-	)
+                TMP_DIR         "${EXTERNAL_TMP_DIR}/${EXTERNAL_PROJECT_NAME}"
+                STAMP_DIR       "${EXTERNAL_STAMP_DIR}/${EXTERNAL_PROJECT_NAME}"
+                LOG_DIR         "${EXTERNAL_LOG_DIR}/${EXTERNAL_PROJECT_NAME}"
+        )
 
-	ExternalProject_Add_Step( EXTERNAL_XML refresh
-		ALWAYS TRUE
-		DEPENDEES "install"
-		COMMENT "refresh shared library cache" 
-		COMMAND ldconfig )
-
-# Install the rapid json library
-	set( ALL_EXTERNALS_BUILD OFF PARENT_SCOPE )
-
-	ExternalProject_Add( EXTERNAL_JSON
-		PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/rapidjson
-		GIT_REPOSITORY https://github.com/Tencent/rapidjson.git
-	)
-
-	ExternalProject_Add_Step( EXTERNAL_JSON refresh
-		ALWAYS TRUE
-		DEPENDEES "install"
-		COMMENT "refresh shared library cache" 
-		COMMAND ldconfig )
+        ExternalProject_Add_Step( ${EXTERNAL_PROJECT_NAME} link
+                ALWAYS FALSE
+                DEPENDEES "install"
+                COMMENT "Link Dynamic Libraries"
+                COMMAND ldconfig )
 
 # Install the tinyfsm library
-	ExternalProject_Add( EXTERNAL_FSM
-		PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/tinyfsm
-	
+	set( EXTERNAL_PROJECT_NAME ext_tinyfsm )
+
+        ExternalProject_Add( ${EXTERNAL_PROJECT_NAME}
 		GIT_REPOSITORY https://github.com/digint/tinyfsm
 		GIT_TAG master
 
+                UPDATE_DISCONNECTED OFF
+
 		UPDATE_COMMAND ""
 		CONFIGURE_COMMAND ""
 		BUILD_COMMAND ""
-		INSTALL_COMMAND ""
+		INSTALL_COMMAND cmake -E copy ${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}/include/tinyfsm.hpp /usr/local/include/ 
+
+                DOWNLOAD_DIR    "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
+                SOURCE_DIR      "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
+                BINARY_DIR      "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
+                INSTALL_DIR     "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
+
+                TMP_DIR         "${EXTERNAL_TMP_DIR}/${EXTERNAL_PROJECT_NAME}"
+                STAMP_DIR       "${EXTERNAL_STAMP_DIR}/${EXTERNAL_PROJECT_NAME}"
+                LOG_DIR         "${EXTERNAL_LOG_DIR}/${EXTERNAL_PROJECT_NAME}"
+
+#	message( STATUS "CATCH 22 - INSTAL REQUIRED !!!!!!! , but build fails before, because it is missing the install" )
+#	install(FILES "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/cmake/tinyfsm.cmake" DESTINATION /lib/cmake/tinyfsm )
+#	install( DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tinyfsm/src/EXTERNAL_FSM/include/  DESTINATION /usr/local/include )
+
 		TEST_COMMAND ""
 	)
-
-	# Create Package Config file based on the input-file
-	include(CMakePackageConfigHelpers)
-	write_basic_package_version_file(
-    		"${CMAKE_CURRENT_SOURCE_DIR}/cmake/tinyfsm.cmake.in"
-    		VERSION 0.3
-    		COMPATIBILITY AnyNewerVersion
-	)
-
-	# Create Package Config for the library
-	include(CMakePackageConfigHelpers)
-	configure_package_config_file(
-    		"${CMAKE_CURRENT_SOURCE_DIR}/cmake/tinyfsm.cmake.in"
-    		"${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/cmake/tinyfsm.cmake"
-    		INSTALL_DESTINATION lib/cmake/tinyfsm
-	)
-
-	message( STATUS "CATCH 22 - INSTAL REQUIRED !!!!!!! , but build fails before, because it is missing the install" )
-	# Copy the files to the installion directories
-#	install(FILES "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/cmake/tinyfsm.cmake" DESTINATION /lib/cmake/tinyfsm )
-	install( DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tinyfsm/src/EXTERNAL_FSM/include/  DESTINATION /usr/local/include )
 
 
 # Instal Speed Logger
-	set( ALL_EXTERNALS_BUILD OFF PARENT_SCOPE )
+        set( EXTERNAL_PROJECT_NAME ext_spdlogger )
 
-	#Install speed logger 
-	ExternalProject_Add( EXTERNAL_LOGGER
-		PREFIX ${CMAKE_SOURCE_DIR}/external/logger
-		CMAKE_ARGS "-DSPDLOG_BUILD_SHARED=ON"
-		GIT_REPOSITORY https://github.com/gabime/spdlog.git
+        ExternalProject_Add( ${EXTERNAL_PROJECT_NAME}
+ 		GIT_REPOSITORY https://github.com/gabime/spdlog.git
 		GIT_TAG "v1.6.0"
+                GIT_PROGRESS ON
+
+                UPDATE_DISCONNECTED OFF
+
+                DOWNLOAD_DIR    "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
+                SOURCE_DIR      "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
+                BINARY_DIR      "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
+                INSTALL_DIR     "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
+
+                TMP_DIR         "${EXTERNAL_TMP_DIR}/${EXTERNAL_PROJECT_NAME}"
+                STAMP_DIR       "${EXTERNAL_STAMP_DIR}/${EXTERNAL_PROJECT_NAME}"
+                LOG_DIR         "${EXTERNAL_LOG_DIR}/${EXTERNAL_PROJECT_NAME}"
+       
+		CMAKE_ARGS "-DSPDLOG_BUILD_SHARED=ON"
+	 )
+
+        ExternalProject_Add_Step( ${EXTERNAL_PROJECT_NAME} link
+                ALWAYS FALSE
+                DEPENDEES "install"
+                COMMENT "Link Dynamic Libraries"
+                COMMAND ldconfig )
+
+# Install Version Generator
+        set( EXTERNAL_PROJECT_NAME generator )
+
+        ExternalProject_Add( ${EXTERNAL_PROJECT_NAME}
+                GIT_REPOSITORY https://github.com/erichschroeter/cmake-auto-increment-build-number.git
+                GIT_TAG master
+                GIT_PROGRESS ON
+
+                UPDATE_DISCONNECTED ON
+
+                CONFIGURE_COMMAND ""
+                BUILD_COMMAND gcc -o ${EXTERNAL_PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}/C_binary_example/generate.c
+                INSTALL_COMMAND mv ${EXTERNAL_PROJECT_NAME} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+                TEST_COMMAND ""
+
+                DOWNLOAD_DIR    "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
+                SOURCE_DIR      "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
+                BINARY_DIR      "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
+                INSTALL_DIR     "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
+
+                TMP_DIR         "${EXTERNAL_TMP_DIR}/${EXTERNAL_PROJECT_NAME}"
+                STAMP_DIR       "${EXTERNAL_STAMP_DIR}/${EXTERNAL_PROJECT_NAME}"
+                LOG_DIR         "${EXTERNAL_LOG_DIR}/${EXTERNAL_PROJECT_NAME}"
+
+        )
+
+# Generate Version Control Header
+        add_custom_target( version ALL
+                COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${EXTERNAL_PROJECT_NAME}
+                         -P "FRAMEWORK"
+                         -M "${VERSION_MAJOR}"
+                         -m ${VERSION_MINOR}
+                         -p ${VERSION_PATCH}
+                         -a "${VERSION_META}"
+                         -F "${CMAKE_SOURCE_DIR}/.buildnumber"
+                         -i
+                > ${CMAKE_SOURCE_DIR}/include/version.h
+
+                DEPENDS "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${EXTERNAL_PROJECT_NAME}"
+                COMMENT "Generating version tags"
+        	VERBATIM
 	)
+        add_dependencies( version ${EXTERNAL_PROJECT_NAME} )
 
-	ExternalProject_Add_Step( EXTERNAL_LOGGER refresh
-		ALWAYS TRUE
-		DEPENDEES "install"
-		COMMENT "refresh shared library cache" 
-		COMMAND ldconfig )
-
-message( FATAL "Version Generator Can not be build anymore" )
-
-# Instal Version Generator
-IF( NOT EXISTS ${CMAKE_SOURCE_DIR}/external/version/generate.c )
-	message( STATUS "Install version generator" )
-
-	set( ALL_EXTERNALS_BUILD OFF PARENT_SCOPE )
-
-	ExternalProject_Add( EXTERNAL_VERSION
-		PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/version
-		GIT_REPOSITORY https://github.com/erichschroeter/cmake-auto-increment-build-number.git
-		UPDATE_COMMAND ""
-		CONFIGURE_COMMAND ""
-		BUILD_COMMAND ""
-		INSTALL_COMMAND ""
-		TEST_COMMAND ""
-		)
-
-	ExternalProject_Add_Step( EXTERNAL_VERSION refresh
-		ALWAYS TRUE	
-		DEPENDEES "build"
-		COMMENT "Copy downloaded files" 
-		COMMAND cp ${CMAKE_CURRENT_SOURCE_DIR}/version/src/EXTERNAL_VERSION/generate.c ${CMAKE_CURRENT_SOURCE_DIR}/version/
-	)
-
-	#add_custom_target( Generate DEPENDS EXTERNAL_VERSION )
-	add_dependencies( EXTERNAL_VERSION REBUILD )
-else()
-	message( STATUS "Version generator is installed" )
-
-	# Create Generator
-	add_executable( generator ${CMAKE_CURRENT_SOURCE_DIR}/version/generate.c )
-
-	# Generate Version Control Header
-	add_custom_target( version ALL
-		COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/generator
-			 -P "FRAMEWORK"
-			 -M "${VERSION_MAJOR}"
-			 -m ${VERSION_MINOR}
-			 -p ${VERSION_PATCH}
-			 -a "${VERSION_META}"
-			 -F "${CMAKE_SOURCE_DIR}/.buildnumber"
-			 -i
-		> ${CMAKE_SOURCE_DIR}/include/version.h 
-
-		DEPENDS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/generator
-		COMMENT "Generating version tags"
-		VERBATIM
-	    )
-	add_dependencies( version generator )
-endif()
