@@ -12,6 +12,14 @@ alias mv='mv -i'
 
 alias cdl='cd /usr/src/linux/'
 
+# Verify (local) Running Hardware
+DEVICE=""
+if grep -q "Raspberry Pi" /proc/cpuinfo; then
+	DEVICE="RaspberryPi"
+else
+	DEVICE="VirtualMachine"
+fi
+export HARDWARE=$DEVICE
 
 FRAMEWORK='/root/framework'
 FRAMEWORK_BUILD=${FRAMEWORK}'/build/'
@@ -118,4 +126,5 @@ fi
 if [ "$DRIVER_I2C" = true ]; then
 	alias i2c='i2cdetect -y 1'
 fi
+
 
