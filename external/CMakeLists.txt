@@ -4,6 +4,9 @@ set( EXTERNAL_TMP_DIR "${CMAKE_CURRENT_SOURCE_DIR}/.temporary")
 set( EXTERNAL_STAMP_DIR "${CMAKE_CURRENT_SOURCE_DIR}/.stamp")
 set( EXTERNAL_LOG_DIR "${CMAKE_CURRENT_SOURCE_DIR}/.log" )
 
+#set( EXTERNAL_INSTALL_PREFIX ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/external )
+set( EXTERNAL_INSTALL_PREFIX /tmp )
+
 include(ExternalProject)
 
 # Instal the Google Test Framework
@@ -13,8 +16,8 @@ include(ExternalProject)
 	set( EXTERNAL_CMAKE_ARGS -DBUILD_SHARED_LIBS=OFF  )
 
 	# Redirect installation to project directory, instead of /usr/local
-	if( $CROSS_COMPILING )
-		list( APPEND EXTERNAL_CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/external )
+	if( CROSS_COMPILING )
+		list( APPEND EXTERNAL_CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${EXTERNAL_INSTALL_PREFIX} )
 	endif()
 
         ExternalProject_Add( ${EXTERNAL_PROJECT_NAME}
@@ -49,7 +52,11 @@ return()
 
 	# Configure Build
 	set( EXTERNAL_CMAKE_ARGS -DDOCUMENTATION=OFF  )
-	list( APPEND EXTERNAL_CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/external )
+	
+	# Redirect installation to project directory, instead of /usr/local
+	if( CROSS_COMPILING )
+		list( APPEND EXTERNAL_CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${EXTERNAL_INSTALL_PREFIX} )
+	endif()
 
         ExternalProject_Add( ${EXTERNAL_PROJECT_NAME}
                 GIT_REPOSITORY  https://github.com/eclipse/mosquitto.git
@@ -82,7 +89,11 @@ return()
 
 	# Configure Build
 	set( EXTERNAL_CMAKE_ARGS "" )
-	list( APPEND EXTERNAL_CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/external )
+
+	# Redirect installation to project directory, instead of /usr/local
+	if( CROSS_COMPILING )
+		list( APPEND EXTERNAL_CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${EXTERNAL_INSTALL_PREFIX} )
+	endif()
 
         ExternalProject_Add( ${EXTERNAL_PROJECT_NAME}
                 GIT_REPOSITORY  https://github.com/leethomason/tinyxml2.git
@@ -114,7 +125,11 @@ return()
 
 	# Configure Build
 	set( EXTERNAL_CMAKE_ARGS "" )
-	list( APPEND EXTERNAL_CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/external )
+	
+	# Redirect installation to project directory, instead of /usr/local
+	if( CROSS_COMPILING )
+		list( APPEND EXTERNAL_CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${EXTERNAL_INSTALL_PREFIX} )
+	endif()
 
         ExternalProject_Add( ${EXTERNAL_PROJECT_NAME}
                 GIT_REPOSITORY https://github.com/Tencent/rapidjson.git
@@ -145,11 +160,6 @@ return()
 # Install the tinyfsm library
 	set( EXTERNAL_PROJECT_NAME ext_tinyfsm )
 
-	# Configure Build
-	set( EXTERNAL_CMAKE_ARGS "" )
-#	Custom Install Command will take care of this
-#	list( APPEND EXTERNAL_CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/external )
-
         ExternalProject_Add( ${EXTERNAL_PROJECT_NAME}
 		GIT_REPOSITORY https://github.com/digint/tinyfsm
 		GIT_TAG master
@@ -159,7 +169,7 @@ return()
 		UPDATE_COMMAND ""
 		CONFIGURE_COMMAND ""
 		BUILD_COMMAND ""
-		INSTALL_COMMAND cmake -E copy ${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}/include/tinyfsm.hpp ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/externals/include
+		INSTALL_COMMAND cmake -E copy ${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}/include/tinyfsm.hpp ${EXTERNAL_INSTALL_PREFIX}/include
 
                 DOWNLOAD_DIR    "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
                 SOURCE_DIR      "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
@@ -178,8 +188,12 @@ return()
 
 	# Configure Build
 	set( EXTERNAL_CMAKE_ARGS -DSPDLOG_BUILD_SHARED=ON )
-	set( EXTERNAL_CMAKE_ARGS -DSPDLOG_BUILD_TESTS=OFF )
-	list( APPEND EXTERNAL_CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/external )
+	list( APPEND EXTERNAL_CMAKE_ARGS -DSPDLOG_BUILD_TESTS=OFF )
+
+	# Redirect installation to project directory, instead of /usr/local
+	if( CROSS_COMPILING )
+		list( APPEND EXTERNAL_CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${EXTERNAL_INSTALL_PREFIX} )
+	endif()
 
         ExternalProject_Add( ${EXTERNAL_PROJECT_NAME}
  		GIT_REPOSITORY https://github.com/gabime/spdlog.git
