@@ -1,12 +1,12 @@
-message( "Download External Dependencies" )
+Message( "Download External Dependencies" )
 
 set( EXTERNAL_TMP_DIR "${CMAKE_CURRENT_SOURCE_DIR}/.temporary")
 set( EXTERNAL_STAMP_DIR "${CMAKE_CURRENT_SOURCE_DIR}/.stamp")
 set( EXTERNAL_LOG_DIR "${CMAKE_CURRENT_SOURCE_DIR}/.log" )
 
-#set( EXTERNAL_INSTALL_PREFIX ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/external )
-set( EXTERNAL_INSTALL_PREFIX /tmp )
+set( EXTERNAL_INSTALL_PREFIX ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/externals )
 
+set( EXTERNAL_UPDATE OFF )
 include(ExternalProject)
 
 # Instal the Google Test Framework
@@ -25,7 +25,7 @@ include(ExternalProject)
                 GIT_TAG master
                 GIT_PROGRESS ON
 
-                UPDATE_DISCONNECTED ON
+                UPDATE_DISCONNECTED EXTERNAL_UPDATE
 
                 DOWNLOAD_DIR    "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
                 SOURCE_DIR      "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
@@ -45,8 +45,6 @@ include(ExternalProject)
                 COMMENT "Link Dynamic Libraries"
                 COMMAND ldconfig )
 
-return()
-
 # Instal the Mosquitto Library
         set( EXTERNAL_PROJECT_NAME ext_mosquitto )
 
@@ -63,7 +61,7 @@ return()
                 GIT_TAG master
                 GIT_PROGRESS ON
 
-                UPDATE_DISCONNECTED ON
+                UPDATE_DISCONNECTED EXTERNAL_UPDATE
 
                 DOWNLOAD_DIR    "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
                 SOURCE_DIR      "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
@@ -100,7 +98,7 @@ return()
                 GIT_TAG master
                 GIT_PROGRESS ON
 
-                UPDATE_DISCONNECTED ON
+                UPDATE_DISCONNECTED EXTERNAL_UPDATE
 
                 DOWNLOAD_DIR    "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
                 SOURCE_DIR      "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
@@ -136,7 +134,7 @@ return()
                 GIT_TAG master
                 GIT_PROGRESS ON
 
-                UPDATE_DISCONNECTED ON
+                UPDATE_DISCONNECTED EXTERNAL_UPDATE
 
                 DOWNLOAD_DIR    "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
                 SOURCE_DIR      "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
@@ -164,7 +162,7 @@ return()
 		GIT_REPOSITORY https://github.com/digint/tinyfsm
 		GIT_TAG master
 
-                UPDATE_DISCONNECTED ON
+                UPDATE_DISCONNECTED EXTERNAL_UPDATE
 
 		UPDATE_COMMAND ""
 		CONFIGURE_COMMAND ""
@@ -189,6 +187,7 @@ return()
 	# Configure Build
 	set( EXTERNAL_CMAKE_ARGS -DSPDLOG_BUILD_SHARED=ON )
 	list( APPEND EXTERNAL_CMAKE_ARGS -DSPDLOG_BUILD_TESTS=OFF )
+	list( APPEND EXTERNAL_CMAKE_ARGS -DSPDLOG_BUILD_TESTS_HO=OFF )
 
 	# Redirect installation to project directory, instead of /usr/local
 	if( CROSS_COMPILING )
@@ -200,7 +199,7 @@ return()
 		GIT_TAG "v1.6.0"
                 GIT_PROGRESS ON
 
-                UPDATE_DISCONNECTED ON
+                UPDATE_DISCONNECTED EXTERNAL_UPDATE
 
                 DOWNLOAD_DIR    "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
                 SOURCE_DIR      "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
@@ -211,7 +210,7 @@ return()
                 STAMP_DIR       "${EXTERNAL_STAMP_DIR}/${EXTERNAL_PROJECT_NAME}"
                 LOG_DIR         "${EXTERNAL_LOG_DIR}/${EXTERNAL_PROJECT_NAME}"
  
-                CMAKE_ARGS 	${EXTERNAL_CMAKE_ARGS} 
+                CMAKE_ARGS 	${EXTERNAL_CMAKE_ARGS}
 	 )
 
         ExternalProject_Add_Step( ${EXTERNAL_PROJECT_NAME} link
@@ -228,7 +227,7 @@ return()
                 GIT_TAG master
                 GIT_PROGRESS ON
 
-                UPDATE_DISCONNECTED ON
+                UPDATE_DISCONNECTED EXTERNAL_UPDATE
 
                 CONFIGURE_COMMAND ""
                 BUILD_COMMAND gcc -o ${EXTERNAL_PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}/C_binary_example/generate.c

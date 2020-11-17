@@ -28,12 +28,20 @@ else()
 endif()
 
 ###############################################################################
+###                               Defenitions                               ###
+###############################################################################
+
+set( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/library )
+set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/binary )
+set( CMAKE_INSTALL_OUTPUT_DIRECTORY /opt/framework/ )
+
+###############################################################################
 ###                         Configure the Compiler                          ###
 ###############################################################################
 message("Configure Compiler")
  
 # Define the (Cross) Compiler
-if( $CROSS_COMPILING )
+if( CROSS_COMPILING )
 	message( STATUS "Configure CrossCompiler" )
 
         # Define the sysroot path for the RaspberryPi distribution in our tools folder
@@ -46,8 +54,7 @@ if( $CROSS_COMPILING )
         set( CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY )
         set( CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY )
 
-	set( CMAKE_CXX_FLAGS "-Wall -g3 -Wno-psabii -I/usr/local/include" )
-	set( LDFLAGS -L/usr/local/lib )
+	set( CMAKE_CXX_FLAGS "-Wall -g3 -Wno-psabii -I/${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/externals/include -L${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/externals/lib" )
 
 	set( CMAKE_CXX_COMPILER arm-linux-gnueabihf-g++ )
 else()
@@ -61,18 +68,12 @@ set ( CMAKE_CXX_STANDARD 17 )
 
 add_definitions(-Wall -g3 -Wno-psabii ) 
 
-set( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/library )
-set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/binary )
-set( CMAKE_INSTALL_OUTPUT_DIRECTORY /opt/framework/ )
-
 set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CMAKE_COMMAND} -E time")
 
 ###############################################################################
 ###                       Download External Projects                        ###
 ###############################################################################
 add_subdirectory( external )
-
-return()
 
 ###############################################################################
 ###                         Configure Coding Tools                          ###

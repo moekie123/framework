@@ -3,3 +3,4 @@ add_library( configurator OBJECT
 		)
 
 add_subdirectory( test )
+
