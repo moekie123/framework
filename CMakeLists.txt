@@ -14,6 +14,7 @@ mark_as_advanced(VERSION_MAJOR VERSION_MINOR VERSION_PATCH)
 ###                          Verify the Hardware                            ###
 ###############################################################################
 set( RPI_HARDWARE FALSE )
+set( CROSS_COMPILING FALSE )
 
 if( $ENV{HARDWARE} STREQUAL "RaspberryPi" )
 	set( RPI_HARDWARE TRUE )
@@ -22,24 +23,21 @@ endif()
 if( $RPI_HARDWARE )
         message( STATUS "Project Build as Raspberry Pi Project" )
 else()
-        message( STATUS "Project Build as Cross Compiler" )
+        message( STATUS "Project Build as Cross Compiler Project" )
+	set( CROSS_COMPILING TRUE )
 endif()
 
 ###############################################################################
 ###                         Configure the Compiler                          ###
 ###############################################################################
 message("Configure Compiler")
-
+ 
 # Define the (Cross) Compiler
-set( COMPILER "" )
-if( NOT $RPI_HARDWARE )
-        message( STATUS "Configure CrossCompiler" )
-
-        set( COMPILER "arm-linux-gnueabihf-" )
+if( $CROSS_COMPILING )
+	message( STATUS "Configure CrossCompiler" )
 
         # Define the sysroot path for the RaspberryPi distribution in our tools folder
 #        set( CMAKE_FIND_ROOT_PATH /root/framework/kernel/linux )
-#        set( CMAKE_SYSROOT / )
 
         # Use our definitions for compiler tools
         set( CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER )
@@ -51,9 +49,11 @@ if( NOT $RPI_HARDWARE )
 	set( CMAKE_CXX_FLAGS "-Wall -g3 -Wno-psabii -I/usr/local/include" )
 	set( LDFLAGS -L/usr/local/lib )
 
+	set( CMAKE_CXX_COMPILER arm-linux-gnueabihf-g++ )
+else()
+	set( CMAKE_CXX_COMPILER g++ )
 endif()
 
-set( CMAKE_CXX_COMPILER  ${COMPILER}g++ )
 set( CMAKE_CXX_STANDARD_REQUIRED ON )
 set( CMAKE_CXX_EXTENSIONS ON )
 

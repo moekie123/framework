@@ -1,16 +1,28 @@
 message( "Download External Dependencies" )
 
+set( EXTERNAL_TMP_DIR "${CMAKE_CURRENT_SOURCE_DIR}/.temporary")
+set( EXTERNAL_STAMP_DIR "${CMAKE_CURRENT_SOURCE_DIR}/.stamp")
+set( EXTERNAL_LOG_DIR "${CMAKE_CURRENT_SOURCE_DIR}/.log" )
+
 include(ExternalProject)
 
 # Instal the Google Test Framework
         set( EXTERNAL_PROJECT_NAME ext_googletest )
+
+	# Configure Build 
+	set( EXTERNAL_CMAKE_ARGS -DBUILD_SHARED_LIBS=OFF  )
+
+	# Redirect installation to project directory, instead of /usr/local
+	if( $CROSS_COMPILING )
+		list( APPEND EXTERNAL_CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/external )
+	endif()
 
         ExternalProject_Add( ${EXTERNAL_PROJECT_NAME}
                 GIT_REPOSITORY https://github.com/google/googletest
                 GIT_TAG master
                 GIT_PROGRESS ON
 
-                UPDATE_DISCONNECTED OFF
+                UPDATE_DISCONNECTED ON
 
                 DOWNLOAD_DIR    "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
                 SOURCE_DIR      "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
@@ -21,7 +33,7 @@ include(ExternalProject)
                 STAMP_DIR       "${EXTERNAL_STAMP_DIR}/${EXTERNAL_PROJECT_NAME}"
                 LOG_DIR         "${EXTERNAL_LOG_DIR}/${EXTERNAL_PROJECT_NAME}"
 
-                CMAKE_ARGS "-DBUILD_SHARED_LIBS=ON -DCMAKE_INSTALL_PREFIX="${CMAKE_LIBRARY_OUTPUT_DIRECTORY}
+                CMAKE_ARGS 	${EXTERNAL_CMAKE_ARGS} 
         )
 
         ExternalProject_Add_Step( ${EXTERNAL_PROJECT_NAME} link
@@ -30,8 +42,14 @@ include(ExternalProject)
                 COMMENT "Link Dynamic Libraries"
                 COMMAND ldconfig )
 
+return()
+
 # Instal the Mosquitto Library
         set( EXTERNAL_PROJECT_NAME ext_mosquitto )
+
+	# Configure Build
+	set( EXTERNAL_CMAKE_ARGS -DDOCUMENTATION=OFF  )
+	list( APPEND EXTERNAL_CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/external )
 
         ExternalProject_Add( ${EXTERNAL_PROJECT_NAME}
                 GIT_REPOSITORY  https://github.com/eclipse/mosquitto.git
@@ -39,8 +57,6 @@ include(ExternalProject)
                 GIT_PROGRESS ON
 
                 UPDATE_DISCONNECTED ON
-
-		INSTALL_COMMAND cmake -E copy ${CMAKE_SOURCE_DIR}/config/mosquitto.conf /usr/local/etc/mosquitto
 
                 DOWNLOAD_DIR    "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
                 SOURCE_DIR      "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
@@ -51,18 +67,22 @@ include(ExternalProject)
                 STAMP_DIR       "${EXTERNAL_STAMP_DIR}/${EXTERNAL_PROJECT_NAME}"
                 LOG_DIR         "${EXTERNAL_LOG_DIR}/${EXTERNAL_PROJECT_NAME}"
 
-                CMAKE_ARGS "-DDOCUMENTATION=OFF"
+                CMAKE_ARGS 	${EXTERNAL_CMAKE_ARGS} 
         )
 
 	ExternalProject_Add_Step( ${EXTERNAL_PROJECT_NAME} link
                 ALWAYS TRUE
                 DEPENDEES "install"
                 COMMENT "Link Dynamic Libraries"
+#		INSTALL_COMMAND cmake -E copy ${CMAKE_SOURCE_DIR}/config/mosquitto.conf /usr/local/etc/mosquitto
                 COMMAND ldconfig )
-
 
 # Instal the TinyXML Library
         set( EXTERNAL_PROJECT_NAME ext_tinyxml2 )
+
+	# Configure Build
+	set( EXTERNAL_CMAKE_ARGS "" )
+	list( APPEND EXTERNAL_CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/external )
 
         ExternalProject_Add( ${EXTERNAL_PROJECT_NAME}
                 GIT_REPOSITORY  https://github.com/leethomason/tinyxml2.git
@@ -79,6 +99,8 @@ include(ExternalProject)
                 TMP_DIR         "${EXTERNAL_TMP_DIR}/${EXTERNAL_PROJECT_NAME}"
                 STAMP_DIR       "${EXTERNAL_STAMP_DIR}/${EXTERNAL_PROJECT_NAME}"
                 LOG_DIR         "${EXTERNAL_LOG_DIR}/${EXTERNAL_PROJECT_NAME}"
+
+                CMAKE_ARGS 	${EXTERNAL_CMAKE_ARGS} 
 	)
 
 	ExternalProject_Add_Step( ${EXTERNAL_PROJECT_NAME} link
@@ -89,6 +111,10 @@ include(ExternalProject)
 
 # Instal the RapidJson Library
         set( EXTERNAL_PROJECT_NAME ext_rapidjson )
+
+	# Configure Build
+	set( EXTERNAL_CMAKE_ARGS "" )
+	list( APPEND EXTERNAL_CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/external )
 
         ExternalProject_Add( ${EXTERNAL_PROJECT_NAME}
                 GIT_REPOSITORY https://github.com/Tencent/rapidjson.git
@@ -105,6 +131,8 @@ include(ExternalProject)
                 TMP_DIR         "${EXTERNAL_TMP_DIR}/${EXTERNAL_PROJECT_NAME}"
                 STAMP_DIR       "${EXTERNAL_STAMP_DIR}/${EXTERNAL_PROJECT_NAME}"
                 LOG_DIR         "${EXTERNAL_LOG_DIR}/${EXTERNAL_PROJECT_NAME}"
+
+                CMAKE_ARGS 	${EXTERNAL_CMAKE_ARGS} 
         )
 
         ExternalProject_Add_Step( ${EXTERNAL_PROJECT_NAME} link
@@ -113,8 +141,14 @@ include(ExternalProject)
                 COMMENT "Link Dynamic Libraries"
                 COMMAND ldconfig )
 
+
 # Install the tinyfsm library
 	set( EXTERNAL_PROJECT_NAME ext_tinyfsm )
+
+	# Configure Build
+	set( EXTERNAL_CMAKE_ARGS "" )
+#	Custom Install Command will take care of this
+#	list( APPEND EXTERNAL_CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/external )
 
         ExternalProject_Add( ${EXTERNAL_PROJECT_NAME}
 		GIT_REPOSITORY https://github.com/digint/tinyfsm
@@ -125,7 +159,7 @@ include(ExternalProject)
 		UPDATE_COMMAND ""
 		CONFIGURE_COMMAND ""
 		BUILD_COMMAND ""
-		INSTALL_COMMAND cmake -E copy ${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}/include/tinyfsm.hpp /usr/local/include/ 
+		INSTALL_COMMAND cmake -E copy ${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}/include/tinyfsm.hpp ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/externals/include
 
                 DOWNLOAD_DIR    "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
                 SOURCE_DIR      "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
@@ -136,16 +170,16 @@ include(ExternalProject)
                 STAMP_DIR       "${EXTERNAL_STAMP_DIR}/${EXTERNAL_PROJECT_NAME}"
                 LOG_DIR         "${EXTERNAL_LOG_DIR}/${EXTERNAL_PROJECT_NAME}"
 
-#	message( STATUS "CATCH 22 - INSTAL REQUIRED !!!!!!! , but build fails before, because it is missing the install" )
-#	install(FILES "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/cmake/tinyfsm.cmake" DESTINATION /lib/cmake/tinyfsm )
-#	install( DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tinyfsm/src/EXTERNAL_FSM/include/  DESTINATION /usr/local/include )
-
 		TEST_COMMAND ""
 	)
 
-
 # Instal Speed Logger
         set( EXTERNAL_PROJECT_NAME ext_spdlogger )
+
+	# Configure Build
+	set( EXTERNAL_CMAKE_ARGS -DSPDLOG_BUILD_SHARED=ON )
+	set( EXTERNAL_CMAKE_ARGS -DSPDLOG_BUILD_TESTS=OFF )
+	list( APPEND EXTERNAL_CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/external )
 
         ExternalProject_Add( ${EXTERNAL_PROJECT_NAME}
  		GIT_REPOSITORY https://github.com/gabime/spdlog.git
@@ -162,8 +196,8 @@ include(ExternalProject)
                 TMP_DIR         "${EXTERNAL_TMP_DIR}/${EXTERNAL_PROJECT_NAME}"
                 STAMP_DIR       "${EXTERNAL_STAMP_DIR}/${EXTERNAL_PROJECT_NAME}"
                 LOG_DIR         "${EXTERNAL_LOG_DIR}/${EXTERNAL_PROJECT_NAME}"
-       
-		CMAKE_ARGS "-DSPDLOG_BUILD_SHARED=ON"
+ 
+                CMAKE_ARGS 	${EXTERNAL_CMAKE_ARGS} 
 	 )
 
         ExternalProject_Add_Step( ${EXTERNAL_PROJECT_NAME} link
