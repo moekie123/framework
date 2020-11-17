@@ -1,11 +1,12 @@
 
 # Ignore generated directories
 build/
-library/
 binary/
-external/
-drivers/
 documentation/
+drivers/
+external/
+kernel/
+library/
 
 # Ignore VIM temporary files
 *.~

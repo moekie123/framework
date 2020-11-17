@@ -73,6 +73,9 @@ set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CMAKE_COMMAND} -E time")
 ###############################################################################
 ###                       Download External Projects                        ###
 ###############################################################################
+add_subdirectory( kernel )
+return()
+
 add_subdirectory( external )
 
 ###############################################################################
