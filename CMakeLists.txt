@@ -7,6 +7,7 @@ set(VERSION_MAJOR   0)
 set(VERSION_MINOR   4)
 set(VERSION_PATCH   0)
 set(VERSION_META "-alpha")
+
 mark_as_advanced(VERSION_MAJOR VERSION_MINOR VERSION_PATCH)
 
 ###############################################################################
@@ -27,24 +28,51 @@ endif()
 ###############################################################################
 ###                         Configure the Compiler                          ###
 ###############################################################################
+message("Configure Compiler")
 
-message( "Configure Compiler" )
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
+# Define the (Cross) Compiler
+set( COMPILER "" )
+if( NOT $RPI_HARDWARE )
+        message( STATUS "Configure CrossCompiler" )
+
+        set( COMPILER "arm-linux-gnueabihf-" )
+
+        # Define the sysroot path for the RaspberryPi distribution in our tools folder
+#        set( CMAKE_FIND_ROOT_PATH /root/framework/kernel/linux )
+#        set( CMAKE_SYSROOT / )
+
+        # Use our definitions for compiler tools
+        set( CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER )
+
+        # Search for libraries and headers in the target directories only
+        set( CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY )
+        set( CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY )
+
+	set( CMAKE_CXX_FLAGS "-Wall -g3 -Wno-psabii -I/usr/local/include" )
+	set( LDFLAGS -L/usr/local/lib )
+
+endif()
+
+set( CMAKE_CXX_COMPILER  ${COMPILER}g++ )
+set( CMAKE_CXX_STANDARD_REQUIRED ON )
+set( CMAKE_CXX_EXTENSIONS ON )
+
+set ( CMAKE_CXX_STANDARD 17 )
+
+add_definitions(-Wall -g3 -Wno-psabii ) 
 
 set( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/library )
 set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/binary )
 set( CMAKE_INSTALL_OUTPUT_DIRECTORY /opt/framework/ )
 
-# Add addional build flags
-SET( CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -g3 -Wno-psabi" )
 set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CMAKE_COMMAND} -E time")
 
 ###############################################################################
 ###                       Download External Projects                        ###
 ###############################################################################
 add_subdirectory( external )
+
+return()
 
 ###############################################################################
 ###                         Configure Coding Tools                          ###

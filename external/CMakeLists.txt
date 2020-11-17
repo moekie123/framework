@@ -10,7 +10,7 @@ include(ExternalProject)
                 GIT_TAG master
                 GIT_PROGRESS ON
 
-                UPDATE_DISCONNECTED ON
+                UPDATE_DISCONNECTED OFF
 
                 DOWNLOAD_DIR    "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
                 SOURCE_DIR      "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
@@ -21,7 +21,7 @@ include(ExternalProject)
                 STAMP_DIR       "${EXTERNAL_STAMP_DIR}/${EXTERNAL_PROJECT_NAME}"
                 LOG_DIR         "${EXTERNAL_LOG_DIR}/${EXTERNAL_PROJECT_NAME}"
 
-                CMAKE_ARGS "-DBUILD_SHARED_LIBS=ON"
+                CMAKE_ARGS "-DBUILD_SHARED_LIBS=ON -DCMAKE_INSTALL_PREFIX="${CMAKE_LIBRARY_OUTPUT_DIRECTORY}
         )
 
         ExternalProject_Add_Step( ${EXTERNAL_PROJECT_NAME} link
