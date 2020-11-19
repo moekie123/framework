@@ -61,6 +61,7 @@ if( CROSS_COMPILING )
 	set( CMAKE_CXX_FLAGS "-Wall -g3 -Wno-psabii -I${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/externals/include -L${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/externals/lib" )
 
 else()
+	set( CMAKE_C_COMPILER gcc )
 	set( CMAKE_CXX_COMPILER g++ )
 endif()
 
@@ -79,8 +80,6 @@ set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CMAKE_COMMAND} -E time")
 add_subdirectory( kernel )
 add_subdirectory( external )
 
-return()
-
 ###############################################################################
 ###                         Configure Coding Tools                          ###
 ###############################################################################
@@ -91,10 +90,10 @@ message( "Check source code" )
 
 # Setup CTags
 message( "Configure CTags" )
-set_source_files_properties( tags PROPERTIES GENERATED true)
-add_custom_target ( tags ALL
-	COMMAND ctags -f tags -R --c++-kinds=+p --fields=+iaS --extras=+q ${CMAKE_CURRENT_SOURCE_DIR} 
-    	WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} )
+#set_source_files_properties( tags PROPERTIES GENERATED true)
+#add_custom_target ( tags ALL
+#	COMMAND ctags -f tags -R --c++-kinds=+p --fields=+iaS --extras=+q ${CMAKE_CURRENT_SOURCE_DIR} --exclude=${CMAKE_SOURCE_DIR}/external/*
+ #   	WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} )
 
 ###############################################################################
 ###                      Configure Test Enviroment                          ###
