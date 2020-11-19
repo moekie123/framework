@@ -28,46 +28,9 @@ endif()
 
 include( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/googletest.cmake )
 include( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/mosquitto.cmake )
+include( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/tinyxml.cmake )
 
 return()
-
-# Instal the TinyXML Library
-        set( EXTERNAL_PROJECT_NAME ext_tinyxml2 )
-
-	# Configure Build
-	set( EXTERNAL_CMAKE_ARGS "" )
-
-	# Redirect installation to project directory, instead of /usr/local
-	if( CROSS_COMPILING )
-#		list( APPEND EXTERNAL_CMAKE_ARGS -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER} )
-#		list( APPEND EXTERNAL_CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${EXTERNAL_INSTALL_PREFIX} )
-#		list( APPEND EXTERNAL_CMAKE_ARGS -DCMAKE_SYSROOT=${CMAKE_SOURCE_DIR}/kernel/linux )
-	endif()
-
-        ExternalProject_Add( ${EXTERNAL_PROJECT_NAME}
-                GIT_REPOSITORY  https://github.com/leethomason/tinyxml2.git
-                GIT_TAG master
-                GIT_PROGRESS ON
-
-                UPDATE_DISCONNECTED EXTERNAL_UPDATE
-
-                DOWNLOAD_DIR    "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
-                SOURCE_DIR      "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
-                BINARY_DIR      "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
-                INSTALL_DIR     "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
-
-                TMP_DIR         "${EXTERNAL_TMP_DIR}/${EXTERNAL_PROJECT_NAME}"
-                STAMP_DIR       "${EXTERNAL_STAMP_DIR}/${EXTERNAL_PROJECT_NAME}"
-                LOG_DIR         "${EXTERNAL_LOG_DIR}/${EXTERNAL_PROJECT_NAME}"
-
-                CMAKE_ARGS 	${EXTERNAL_CMAKE_ARGS} 
-	)
-
-	ExternalProject_Add_Step( ${EXTERNAL_PROJECT_NAME} link
-                ALWAYS FALSE
-                DEPENDEES "install"
-                COMMENT "Link Dynamic Libraries"
-                COMMAND ldconfig )
 
 # Instal the RapidJson Library
         set( EXTERNAL_PROJECT_NAME ext_rapidjson )
