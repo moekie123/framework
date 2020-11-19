@@ -27,45 +27,9 @@ if( CROSS_COMPILING )
 endif()
 
 include( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/googletest.cmake )
+include( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/mosquitto.cmake )
+
 return()
-
-# Instal the Google Test Framework
-        set( EXTERNAL_PROJECT_NAME ext_googletest )
-
-	# Configure Build 
-	set( EXTERNAL_CMAKE_ARGS -DBUILD_SHARED_LIBS=OFF  )
-
-	# Redirect installation to project directory, instead of /usr/local
-	if( CROSS_COMPILING )
-		list( APPEND EXTERNAL_CMAKE_ARGS -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER} )
-#		list( APPEND EXTERNAL_CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${EXTERNAL_INSTALL_PREFIX} )
-#		list( APPEND EXTERNAL_CMAKE_ARGS -DCMAKE_SYSROOT=${CMAKE_SOURCE_DIR}/kernel/linux )
-	endif()
-
-        ExternalProject_Add( ${EXTERNAL_PROJECT_NAME}
-                GIT_REPOSITORY https://github.com/google/googletest
-                GIT_TAG master
-                GIT_PROGRESS ON
-
-                UPDATE_DISCONNECTED EXTERNAL_UPDATE
-
-                DOWNLOAD_DIR    "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
-                SOURCE_DIR      "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
-                BINARY_DIR      "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
-                INSTALL_DIR     "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
-
-                TMP_DIR         "${EXTERNAL_TMP_DIR}/${EXTERNAL_PROJECT_NAME}"
-                STAMP_DIR       "${EXTERNAL_STAMP_DIR}/${EXTERNAL_PROJECT_NAME}"
-                LOG_DIR         "${EXTERNAL_LOG_DIR}/${EXTERNAL_PROJECT_NAME}"
-
-                CMAKE_ARGS 	${EXTERNAL_CMAKE_ARGS} 
-        )
-
-        ExternalProject_Add_Step( ${EXTERNAL_PROJECT_NAME} link
-                ALWAYS FALSE
-                DEPENDEES "install"
-                COMMENT "Link Dynamic Libraries"
-                COMMAND ldconfig )
 
 # Instal the TinyXML Library
         set( EXTERNAL_PROJECT_NAME ext_tinyxml2 )
@@ -210,50 +174,6 @@ return()
                 COMMENT "Link Dynamic Libraries"
                 COMMAND ldconfig )
 
-# Instal the Mosquitto Library
-        set( EXTERNAL_PROJECT_NAME ext_mosquitto )
-
-	# Configure Build
-	set( EXTERNAL_CMAKE_ARGS -DDOCUMENTATION=OFF  )
-
-	# Redirect installation to project directory, instead of /usr/local
-	if( CROSS_COMPILING )
-		list( APPEND EXTERNAL_CMAKE_ARGS -DCMAKE_C_FLAGS=${CMAKE_C_FLAGS} ) 
-		list( APPEND EXTERNAL_CMAKE_ARGS -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER} )
-
-#		list( APPEND EXTERNAL_CMAKE_ARGS -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER} )
-
-		list( APPEND EXTERNAL_CMAKE_ARGS -DWITH_TLS=NO )
-
-		list( APPEND EXTERNAL_CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${EXTERNAL_INSTALL_PREFIX} )
-		list( APPEND EXTERNAL_CMAKE_ARGS -DCMAKE_SYSROOT="/root/framework/kernel/linux" )
-	endif()
-
-        ExternalProject_Add( ${EXTERNAL_PROJECT_NAME}
-                GIT_REPOSITORY  https://github.com/eclipse/mosquitto.git
-                GIT_TAG master
-                GIT_PROGRESS ON
-
-                UPDATE_DISCONNECTED EXTERNAL_UPDATE
-
-                DOWNLOAD_DIR    "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
-                SOURCE_DIR      "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
-                BINARY_DIR      "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
-                INSTALL_DIR     "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
-
-                TMP_DIR         "${EXTERNAL_TMP_DIR}/${EXTERNAL_PROJECT_NAME}"
-                STAMP_DIR       "${EXTERNAL_STAMP_DIR}/${EXTERNAL_PROJECT_NAME}"
-                LOG_DIR         "${EXTERNAL_LOG_DIR}/${EXTERNAL_PROJECT_NAME}"
-
-                CMAKE_ARGS 	${EXTERNAL_CMAKE_ARGS} 
-        )
-
-	ExternalProject_Add_Step( ${EXTERNAL_PROJECT_NAME} link
-                ALWAYS TRUE
-                DEPENDEES "install"
-                COMMENT "Link Dynamic Libraries"
-#		INSTALL_COMMAND cmake -E copy ${CMAKE_SOURCE_DIR}/config/mosquitto.conf /usr/local/etc/mosquitto
-                COMMAND ldconfig )
 
 # Install Version Generator
         set( EXTERNAL_PROJECT_NAME generator )
