@@ -29,74 +29,10 @@ endif()
 include( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/googletest.cmake )
 include( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/mosquitto.cmake )
 include( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/tinyxml.cmake )
+include( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/tinyfsm.cmake )
+include( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/rapidjson.cmake )
 
 return()
-
-# Instal the RapidJson Library
-        set( EXTERNAL_PROJECT_NAME ext_rapidjson )
-
-	# Configure Build
-	set( EXTERNAL_CMAKE_ARGS "" )
-	
-	# Redirect installation to project directory, instead of /usr/local
-	if( CROSS_COMPILING )
-#		list( APPEND EXTERNAL_CMAKE_ARGS -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER} )
-#		list( APPEND EXTERNAL_CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${EXTERNAL_INSTALL_PREFIX} )
-#		list( APPEND EXTERNAL_CMAKE_ARGS -DCMAKE_CROSSCOMPILING=ON )
-#		list( APPEND EXTERNAL_CMAKE_ARGS -DCMAKE_SYSROOT=${CMAKE_SOURCE_DIR}/kernel/linux )
-#		list( APPEND EXTERNAL_CMAKE_ARGS -DCMAKE_CXX_FLAGS="-march=armv7") 
-	endif()
-
-        ExternalProject_Add( ${EXTERNAL_PROJECT_NAME}
-                GIT_REPOSITORY https://github.com/Tencent/rapidjson.git
-                GIT_TAG master
-                GIT_PROGRESS ON
-
-                UPDATE_DISCONNECTED EXTERNAL_UPDATE
-
-                DOWNLOAD_DIR    "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
-                SOURCE_DIR      "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
-                BINARY_DIR      "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
-                INSTALL_DIR     "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
-
-                TMP_DIR         "${EXTERNAL_TMP_DIR}/${EXTERNAL_PROJECT_NAME}"
-                STAMP_DIR       "${EXTERNAL_STAMP_DIR}/${EXTERNAL_PROJECT_NAME}"
-                LOG_DIR         "${EXTERNAL_LOG_DIR}/${EXTERNAL_PROJECT_NAME}"
-
-                CMAKE_ARGS 	${EXTERNAL_CMAKE_ARGS} 
-        )
-
-        ExternalProject_Add_Step( ${EXTERNAL_PROJECT_NAME} link
-                ALWAYS FALSE
-                DEPENDEES "install"
-                COMMENT "Link Dynamic Libraries"
-                COMMAND ldconfig )
-
-# Install the tinyfsm library
-	set( EXTERNAL_PROJECT_NAME ext_tinyfsm )
-
-        ExternalProject_Add( ${EXTERNAL_PROJECT_NAME}
-		GIT_REPOSITORY https://github.com/digint/tinyfsm
-		GIT_TAG master
-
-                UPDATE_DISCONNECTED EXTERNAL_UPDATE
-
-		UPDATE_COMMAND ""
-		CONFIGURE_COMMAND ""
-		BUILD_COMMAND ""
-		INSTALL_COMMAND cmake -E copy ${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}/include/tinyfsm.hpp ${EXTERNAL_INSTALL_PREFIX}/include
-
-                DOWNLOAD_DIR    "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
-                SOURCE_DIR      "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
-                BINARY_DIR      "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
-                INSTALL_DIR     "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
-
-                TMP_DIR         "${EXTERNAL_TMP_DIR}/${EXTERNAL_PROJECT_NAME}"
-                STAMP_DIR       "${EXTERNAL_STAMP_DIR}/${EXTERNAL_PROJECT_NAME}"
-                LOG_DIR         "${EXTERNAL_LOG_DIR}/${EXTERNAL_PROJECT_NAME}"
-
-		TEST_COMMAND ""
-	)
 
 # Instal Speed Logger
         set( EXTERNAL_PROJECT_NAME ext_spdlogger )
