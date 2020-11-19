@@ -31,90 +31,49 @@ include( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/mosquitto.cmake )
 include( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/tinyxml.cmake )
 include( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/tinyfsm.cmake )
 include( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/rapidjson.cmake )
-
-return()
-
-# Instal Speed Logger
-        set( EXTERNAL_PROJECT_NAME ext_spdlogger )
-
-	# Configure Build
-	set( EXTERNAL_CMAKE_ARGS -DSPDLOG_BUILD_SHARED=ON )
-	list( APPEND EXTERNAL_CMAKE_ARGS -DSPDLOG_BUILD_TESTS=OFF )
-	list( APPEND EXTERNAL_CMAKE_ARGS -DSPDLOG_BUILD_TESTS_HO=OFF )
-
-	# Redirect installation to project directory, instead of /usr/local
-	if( CROSS_COMPILING )
-#		list( APPEND EXTERNAL_CMAKE_ARGS -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER} )
-#		list( APPEND EXTERNAL_CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${EXTERNAL_INSTALL_PREFIX} )
-	endif()
-
-        ExternalProject_Add( ${EXTERNAL_PROJECT_NAME}
- 		GIT_REPOSITORY https://github.com/gabime/spdlog.git
-		GIT_TAG "v1.6.0"
-                GIT_PROGRESS ON
-
-                UPDATE_DISCONNECTED EXTERNAL_UPDATE
-
-                DOWNLOAD_DIR    "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
-                SOURCE_DIR      "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
-                BINARY_DIR      "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
-                INSTALL_DIR     "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
-
-                TMP_DIR         "${EXTERNAL_TMP_DIR}/${EXTERNAL_PROJECT_NAME}"
-                STAMP_DIR       "${EXTERNAL_STAMP_DIR}/${EXTERNAL_PROJECT_NAME}"
-                LOG_DIR         "${EXTERNAL_LOG_DIR}/${EXTERNAL_PROJECT_NAME}"
- 
-                CMAKE_ARGS 	${EXTERNAL_CMAKE_ARGS}
-	 )
-
-        ExternalProject_Add_Step( ${EXTERNAL_PROJECT_NAME} link
-                ALWAYS FALSE
-                DEPENDEES "install"
-                COMMENT "Link Dynamic Libraries"
-                COMMAND ldconfig )
-
+include( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/spdlogger.cmake )
 
 # Install Version Generator
-        set( EXTERNAL_PROJECT_NAME generator )
+set( EXTERNAL_PROJECT_NAME generator )
 
-        ExternalProject_Add( ${EXTERNAL_PROJECT_NAME}
-                GIT_REPOSITORY https://github.com/erichschroeter/cmake-auto-increment-build-number.git
-                GIT_TAG master
-                GIT_PROGRESS ON
+ExternalProject_Add( ${EXTERNAL_PROJECT_NAME}
+	GIT_REPOSITORY https://github.com/erichschroeter/cmake-auto-increment-build-number.git
+	GIT_TAG master
+	GIT_PROGRESS ON
 
-                UPDATE_DISCONNECTED EXTERNAL_UPDATE
+	UPDATE_DISCONNECTED EXTERNAL_UPDATE
 
-                CONFIGURE_COMMAND ""
-                BUILD_COMMAND gcc -o ${EXTERNAL_PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}/C_binary_example/generate.c
-                INSTALL_COMMAND mv ${EXTERNAL_PROJECT_NAME} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
-                TEST_COMMAND ""
+	CONFIGURE_COMMAND ""
+	BUILD_COMMAND gcc -o ${EXTERNAL_PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}/C_binary_example/generate.c
+	INSTALL_COMMAND mv ${EXTERNAL_PROJECT_NAME} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+	TEST_COMMAND ""
 
-                DOWNLOAD_DIR    "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
-                SOURCE_DIR      "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
-                BINARY_DIR      "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
-                INSTALL_DIR     "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
+	DOWNLOAD_DIR    "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
+	SOURCE_DIR      "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
+	BINARY_DIR      "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
+	INSTALL_DIR     "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
 
-                TMP_DIR         "${EXTERNAL_TMP_DIR}/${EXTERNAL_PROJECT_NAME}"
-                STAMP_DIR       "${EXTERNAL_STAMP_DIR}/${EXTERNAL_PROJECT_NAME}"
-                LOG_DIR         "${EXTERNAL_LOG_DIR}/${EXTERNAL_PROJECT_NAME}"
+	TMP_DIR         "${EXTERNAL_TMP_DIR}/${EXTERNAL_PROJECT_NAME}"
+	STAMP_DIR       "${EXTERNAL_STAMP_DIR}/${EXTERNAL_PROJECT_NAME}"
+	LOG_DIR         "${EXTERNAL_LOG_DIR}/${EXTERNAL_PROJECT_NAME}"
 
-        )
+)
 
 # Generate Version Control Header
-        add_custom_target( version ALL
-                COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${EXTERNAL_PROJECT_NAME}
-                         -P "FRAMEWORK"
-                         -M "${VERSION_MAJOR}"
-                         -m ${VERSION_MINOR}
-                         -p ${VERSION_PATCH}
-                         -a "${VERSION_META}"
-                         -F "${CMAKE_SOURCE_DIR}/.buildnumber"
-                         -i
-                > ${CMAKE_SOURCE_DIR}/include/version.h
+add_custom_target( version ALL
+	COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${EXTERNAL_PROJECT_NAME}
+		 -P "FRAMEWORK"
+		 -M "${VERSION_MAJOR}"
+		 -m ${VERSION_MINOR}
+		 -p ${VERSION_PATCH}
+		 -a "${VERSION_META}"
+		 -F "${CMAKE_SOURCE_DIR}/.buildnumber"
+		 -i
+	> ${CMAKE_SOURCE_DIR}/include/version.h
 
-                DEPENDS "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${EXTERNAL_PROJECT_NAME}"
-                COMMENT "Generating version tags"
-        	VERBATIM
-	)
-        add_dependencies( version ${EXTERNAL_PROJECT_NAME} )
+	DEPENDS "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${EXTERNAL_PROJECT_NAME}"
+	COMMENT "Generating version tags"
+	VERBATIM
+)
+add_dependencies( version ${EXTERNAL_PROJECT_NAME} )
 
