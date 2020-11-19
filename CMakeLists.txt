@@ -45,7 +45,7 @@ if( CROSS_COMPILING )
 	message( STATUS "Configure CrossCompiler" )
 
         # Define the sysroot path for the RaspberryPi distribution in our tools folder
-#        set( CMAKE_FIND_ROOT_PATH /root/framework/kernel/linux )
+        set( CMAKE_SYSROOT /root/framework/kernel/linux )
 
         # Use our definitions for compiler tools
         set( CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER )
@@ -54,9 +54,12 @@ if( CROSS_COMPILING )
         set( CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY )
         set( CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY )
 
-	set( CMAKE_CXX_FLAGS "-Wall -g3 -Wno-psabii -I/${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/externals/include -L${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/externals/lib" )
+	set( CMAKE_C_COMPILER arm-linux-gnueabihf-gcc )
+	set( CMAKE_C_FLAGS "-Wall -g3 -Wno-psabii -I${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/externals/include -L${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/externals/lib" )
 
 	set( CMAKE_CXX_COMPILER arm-linux-gnueabihf-g++ )
+	set( CMAKE_CXX_FLAGS "-Wall -g3 -Wno-psabii -I${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/externals/include -L${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/externals/lib" )
+
 else()
 	set( CMAKE_CXX_COMPILER g++ )
 endif()
@@ -74,9 +77,9 @@ set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CMAKE_COMMAND} -E time")
 ###                       Download External Projects                        ###
 ###############################################################################
 add_subdirectory( kernel )
-return()
-
 add_subdirectory( external )
+
+return()
 
 ###############################################################################
 ###                         Configure Coding Tools                          ###

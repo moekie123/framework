@@ -37,4 +37,3 @@ set( KERNEL_UPDATE ON )
                 LOG_DIR         "${KERNEL_LOG_DIR}/${KERNEL_PROJECT_NAME}"
         )
 
-message( "Temp" )
