@@ -80,6 +80,8 @@ set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CMAKE_COMMAND} -E time")
 add_subdirectory( kernel )
 add_subdirectory( external )
 
+return()
+
 ###############################################################################
 ###                         Configure Coding Tools                          ###
 ###############################################################################

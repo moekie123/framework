@@ -26,7 +26,14 @@ if( CROSS_COMPILING )
 	list( APPEND EXTERNAL_CROSS_COMPILE_ARGS -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY )
 endif()
 
+# Frameworks
+include( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/boost.cmake )
+
+# Test Enviroments
 include( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/googletest.cmake )
+include( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/cucumber.cmake )
+
+# Other third-party libraries
 include( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/mosquitto.cmake )
 include( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/tinyxml.cmake )
 include( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/tinyfsm.cmake )
