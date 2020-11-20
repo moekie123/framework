@@ -21,11 +21,11 @@ set( KERNEL_UPDATE ON )
 		BUILD_IN_SOURCE ON
 
 		CONFIGURE_COMMAND	export KERNEL=kernel7
-		COMMAND			make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- bcm2709_defconfig -j4
+		COMMAND			make bcm2709_defconfig -j4
 
-		BUILD_COMMAND 		make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- zImage modules dtbs -j4
+		BUILD_COMMAND 		make zImage modules dtbs -j4
 
-		INSTALL_COMMAND 	make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- INSTALL_MOD_PATH=${CMAKE_CURRENT_SOURCE_DIR}/modules modules_install
+		INSTALL_COMMAND 	make INSTALL_MOD_PATH=${CMAKE_CURRENT_SOURCE_DIR}/modules modules_install -j4 
 		COMMAND			${CMAKE_CURRENT_SOURCE_DIR}/Install.sh	
 
                 DOWNLOAD_DIR    "${CMAKE_CURRENT_SOURCE_DIR}/${KERNEL_PROJECT_NAME}"

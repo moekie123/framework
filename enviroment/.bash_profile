@@ -1,4 +1,4 @@
-#echo "Framework Profile Loaded"
+echo "Framework Profile Loaded"
 
 shopt -s expand_aliases  
 
@@ -13,8 +13,11 @@ alias mv='mv -i'
 alias cdl='cd /usr/src/linux/'
 
 # Verify (local) Running Hardware
-DEVICE=""
-if grep -q "Raspberry Pi" /proc/cpuinfo; then
+
+MACHINE=$(uname -m)
+
+if [ "$MACHINE" = "armv7l" ]; 
+then
 	DEVICE="RaspberryPi"
 else
 	DEVICE="VirtualMachine"

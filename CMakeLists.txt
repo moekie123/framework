@@ -70,7 +70,7 @@ set( CMAKE_CXX_EXTENSIONS ON )
 
 set ( CMAKE_CXX_STANDARD 17 )
 
-add_definitions(-Wall -g3 -Wno-psabii ) 
+add_definitions( -Wall -g3 -Wno-psabii ) 
 
 set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CMAKE_COMMAND} -E time")
 
@@ -78,7 +78,10 @@ set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CMAKE_COMMAND} -E time")
 ###                       Download External Projects                        ###
 ###############################################################################
 add_subdirectory( kernel )
-add_subdirectory( external )
+
+return()
+
+#add_subdirectory( external )
 
 return()
 
