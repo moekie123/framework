@@ -1,17 +1,20 @@
 include(ExternalProject)
 
-# Instal the Google Test Framework
+# Install speed logger
 set( EXTERNAL_PROJECT_NAME ext_spdlogger )
 
 # Configure build arguments
-set( EXTERNAL_CMAKE_ARGS -DSPDLOG_BUILD_SHARED=ON )
+set( EXTERNAL_CMAKE_ARGS -DSPDLOG_BUILD_SHARED=OFF )
+
 list( APPEND EXTERNAL_CMAKE_ARGS -DSPDLOG_BUILD_TESTS=OFF )
 list( APPEND EXTERNAL_CMAKE_ARGS -DSPDLOG_BUILD_TESTS_HO=OFF )
 
+# Add configure install directories
+list( APPEND EXTERNAL_CMAKE_ARGS -DCMAKE_INSTALL_LIBDIR=${EXTERNAL_DIR}/library ) 
+list( APPEND EXTERNAL_CMAKE_ARGS -DCMAKE_INSTALL_INCLUDEDIR=${EXTERNAL_DIR}/include )
+
 # Add cross compiler arguments to build arguments
-if( CROSS_COMPILING )
-	list( APPEND EXTERNAL_CMAKE_ARGS ${EXTERNAL_CROSS_COMPILE_ARGS} )
-endif()
+list( APPEND EXTERNAL_CMAKE_ARGS ${EXTERNAL_CROSS_COMPILE_ARGS} )
 
 # Create external project
 ExternalProject_Add( ${EXTERNAL_PROJECT_NAME}

@@ -1,6 +1,6 @@
 include(ExternalProject)
 
-# Instal the Google Test Framework
+# Install the Google Test Framework
 set( EXTERNAL_PROJECT_NAME ext_googletest )
 
 # Configure build arguments
