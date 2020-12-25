@@ -1,6 +1,6 @@
-cmake_minimum_required( VERSION 3.17.0 )
+cmake_minimum_required( VERSION 3.17.0 FATAL_ERROR )
 
-Project( Framework )
+Project( Framework LANGUAGES CXX )
 
 # Framework Version
 set(VERSION_MAJOR   0)
@@ -10,78 +10,141 @@ set(VERSION_META "-alpha")
 
 mark_as_advanced(VERSION_MAJOR VERSION_MINOR VERSION_PATCH)
 
+message( STATUS "Project Name : ${CMAKE_PROJECT_NAME}" )
+
 ###############################################################################
 ###                          Verify the Hardware                            ###
 ###############################################################################
-set( RPI_HARDWARE FALSE )
-set( CROSS_COMPILING FALSE )
 
+set( RPI_HARDWARE FALSE )
+
+# Check if enviroment variables define the hardware
 if( $ENV{HARDWARE} STREQUAL "RaspberryPi" )
 	set( RPI_HARDWARE TRUE )
 endif()
 
-if( $RPI_HARDWARE )
-        message( STATUS "Project Build as Raspberry Pi Project" )
-else()
-        message( STATUS "Project Build as Cross Compiler Project" )
-	set( CROSS_COMPILING TRUE )
-endif()
+message( STATUS "Hardware [$ENV{HARDWARE}] recognized as embedded platform [${RPI_HARDWARE}]" )
 
 ###############################################################################
-###                               Defenitions                               ###
+###                               Definitions                               ###
 ###############################################################################
 
 set( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/library )
 set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/binary )
-set( CMAKE_INSTALL_OUTPUT_DIRECTORY /opt/framework/ )
+
+set( INSTALL_DIRECTORY /opt/framework/ )
+
+###############################################################################
+###                    Project Build Configuration                          ###
+###############################################################################
+
+if( NOT CMAKE_BUILD_TYPE )
+	set( CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE )
+endif()
+
+message( STATUS "Build type: ${CMAKE_BUILD_TYPE}" )
 
 ###############################################################################
 ###                         Configure the Compiler                          ###
 ###############################################################################
-message("Configure Compiler")
- 
-# Define the (Cross) Compiler
-if( CROSS_COMPILING )
-	message( STATUS "Configure CrossCompiler" )
 
-        # Define the sysroot path for the RaspberryPi distribution in our tools folder
-        set( CMAKE_SYSROOT /root/framework/kernel/linux )
+include( CMakeDependentOption )
 
-        # Use our definitions for compiler tools
-        set( CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER )
+# Cross Compiling required when not running on RaspberryPi
+cmake_dependent_option(
+	CROSS_COMPILING "Build project for different platform" FALSE
+	"RPI_HARDWARE"
+	TRUE # RPI_HARDWARE true, apply this value
+)
 
-        # Search for libraries and headers in the target directories only
-        set( CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY )
-        set( CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY )
+message( CHECK_START "Set required compiling method" )
+if( ${CROSS_COMPILING} )
+	message( CHECK_PASS "Crossing" )
 
-	set( CMAKE_C_COMPILER arm-linux-gnueabihf-gcc )
-	set( CMAKE_C_FLAGS "-Wall -g3 -Wno-psabii -I${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/externals/include -L${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/externals/lib" )
+	set( TOOLCHAIN aarch64-linux-gnu- )
+	set( ARCHITECTURE arm64 )
+	set( KERNEL kernel8 )
 
-	set( CMAKE_CXX_COMPILER arm-linux-gnueabihf-g++ )
-	set( CMAKE_CXX_FLAGS "-Wall -g3 -Wno-psabii -I${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/externals/include -L${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/externals/lib" )
-
+	set( CMAKE_CXX_COMPILER ${TOOLCHAIN}g++ )
 else()
-	set( CMAKE_C_COMPILER gcc )
+	message( CHECK_PASS "Native" )
+
+	# Find out the enviroment architecture
+	set( TOOLCHAIN aarch64-linux-gnu- )
+	set( ARCHITECTURE arm64 )
+	set( KERNEL kernel8 )
+
+	message( WARNING "CMake not ablel to dectect the architecture")
+	return()
+
 	set( CMAKE_CXX_COMPILER g++ )
 endif()
 
-set( CMAKE_CXX_STANDARD_REQUIRED ON )
-set( CMAKE_CXX_EXTENSIONS ON )
+# Terminate build if C++ compiler is missing
+message( CHECK_START "Check for C++ compiler" )
+if( CMAKE_CXX_COMPILER_LOADED )
+	message( CHECK_PASS "Loaded" )
 
-set ( CMAKE_CXX_STANDARD 17 )
+	message( STATUS "C++ compiler: ${CMAKE_CXX_COMPILER}")
+	message( STATUS "C++ compiler id: ${CMAKE_CXX_COMPILER_ID}")
+	message( STATUS "C++ compiler version: ${CMAKE_CXX_COMPILER_VERSION}")
 
-add_definitions( -Wall -g3 -Wno-psabii ) 
+	set( CMAKE_CXX_STANDARD 17 )
+	set( CMAKE_CXX_STANDARD_REQUIRED ON )
+	message( STATUS "C++ standard: ${CMAKE_CXX_STANDARD}" )
+	
+#	set( CMAKE_CXX_EXTENSIONS OFF )
+else()
+	message( CHECK_FAIL "Not loaded" )
+	return()
+endif()
 
-set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CMAKE_COMMAND} -E time")
+
+# Configure the compiler flags
+set( COMPILER_FLAGS )
+list( APPEND COMPILER_FLAGS "-Wall" "-Wno-psabii" )
+
+if( ${CMAKE_BUILD_TYPE} STREQUAL "Release" )
+	list(APPEND COMPILER_FLAGS "-Wsuggest-final-types" "-Wsuggest-final-methods" "-Wsuggest-override")
+
+elseif( ${CMAKE_BUILD_TYPE} STREQUAL "Debug" )
+	list(APPEND COMPILER_FLAGS "-O3" "-g3" "-Wno-unused")
+
+endif()
+message( STATUS "Compile flags: " ${COMPILER_FLAGS} )
+
+###############################################################################
+###                           COMPILER ANALYTICS                            ###
+###############################################################################
+
+set_property( GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CMAKE_COMMAND} -E time" )
+
+###############################################################################
+###                             Build Kernel                                ###
+###############################################################################
+
+# Define the sysroot path for the RaspberryPi Kernel
+set( CMAKE_SYSROOT "${CMAKE_SOURCE_DIR}/kernel/linux" )
+
+# Use our definitions for compiler tools
+set( CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER )
+
+# Search for libraries and headers in the target directories only
+set( CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY )
+list( APPEND COMPILER_FLAGS "-L${CMAKE_SOURCE_DIR}/kernel/modules" )
+
+set( CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY )
+list( APPEND COMPILER_FLAGS "-I${CMAKE_SOURCE_DIR}/kernel/include" )
+
+message( STATUS "Additional Kernel Compile flags: " ${COMPILER_FLAGS} )
+
+add_subdirectory( kernel )
 
 ###############################################################################
 ###                       Download External Projects                        ###
 ###############################################################################
-add_subdirectory( kernel )
 
-return()
-
-#add_subdirectory( external )
+add_subdirectory( external )
 
 return()
 

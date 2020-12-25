@@ -104,7 +104,7 @@ fi
 if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_BASH" ]]; then
 info "Configure Enviroment"
 	# Copy the following files to the Home-dir
-	files=( ".bash_profile" ".vimrc" ".gdbinit" ".git.template" )
+	files=( ".bash_profile" ".vimrc" ".git.template" )
 
 	for FILE in "${files[@]}"
 	do
@@ -142,7 +142,7 @@ fi
 if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_TOOLKIT" ]]; then
 # Platfrom independend toolkit
 info "Install Development Toolkit"
-	$INSTALL gcc g++ python build-essential cmake #universal-ctags 
+	$INSTALL gcc g++ python build-essential cmake #universal-ctags bjam
 
 # Raspberry pi specifics
 #info "Install I2C Toolkit"
@@ -194,7 +194,9 @@ fi
 if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_KERNEL" ]]; then
 	info "Install Kernel Toolkit"
 	$INSTALL bc bison flex libssl-dev 
-	$INSTALL libncurses5-dev 
+	$INSTALL libncurses5-dev
+	$INSTALL crossbuild-essential-armhf crossbuild-essential-arm64 
+	$INSTALL rsync
 fi
 
 info "Finished Setup Development Environment Script"

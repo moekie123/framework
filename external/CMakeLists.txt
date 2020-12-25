@@ -1,44 +1,47 @@
 Message( "Download External Dependencies" )
 
-set( EXTERNAL_TMP_DIR "${CMAKE_CURRENT_SOURCE_DIR}/.temporary")
-set( EXTERNAL_STAMP_DIR "${CMAKE_CURRENT_SOURCE_DIR}/.stamp")
-set( EXTERNAL_LOG_DIR "${CMAKE_CURRENT_SOURCE_DIR}/.log" )
-
-set( EXTERNAL_INSTALL_PREFIX ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/externals )
-
-set( EXTERNAL_UPDATE OFF )
 include(ExternalProject)
 
+# Storage location for build and install files
+set( EXTERNAL_DIR "${CMAKE_CURRENT_SOURCE_DIR}" )
+
+# Define generated directories
+set( EXTERNAL_TMP_DIR  "${EXTERNAL_DIR}/.temporary")
+set( EXTERNAL_LOG_DIR  "${EXTERNAL_DIR}/.log" )
+set( EXTERNAL_STAMP_DIR "${EXTERNAL_DIR}/.stamp")
+
+# Allow automatic checkout and rebuild
+set( EXTERNAL_UPDATE OFF )
+
 # Redirect installation to project directory, instead of /usr/local
-if( CROSS_COMPILING )
-	# Configure C-Compiler
-	list( APPEND EXTERNAL_CROSS_COMPILE_ARGS -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER} )
+set( EXTERNAL_BUILD_ARGS "" )
 
-	# Configure C++-Compiler
-	list( APPEND EXTERNAL_CROSS_COMPILE_ARGS -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER} )
+# Configure C++-Compiler
+list( APPEND EXTERNAL_BUILD_ARGS " -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}" )
 
-	# Configure General Cross Compiler Settings
-	list( APPEND EXTERNAL_CROSS_COMPILE_ARGS -DCMAKE_INSTALL_PREFIX=${EXTERNAL_INSTALL_PREFIX} )
-	list( APPEND EXTERNAL_CROSS_COMPILE_ARGS -DCMAKE_SYSROOT=${CMAKE_SOURCE_DIR}/kernel/linux )
+# Configure General Cross Compiler Settings
+list( APPEND EXTERNAL_BUILD_ARGS " -DCMAKE_INSTALL_PREFIX=${EXTERNAL_DIR}" )
 
-	list( APPEND EXTERNAL_CROSS_COMPILE_ARGS -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER )
-	list( APPEND EXTERNAL_CROSS_COMPILE_ARGS -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY )
-	list( APPEND EXTERNAL_CROSS_COMPILE_ARGS -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY )
-endif()
+list( APPEND EXTERNAL_BUILD_ARGS " -DCMAKE_SYSROOT=${CMAKE_SYSROOT}" )
 
-# Frameworks
-include( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/boost.cmake )
+list( APPEND EXTERNAL_BUILD_ARGS " -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=${CMAKE_FIND_ROOT_PATH_MODE_PROGRAM}" )
+list( APPEND EXTERNAL_BUILD_ARGS " -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=${CMAKE_FIND_ROOT_PATH_MODE_INCLUDE}" )
+list( APPEND EXTERNAL_BUILD_ARGS " -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=${CMAKE_FIND_ROOT_PATH_MODE_LIBRARY}" )
 
 # Test Enviroments
 include( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/googletest.cmake )
-include( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/cucumber.cmake )
+include( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/mosquitto.cmake )
+
+return()
 
 # Other third-party libraries
-include( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/mosquitto.cmake )
 include( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/tinyxml.cmake )
 include( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/tinyfsm.cmake )
 include( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/rapidjson.cmake )
 include( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/spdlogger.cmake )
+
+#include( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/boost.cmake )
+#include( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/cucumber.cmake )
 
 # Install Version Generator
 set( EXTERNAL_PROJECT_NAME generator )

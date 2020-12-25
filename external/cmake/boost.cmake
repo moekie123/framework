@@ -1,6 +1,6 @@
 include(ExternalProject)
 
-# Instal the Google Test Framework
+# Instal the Boost Framework
 set( EXTERNAL_PROJECT_NAME ext_boost )
 
 # Configure build arguments
@@ -8,9 +8,8 @@ set( EXTERNAL_CMAKE_ARGS "" )
 
 # Add cross compiler arguments to build arguments
 if( CROSS_COMPILING )
-	list( APPEND EXTERNAL_CMAKE_ARGS ${EXTERNAL_CROSS_COMPILE_ARGS} )
+	list( APPEND EXTERNAL_CMAKE_ARGS ${EXTERNAL_COMPILER} )
 endif()	
-
 
 ExternalProject_Add( ${EXTERNAL_PROJECT_NAME}
 	GIT_REPOSITORY https://github.com/boostorg/boost/
@@ -22,6 +21,8 @@ ExternalProject_Add( ${EXTERNAL_PROJECT_NAME}
 	CONFIGURE_COMMAND ""
 	
 	BUILD_COMMAND bjam --with-regex toolset=arm-linux-gnueabihf-g++  variant=debug link=static install --prefix=/tmp/boostinstall
+
+	INSTALL_COMMAND = ""
 
 	DOWNLOAD_DIR    "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
 	SOURCE_DIR      "${CMAKE_CURRENT_SOURCE_DIR}/${EXTERNAL_PROJECT_NAME}"
