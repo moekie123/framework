@@ -25,7 +25,7 @@ ExternalProject_Add( ${EXTERNAL_PROJECT_NAME}
 	GIT_TAG master
 	GIT_PROGRESS ON
 
-	UPDATE_DISCONNECTED EXTERNAL_UPDATE
+	UPDATE_DISCONNECTED ${EXTERNAL_UPDATE}
 
 # Customize the build command such that =march is compaatible
 # - Figrue wich build flags are used at the momemtn

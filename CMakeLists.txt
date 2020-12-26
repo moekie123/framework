@@ -29,9 +29,8 @@ message( STATUS "Hardware [$ENV{HARDWARE}] recognized as embedded platform [${RP
 ###                               Definitions                               ###
 ###############################################################################
 
-set( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/library )
+#set( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/library )
 set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/binary )
-
 set( INSTALL_DIRECTORY /opt/framework/ )
 
 ###############################################################################
