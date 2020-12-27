@@ -1,6 +1,6 @@
 cmake_minimum_required( VERSION 3.17.0 FATAL_ERROR )
 
-Project( Framework LANGUAGES CXX )
+Project( Framework LANGUAGES CXX C )
 
 # Framework Version
 set(VERSION_MAJOR   0)
@@ -69,6 +69,7 @@ if( ${CROSS_COMPILING} )
 	set( ARCHITECTURE arm64 )
 	set( KERNEL kernel8 )
 
+	set( CMAKE_C_COMPILER ${TOOLCHAIN}gcc )
 	set( CMAKE_CXX_COMPILER ${TOOLCHAIN}g++ )
 else()
 	message( CHECK_PASS "Native" )
@@ -157,15 +158,11 @@ endif()
 # Define the sysroot path for the RaspberryPi Kernel
 set( CMAKE_SYSROOT "${CMAKE_SOURCE_DIR}/kernel/linux" )
 
-# Use our definitions for compiler tools
 set( CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER )
 
-# Search for libraries and headers in the target directories only
 set( CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY )
-list( APPEND COMPILER_FLAGS "-L${CMAKE_SOURCE_DIR}/kernel/modules" )
-
 set( CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY )
-list( APPEND COMPILER_FLAGS "-I${CMAKE_SOURCE_DIR}/kernel/include" )
+set( CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY )
 
 message( STATUS "Additional Kernel Compile flags: " ${COMPILER_FLAGS} )
 
@@ -174,6 +171,10 @@ add_subdirectory( kernel )
 ###############################################################################
 ###                       Download External Projects                        ###
 ###############################################################################
+
+set( CMAKE_FIND_DEBUG_MODE 1 )
+set( CMAKE_REQUIRED_INCLUDES "${CMAKE_SOURCE_DIR}/kernel/linux/include/glibc" )
+find_package( Threads REQUIRED )
 
 add_subdirectory( external )
 
