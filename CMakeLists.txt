@@ -31,7 +31,12 @@ message( STATUS "Hardware [$ENV{HARDWARE}] recognized as embedded platform [${RP
 
 #set( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/library )
 set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/binary )
+
 set( INSTALL_DIRECTORY /opt/framework/ )
+
+# List of header file directories
+set( HEADER_DIRECTORIES )
+set( LIBRARY_DIRECTORIES )
 
 ###############################################################################
 ###                    Project Build Configuration                          ###
@@ -98,10 +103,9 @@ else()
 	return()
 endif()
 
-
 # Configure the compiler flags
 set( COMPILER_FLAGS )
-list( APPEND COMPILER_FLAGS "-Wall" "-Wno-psabii" )
+list( APPEND COMPILER_FLAGS "-Wall" "-Wno-psabii" "-v" "-time")
 
 if( ${CMAKE_BUILD_TYPE} STREQUAL "Release" )
 	list(APPEND COMPILER_FLAGS "-Wsuggest-final-types" "-Wsuggest-final-methods" "-Wsuggest-override")
@@ -117,6 +121,34 @@ message( STATUS "Compile flags: " ${COMPILER_FLAGS} )
 ###############################################################################
 
 set_property( GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CMAKE_COMMAND} -E time" )
+
+###############################################################################
+###                         Configure Coding Tools                          ###
+###############################################################################
+
+# Setup CppCheck
+find_program(CMAKE_CXX_CPPCHECK NAMES cppcheck)
+
+if (CMAKE_CXX_CPPCHECK)
+	list(
+		APPEND CMAKE_CXX_CPPCHECK 
+			"--enable=warning"
+			"--inconclusive"
+			"--force" 
+			"--inline-suppr"
+			"--language=c++"
+			"--suppress=*:*external*"
+    	)
+endif()
+
+# Setup CTags
+
+#set_source_files_properties( tags PROPERTIES GENERATED true )
+
+#add_custom_target ( tags ALL
+#	COMMAND ctags -f tags -R --c++-kinds=+p --fields=+iaS ${CMAKE_CURRENT_SOURCE_DIR} --exclude=${CMAKE_SOURCE_DIR}/external/*
+#   	WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} )
+
 
 ###############################################################################
 ###                             Build Kernel                                ###
@@ -147,20 +179,14 @@ add_subdirectory( external )
 
 return()
 
-###############################################################################
-###                         Configure Coding Tools                          ###
-###############################################################################
+list( APPEND HEADER_DIRECTORIES ${CMAKE_SOURCE_DIR}/include )
+list( APPEND HEADER_DIRECTORIES ${CMAKE_SOURCE_DIR}/external/include )
 
-# Validate Source
-message( "Check source code" )
-#set(CMAKE_CXX_CPPCHECK "cppcheck")
-
-# Setup CTags
-message( "Configure CTags" )
-#set_source_files_properties( tags PROPERTIES GENERATED true)
-#add_custom_target ( tags ALL
-#	COMMAND ctags -f tags -R --c++-kinds=+p --fields=+iaS --extras=+q ${CMAKE_CURRENT_SOURCE_DIR} --exclude=${CMAKE_SOURCE_DIR}/external/*
- #   	WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} )
+find_library( EXTERNAL_LIBRARIES 
+	NAMES tinyxml2
+	PATHS ${CMAKE_SOURCE_DIR}/external/library
+	NO_CMAKE_FIND_ROOT_PATH
+	REQUIRED)
 
 ###############################################################################
 ###                      Configure Test Enviroment                          ###
@@ -169,11 +195,19 @@ message( "Configure CTags" )
 # Build Test Enviroment
 message( "Configure Test Enviroment" )
 function( gsetup gtest-name )
+
 	message("Setup [gtest-${gtest-name}] target")
+
 	add_executable( gtest-${gtest-name} gtest-${gtest-name}.cpp )
-	target_link_libraries( gtest-${gtest-name} gtest gmock pthread )
+
+#	target_link_libraries( gtest-${gtest-name} gtest gmock pthread )
+
+	target_compile_options( gtest-${gtest-name} PRIVATE ${COMPILER_FLAGS}  )
+	target_include_directories( gtest-${gtest-name} PRIVATE ${HEADER_DIRECTORIES} )
+
 	add_test( NAME ${gtest-name} COMMAND gtest-${gtest-name} WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY} )
 	install( TARGETS gtest-${gtest-name} DESTINATION ${CMAKE_INSTALL_OUTPUT_DIRECTORY}/gtest )
+
 endfunction()
 include( CTest )
 
@@ -181,10 +215,10 @@ include( CTest )
 ###                           Build the Framework                           ###
 ###############################################################################
 
-# Build Enviroment
-message( "Setup the directory tree" )
-include_directories( include )
 add_subdirectory( source )
+
+return()
+
 add_subdirectory( prototype )
 
 # Include drivers

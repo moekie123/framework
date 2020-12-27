@@ -7,3 +7,6 @@ add_subdirectory( hardware )
 
 # Merge to one library
 add_library( Framework ${FRAMEWORK_SOURCES} )
+
+target_include_directories( Framework PRIVATE ${HEADER_DIRECTORIES} )
+target_compile_options( Framework PRIVATE ${COMPILER_FLAGS}  )

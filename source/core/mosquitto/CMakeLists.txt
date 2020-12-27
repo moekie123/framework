@@ -4,6 +4,9 @@ add_library( mqtt OBJECT
 		Visitor.cpp
 		)
 
+target_include_directories( mqtt PRIVATE ${HEADER_DIRECTORIES} )
+target_compile_options( mqtt PRIVATE ${COMPILER_FLAGS}  )
+
 add_executable( fsm-mqtt
 			main.cpp 
 			../../Framework.cpp

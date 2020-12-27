@@ -50,6 +50,7 @@ if [ -d "${FRAMEWORK}" ]; then
 	alias cdim='cd '$FRAMEWORK/include/mocks
 
 	alias  cde='cd '$FRAMEWORK/external
+	alias  cdec='cd '$FRAMEWORK/external/cmake
 
 	alias  cdp='cd '$FRAMEWORK/prototype
 
@@ -65,7 +66,7 @@ if [ -d "${FRAMEWORK}" ]; then
 	alias  cdenv='cd '$FRAMEWORK/enviroment
 
 	# Build shortcuts
-	alias makef='make --no-print-directory -C '${FRAMEWORK_BUILD}
+	alias makef='make --no-print-directory -C ${FRAMEWORK_BUILD} VERBOSE=1'
 	alias maker='make --no-print-directory -C  ${FRAMEWORK_BUILD} -j4'
 	alias makes='make --no-print-directory -C  ${FRAMEWORK_BUILD} -j4 '${SESSION} 
 

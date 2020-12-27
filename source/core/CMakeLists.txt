@@ -14,6 +14,9 @@ add_library( generic OBJECT
 		${CMAKE_CURRENT_SOURCE_DIR}/Observer.cpp
 		${CMAKE_CURRENT_SOURCE_DIR}/Subject.cpp )
 
+target_include_directories( generic PRIVATE ${HEADER_DIRECTORIES} )
+target_compile_options( generic PRIVATE ${COMPILER_FLAGS}  )
+
 # Collect Framework sources
 set( CORE_SOURCES
 	# Include the Fundamentals

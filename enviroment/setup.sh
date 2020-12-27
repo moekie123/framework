@@ -142,7 +142,7 @@ fi
 if [ "$#" -eq 0 ] || [[ " ${INSTALLATION[@]} " =~ "INSTALL_TOOLKIT" ]]; then
 # Platfrom independend toolkit
 info "Install Development Toolkit"
-	$INSTALL gcc g++ python build-essential cmake #universal-ctags bjam
+	$INSTALL gcc g++ python build-essential cmake universal-ctags# bjam
 
 # Raspberry pi specifics
 #info "Install I2C Toolkit"

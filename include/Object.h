@@ -5,7 +5,7 @@
 #include <string>
 
 // Third-Party
-#include <spdlog/spdlog.h>
+#include "spdlog/spdlog.h"
 
 // Forward Declaration
 class Generic;
