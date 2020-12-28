@@ -11,10 +11,9 @@ set( EXTERNAL_LOG_DIR  "${EXTERNAL_DIR}/.log" )
 set( EXTERNAL_STAMP_DIR "${EXTERNAL_DIR}/.stamp")
 
 # Allow automatic checkout and rebuild
-set( DISCONNECT OFF )
+set( DISCONNECT ON )
 
-# Redirect installation to project directory, instead of /usr/local
-set( EXTERNAL_BUILD_ARGS "" )
+include( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/glibc.cmake )
 
 # Include external projects
 include( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/googletest.cmake )

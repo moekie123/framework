@@ -172,10 +172,6 @@ add_subdirectory( kernel )
 ###                       Download External Projects                        ###
 ###############################################################################
 
-set( CMAKE_FIND_DEBUG_MODE 1 )
-set( CMAKE_REQUIRED_INCLUDES "${CMAKE_SOURCE_DIR}/kernel/linux/include/glibc" )
-find_package( Threads REQUIRED )
-
 add_subdirectory( external )
 
 return()

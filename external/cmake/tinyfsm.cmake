@@ -16,7 +16,7 @@ ExternalProject_Add( ${EXTERNAL_PROJECT_NAME}
 	UPDATE_COMMAND ""
 	CONFIGURE_COMMAND ""
 	BUILD_COMMAND ""
-	INSTALL_COMMAND cmake -E copy ${EXTERNAL_DIR}/${EXTERNAL_PROJECT_NAME}/include/tinyfsm.hpp ${EXTERNAL_DIR}/include
+	INSTALL_COMMAND cmake -E copy ${EXTERNAL_DIR}/${EXTERNAL_PROJECT_NAME}/include/tinyfsm.hpp ${EXTERNAL_DIR}/output/include
 	TEST_COMMAND ""
 
 	DOWNLOAD_DIR    "${EXTERNAL_DIR}/${EXTERNAL_PROJECT_NAME}"
@@ -27,5 +27,7 @@ ExternalProject_Add( ${EXTERNAL_PROJECT_NAME}
 	TMP_DIR         "${EXTERNAL_TMP_DIR}/${EXTERNAL_PROJECT_NAME}"
 	STAMP_DIR       "${EXTERNAL_STAMP_DIR}/${EXTERNAL_PROJECT_NAME}"
 	LOG_DIR         "${EXTERNAL_LOG_DIR}/${EXTERNAL_PROJECT_NAME}"
-
 )
+
+# GLibc must be build before googletest can be build because of the phread.h dependency
+ExternalProject_Add_StepDependencies( ${EXTERNAL_PROJECT_NAME} install "ext_glibc" )

@@ -3,9 +3,6 @@ include(ExternalProject)
 # Install Rapid JSON
 set( EXTERNAL_PROJECT_NAME ext_rapidjson )
 
-# Configure build arguments
-set( EXTERNAL_CMAKE_ARGS "" )
-
 # Create external project
 ExternalProject_Add( ${EXTERNAL_PROJECT_NAME}
 	GIT_REPOSITORY https://github.com/Tencent/rapidjson.git
@@ -27,13 +24,14 @@ ExternalProject_Add( ${EXTERNAL_PROJECT_NAME}
 	STAMP_DIR       "${EXTERNAL_STAMP_DIR}/${EXTERNAL_PROJECT_NAME}"
 	LOG_DIR         "${EXTERNAL_LOG_DIR}/${EXTERNAL_PROJECT_NAME}"
 	
-	CMAKE_ARGS 	-DCMAKE_CXX_COMPILER=/usr/bin/${CMAKE_CXX_COMPILER}
+#	CMAKE_ARGS	-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+	CMAKE_ARGS	-DCMAKE_CXX_COMPILER=/usr/bin/${CMAKE_CXX_COMPILER}
 
 			-DCMAKE_SYSROOT=${CMAKE_SYSROOT}
 
-			-DCMAKE_INSTALL_PREFIX=${EXTERNAL_DIR}
-			-DCMAKE_INSTALL_LIBDIR=${EXTERNAL_DIR}/library 
-			-DCMAKE_INSTALL_INCLUDEDIR=${EXTERNAL_DIR}/include
+			-DCMAKE_INSTALL_PREFIX=${EXTERNAL_DIR}/output
+			-DCMAKE_INSTALL_LIBDIR=${EXTERNAL_DIR}/output/lib 
+			-DCMAKE_INSTALL_INCLUDEDIR=${EXTERNAL_DIR}/output/include
 			
 			-DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=${CMAKE_FIND_ROOT_PATH_MODE_PROGRAM} 
 			-DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=${CMAKE_FIND_ROOT_PATH_MODE_INCLUDE} 
@@ -43,3 +41,6 @@ ExternalProject_Add( ${EXTERNAL_PROJECT_NAME}
 			-DRAPIDJSON_BUILD_EXAMPLES=OFF
 			-DRAPIDJSON_BUILD_TESTS=OFF 
 )
+
+# GLibc must be build before googletest can be build because of the phread.h dependency
+ExternalProject_Add_StepDependencies( ${EXTERNAL_PROJECT_NAME} install "ext_glibc" )

@@ -1,7 +1,7 @@
 include(ExternalProject)
 
 # Install Version Generator
-set( EXTERNAL_PROJECT_NAME generator )
+set( EXTERNAL_PROJECT_NAME ext_generator )
 
 ExternalProject_Add( ${EXTERNAL_PROJECT_NAME}
 	GIT_REPOSITORY https://github.com/erichschroeter/cmake-auto-increment-build-number.git
@@ -43,4 +43,3 @@ add_custom_target( version ALL
 )
 
 add_dependencies( version ${EXTERNAL_PROJECT_NAME} )
-

@@ -49,6 +49,9 @@ if [ -d "${FRAMEWORK}" ]; then
 	alias  cdi='cd '$FRAMEWORK/include
 	alias cdim='cd '$FRAMEWORK/include/mocks
 
+	alias  cdk='cd '$FRAMEWORK/kernel
+	alias  cdki='cd '$FRAMEWORK/kernel/inlcude
+
 	alias  cde='cd '$FRAMEWORK/external
 	alias  cdec='cd '$FRAMEWORK/external/cmake
 
