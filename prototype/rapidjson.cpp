@@ -3,7 +3,6 @@
 #include "rapidjson/document.h"
 #include "rapidjson/writer.h"
 #include "rapidjson/stringbuffer.h"
-#include <iostream>
  
 using namespace rapidjson;
  
@@ -12,6 +11,8 @@ int main() {
     const char* json = "{\"project\":\"rapidjson\",\"stars\":10}";
     Document d;
     d.Parse(json);
+
+	std::cout << "test\n";
  
     // 2. Modify it by DOM.
     Value& s = d["stars"];

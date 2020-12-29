@@ -10,7 +10,7 @@ ExternalProject_Add( ${EXTERNAL_PROJECT_NAME}
 	GIT_TAG master
 	GIT_PROGRESS ON
 
-#	UPDATE_DISCONNECTED ${DISCONNECT}
+	UPDATE_DISCONNECTED ${DISCONNECT}
 
 	DOWNLOAD_DIR    "${EXTERNAL_DIR}/${EXTERNAL_PROJECT_NAME}"
 	SOURCE_DIR      "${EXTERNAL_DIR}/${EXTERNAL_PROJECT_NAME}"
@@ -49,5 +49,3 @@ ExternalProject_Add( ${EXTERNAL_PROJECT_NAME}
 			-DDOCUMENTATION=OFF
 )
 
-# GLibc must be build before googletest can be build because of the phread.h dependency
-ExternalProject_Add_StepDependencies( ${EXTERNAL_PROJECT_NAME} install "ext_glibc" )

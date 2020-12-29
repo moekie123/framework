@@ -34,10 +34,6 @@ set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/binary )
 
 set( INSTALL_DIRECTORY /opt/framework/ )
 
-# List of header file directories
-set( HEADER_DIRECTORIES )
-set( LIBRARY_DIRECTORIES )
-
 ###############################################################################
 ###                    Project Build Configuration                          ###
 ###############################################################################
@@ -117,30 +113,32 @@ elseif( ${CMAKE_BUILD_TYPE} STREQUAL "Debug" )
 endif()
 message( STATUS "Compile flags: " ${COMPILER_FLAGS} )
 
+add_compile_options( ${COMPILER_FLAGS} )
+
 ###############################################################################
 ###                           COMPILER ANALYTICS                            ###
 ###############################################################################
 
-set_property( GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CMAKE_COMMAND} -E time" )
+#set_property( GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CMAKE_COMMAND} -E time" )
 
 ###############################################################################
 ###                         Configure Coding Tools                          ###
 ###############################################################################
 
 # Setup CppCheck
-find_program(CMAKE_CXX_CPPCHECK NAMES cppcheck)
+#find_program(CMAKE_CXX_CPPCHECK NAMES cppcheck)
 
-if (CMAKE_CXX_CPPCHECK)
-	list(
-		APPEND CMAKE_CXX_CPPCHECK 
-			"--enable=warning"
-			"--inconclusive"
-			"--force" 
-			"--inline-suppr"
-			"--language=c++"
-			"--suppress=*:*external*"
-    	)
-endif()
+#if (CMAKE_CXX_CPPCHECK)
+#	list(
+#		APPEND CMAKE_CXX_CPPCHECK 
+#			"--enable=warning"
+#			"--inconclusive"
+#			"--force" 
+#			"--inline-suppr"
+#			"--language=c++"
+#			"--suppress=*:*external*"
+#    	)
+#endif()
 
 # Setup CTags
 
@@ -171,19 +169,28 @@ add_subdirectory( kernel )
 ###############################################################################
 ###                       Download External Projects                        ###
 ###############################################################################
-
 add_subdirectory( external )
 
-return()
-
+# List of header file directories
+set( HEADER_DIRECTORIES )
 list( APPEND HEADER_DIRECTORIES ${CMAKE_SOURCE_DIR}/include )
-list( APPEND HEADER_DIRECTORIES ${CMAKE_SOURCE_DIR}/external/include )
+list( APPEND HEADER_DIRECTORIES ${CMAKE_SOURCE_DIR}/external/output/include )
+list( APPEND HEADER_DIRECTORIES ${CMAKE_SOURCE_DIR}/kernel/include )
 
-find_library( EXTERNAL_LIBRARIES 
-	NAMES tinyxml2
-	PATHS ${CMAKE_SOURCE_DIR}/external/library
-	NO_CMAKE_FIND_ROOT_PATH
-	REQUIRED)
+include_directories( ${HEADER_DIRECTORIES} )
+
+set( LIBRARY_DIRECTORIES )
+list( APPEND LIBRARY_DIRECTORIES ${CMAKE_SOURCE_DIR}/external/output/lib )
+
+link_directories( ${LIBRARY_DIRECTORIES} )
+
+#find_library( EXTERNAL_LIBRARIES 
+#	NAMES mosquitto
+#	NO_DEFAULT_PATH	
+#	PATHS ${CMAKE_SOURCE_DIR}/external/output/lib
+#	NO_CMAKE_FIND_ROOT_PATH
+#	REQUIRED)
+#message( "#########" ${EXTERNAL_LIBRARIES} )
 
 ###############################################################################
 ###                      Configure Test Enviroment                          ###
@@ -197,7 +204,7 @@ function( gsetup gtest-name )
 
 	add_executable( gtest-${gtest-name} gtest-${gtest-name}.cpp )
 
-#	target_link_libraries( gtest-${gtest-name} gtest gmock pthread )
+	target_link_libraries( gtest-${gtest-name} TEST_LIBRARIES )
 
 	target_compile_options( gtest-${gtest-name} PRIVATE ${COMPILER_FLAGS}  )
 	target_include_directories( gtest-${gtest-name} PRIVATE ${HEADER_DIRECTORIES} )
@@ -212,11 +219,13 @@ include( CTest )
 ###                           Build the Framework                           ###
 ###############################################################################
 
+add_subdirectory( prototype )
+return()
+
 add_subdirectory( source )
 
 return()
 
-add_subdirectory( prototype )
 
 # Include drivers
 add_subdirectory( drivers )

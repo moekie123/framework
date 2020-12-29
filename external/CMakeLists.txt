@@ -13,8 +13,6 @@ set( EXTERNAL_STAMP_DIR "${EXTERNAL_DIR}/.stamp")
 # Allow automatic checkout and rebuild
 set( DISCONNECT ON )
 
-include( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/glibc.cmake )
-
 # Include external projects
 include( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/googletest.cmake )
 include( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/mosquitto.cmake )

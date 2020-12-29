@@ -77,7 +77,7 @@ if [ -d "${FRAMEWORK}" ]; then
 	{
        		echo "Rebuild the complete project"
 		rm -rf ${FRAMEWORK_BUILD}
-		cmake -S${FRAMEWORK} -B${FRAMEWORK_BUILD} -DCMAKE_BUILD_TYPE=Debug -DCMAKE_FIND_DEBUG_MODE=ON
+		cmake -S${FRAMEWORK} -B${FRAMEWORK_BUILD} -DCMAKE_BUILD_TYPE=Debug
        		make --no-print-directory -C ${FRAMEWORK_BUILD} VERBOSE=1
 	}
 

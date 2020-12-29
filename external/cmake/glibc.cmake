@@ -3,8 +3,6 @@ include(ExternalProject)
 # Install the Google Test Framework
 set( EXTERNAL_PROJECT_NAME ext_glibc )
 
-find_package( Threads REQUIRED )
-
 set( GLIBC_CONFIGURE_FLAGS )
 list( APPEND GLIBC_CONFIGRE_FLAGS --prefix=${EXTERNAL_DIR}/output )
 list( APPEND GLIBC_CONFIGRE_FLAGS --with-gnu-ld --with-gnu-as )
@@ -30,7 +28,7 @@ ExternalProject_Add( ${EXTERNAL_PROJECT_NAME}
 	GIT_TAG master
 	GIT_PROGRESS ON
 
-	UPDATE_DISCONNECTED ${DISCONNECT}
+#	UPDATE_DISCONNECTED ${DISCONNECT}
 	
 	UPDATE_COMMAND 		""
 	CONFIGURE_COMMAND 	./glibc/configure ${GLIBC_CONFIGRE_FLAGS}

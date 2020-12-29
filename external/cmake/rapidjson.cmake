@@ -41,6 +41,3 @@ ExternalProject_Add( ${EXTERNAL_PROJECT_NAME}
 			-DRAPIDJSON_BUILD_EXAMPLES=OFF
 			-DRAPIDJSON_BUILD_TESTS=OFF 
 )
-
-# GLibc must be build before googletest can be build because of the phread.h dependency
-ExternalProject_Add_StepDependencies( ${EXTERNAL_PROJECT_NAME} install "ext_glibc" )

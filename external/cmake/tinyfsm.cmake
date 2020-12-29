@@ -28,6 +28,3 @@ ExternalProject_Add( ${EXTERNAL_PROJECT_NAME}
 	STAMP_DIR       "${EXTERNAL_STAMP_DIR}/${EXTERNAL_PROJECT_NAME}"
 	LOG_DIR         "${EXTERNAL_LOG_DIR}/${EXTERNAL_PROJECT_NAME}"
 )
-
-# GLibc must be build before googletest can be build because of the phread.h dependency
-ExternalProject_Add_StepDependencies( ${EXTERNAL_PROJECT_NAME} install "ext_glibc" )

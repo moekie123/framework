@@ -41,5 +41,3 @@ ExternalProject_Add( ${EXTERNAL_PROJECT_NAME}
 			-DBUILD_SHARED_LIBS=ON
 )
 
-# GLibc must be build before googletest can be build because of the phread.h dependency
-ExternalProject_Add_StepDependencies( ${EXTERNAL_PROJECT_NAME} install "ext_glibc" )
